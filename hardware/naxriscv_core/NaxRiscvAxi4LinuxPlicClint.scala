@@ -16,12 +16,17 @@ import spinal.core._
 import spinal.lib._
 import spinal.lib.eda.bench.Rtl
 
+import spinal.lib.misc.AxiLite4Clint
+import spinal.lib.misc.plic.AxiLite4Plic
+import spinal.lib.bus.amba4.axi.{Axi4ReadOnly, Axi4SpecRenamer}
+import spinal.lib.bus.amba4.axilite.AxiLite4SpecRenamer
+
 object NaxRiscvAxi4LinuxPlicClint extends App{
   var ramBlocks = "inferred"
   var regFileFakeRatio = 1
-  var withLsu = true
-  var withIoFf = false
-  var withRfLatchRam = true
+  var withLsu = true // Add Load/Store Unit
+  var withIoFf = false // Add a Flip-Flops to the IO
+  var withRfLatchRam = true // Add a RAM to the Register File
   var blackBoxCombRam = false
 
   assert(new scopt.OptionParser[Unit]("NaxAsicGen") {
@@ -88,7 +93,21 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
 
   if(blackBoxCombRam) spinalConfig.memBlackBoxers += new CombRamBlackboxer()
 
-  def gen = new NaxRiscv(plugins).setDefinitionName("NaxRiscvAxi4LinuxPlicClint")
+  def gen = new NaxRiscv(plugins){
+        val clintCtrl = new AxiLite4Clint(1, bufferTime = false)
+        val plicCtrl = new AxiLite4Plic(
+          sourceCount = 31,
+          targetCount = 2
+        )
+
+        val clint = clintCtrl.io.bus.toIo()
+        val plic = plicCtrl.io.bus.toIo()
+        val plicInterrupts = in Bits(32 bits)
+        plicCtrl.io.sources := plicInterrupts >> 1
+
+        AxiLite4SpecRenamer(clint)
+        AxiLite4SpecRenamer(plic)
+      }.setDefinitionName("NaxRiscvAxi4LinuxPlicClint")
   spinalConfig.generateVerilog(if(withIoFf) Rtl.ffIo(gen) else gen)
 
 //  spinalConfig.generateVerilog(new StreamFifo(UInt(4 bits), 256).setDefinitionName("nax"))
