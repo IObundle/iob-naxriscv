@@ -16,12 +16,15 @@ JDK_HOME := $(shell dirname $$(dirname $$(which java)))
 
 # Primary targets
 naxriscv:
-	# FIXME: Choose a .scala demo, include PLIC/CLINT, and copy to correct submodule directory.
-	cp $(NAX_HARDWARE_DIR)/naxriscv_core/NaxRiscvAxi4LinuxPlicClint.scala $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/demo/
+	#mkdir -p $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/platform/asic
+	cp $(NAX_HARDWARE_DIR)/naxriscv_core/NaxRiscvAxi4LinuxPlicClint.scala $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/platform/asic/
 	#cp $(NAX_HARDWARE_DIR)/naxriscv_core/MmuPlugin.scala $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/plugin/
+	# (Re-)try to apply these patches: https://github.com/SpinalHDL/NaxRiscv/issues/140#issuecomment-2725576402
+	-make -C submodules/NaxRiscv install-core
+	# Run sbt to build CPU and copy generated verilog to this repo
 	cd submodules/NaxRiscv && \
-	sbt -java-home $(JDK_HOME) "runMain naxriscv.demo.$(CPU)" && \
-	cp $(CPU).v $(NAXRISCV_SRC_DIR)
+	sbt -java-home $(JDK_HOME) "runMain naxriscv.platform.asic.$(CPU)" && \
+	cp $(CPU).v $(NAXRISCV_SRC_DIR)/$(CPU).v
 
 #
 # Clean
