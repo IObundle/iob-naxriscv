@@ -5,19 +5,6 @@
 `timescale 1ns/1ps
 
 module NaxRiscvAxi4LinuxPlicClint (
-  output wire          FetchCachePlugin_mem_cmd_valid,
-  input  wire          FetchCachePlugin_mem_cmd_ready,
-  output wire [31:0]   FetchCachePlugin_mem_cmd_payload_address,
-  output wire          FetchCachePlugin_mem_cmd_payload_io,
-  input  wire          FetchCachePlugin_mem_rsp_valid,
-  output wire          FetchCachePlugin_mem_rsp_ready,
-  input  wire [63:0]   FetchCachePlugin_mem_rsp_payload_data,
-  input  wire          FetchCachePlugin_mem_rsp_payload_error,
-  input  wire          PrivilegedPlugin_io_int_machine_timer /* verilator public */ ,
-  input  wire          PrivilegedPlugin_io_int_machine_software /* verilator public */ ,
-  input  wire          PrivilegedPlugin_io_int_machine_external /* verilator public */ ,
-  input  wire          PrivilegedPlugin_io_int_supervisor_external /* verilator public */ ,
-  input  wire [63:0]   PrivilegedPlugin_io_rdtime,
   input  wire          clint_awvalid,
   output wire          clint_awready,
   input  wire [15:0]   clint_awaddr,
@@ -57,6 +44,18 @@ module NaxRiscvAxi4LinuxPlicClint (
   output wire [31:0]   plic_rdata,
   output wire [1:0]    plic_rresp,
   input  wire [31:0]   plicInterrupts,
+  output wire          iBusAxi_arvalid,
+  input  wire          iBusAxi_arready,
+  output wire [31:0]   iBusAxi_araddr,
+  output wire [7:0]    iBusAxi_arlen,
+  output wire [2:0]    iBusAxi_arsize,
+  output wire [1:0]    iBusAxi_arburst,
+  output wire [2:0]    iBusAxi_arprot,
+  input  wire          iBusAxi_rvalid,
+  output wire          iBusAxi_rready,
+  input  wire [63:0]   iBusAxi_rdata,
+  input  wire [1:0]    iBusAxi_rresp,
+  input  wire          iBusAxi_rlast,
   output wire          LsuPlugin_peripheralBus_cmd_valid /* verilator public */ ,
   input  wire          LsuPlugin_peripheralBus_cmd_ready /* verilator public */ ,
   output wire          LsuPlugin_peripheralBus_cmd_payload_write /* verilator public */ ,
@@ -2856,6 +2855,14 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 _zz_FetchPlugin_stages_2_valid;
   reg                 FetchPlugin_stages_2_valid;
   reg                 _zz_AlignerPlugin_setup_s2m_valid;
+  wire                FetchCachePlugin_mem_cmd_valid;
+  wire                FetchCachePlugin_mem_cmd_ready;
+  wire       [31:0]   FetchCachePlugin_mem_cmd_payload_address;
+  wire                FetchCachePlugin_mem_cmd_payload_io;
+  wire                FetchCachePlugin_mem_rsp_valid;
+  wire                FetchCachePlugin_mem_rsp_ready;
+  wire       [63:0]   FetchCachePlugin_mem_rsp_payload_data;
+  wire                FetchCachePlugin_mem_rsp_payload_error;
   reg                 FetchCachePlugin_setup_redoJump_valid;
   wire       [31:0]   FetchCachePlugin_setup_redoJump_payload_pc;
   wire                FetchCachePlugin_setup_historyJump_valid;
@@ -2974,6 +2981,11 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [3:0]    CommitPlugin_setup_robLineMask_line;
   reg        [0:0]    CommitPlugin_setup_robLineMask_mask;
   wire                CommitPlugin_setup_isRobEmpty;
+  wire                PrivilegedPlugin_io_int_machine_timer /* verilator public */ ;
+  wire                PrivilegedPlugin_io_int_machine_software /* verilator public */ ;
+  wire                PrivilegedPlugin_io_int_machine_external /* verilator public */ ;
+  wire                PrivilegedPlugin_io_int_supervisor_external /* verilator public */ ;
+  wire       [63:0]   PrivilegedPlugin_io_rdtime;
   reg                 PrivilegedPlugin_setup_jump_valid;
   reg        [31:0]   PrivilegedPlugin_setup_jump_payload_pc;
   reg        [1:0]    PrivilegedPlugin_setup_privilege;
@@ -3053,6 +3065,20 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   EU0_CsrAccessPlugin_setup_trap_payload_tval;
   wire                EU0_CsrAccessPlugin_setup_trap_payload_skipCommit;
   wire       [7:0]    EU0_CsrAccessPlugin_setup_trap_payload_reason;
+  wire                FetchCachePlugin_mem_resizer_ret_cmd_valid;
+  wire                FetchCachePlugin_mem_resizer_ret_cmd_ready;
+  wire       [31:0]   FetchCachePlugin_mem_resizer_ret_cmd_payload_address;
+  wire                FetchCachePlugin_mem_resizer_ret_cmd_payload_io;
+  wire                FetchCachePlugin_mem_resizer_ret_rsp_valid;
+  wire                FetchCachePlugin_mem_resizer_ret_rsp_ready;
+  wire       [63:0]   FetchCachePlugin_mem_resizer_ret_rsp_payload_data;
+  wire                FetchCachePlugin_mem_resizer_ret_rsp_payload_error;
+  wire                FetchCachePlugin_mem_resizer_rspOutputStream_valid;
+  wire                FetchCachePlugin_mem_resizer_rspOutputStream_ready;
+  wire       [63:0]   FetchCachePlugin_mem_resizer_rspOutputStream_payload;
+  wire                FetchCachePlugin_mem_resizer_ret_rsp_translated_valid;
+  wire                FetchCachePlugin_mem_resizer_ret_rsp_translated_ready;
+  wire       [63:0]   FetchCachePlugin_mem_resizer_ret_rsp_translated_payload;
   wire                FetchPlugin_stages_1_isFireing;
   reg                 _zz_FetchPlugin_stages_1_isFirstCycle;
   wire                when_Stage_l170;
@@ -9033,6 +9059,36 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign plic_rdata = plicCtrl_io_bus_r_payload_data;
   assign plic_rresp = plicCtrl_io_bus_r_payload_resp;
   assign plicCtrl_io_sources = (plicInterrupts >>> 1'd1);
+  assign FetchCachePlugin_mem_resizer_ret_cmd_valid = FetchCachePlugin_mem_cmd_valid;
+  assign FetchCachePlugin_mem_cmd_ready = FetchCachePlugin_mem_resizer_ret_cmd_ready;
+  assign FetchCachePlugin_mem_resizer_ret_cmd_payload_address = FetchCachePlugin_mem_cmd_payload_address;
+  assign FetchCachePlugin_mem_resizer_ret_cmd_payload_io = FetchCachePlugin_mem_cmd_payload_io;
+  assign FetchCachePlugin_mem_resizer_ret_rsp_translated_valid = FetchCachePlugin_mem_resizer_ret_rsp_valid;
+  assign FetchCachePlugin_mem_resizer_ret_rsp_ready = FetchCachePlugin_mem_resizer_ret_rsp_translated_ready;
+  assign FetchCachePlugin_mem_resizer_ret_rsp_translated_payload = FetchCachePlugin_mem_resizer_ret_rsp_payload_data;
+  assign FetchCachePlugin_mem_resizer_rspOutputStream_valid = FetchCachePlugin_mem_resizer_ret_rsp_translated_valid;
+  assign FetchCachePlugin_mem_resizer_ret_rsp_translated_ready = FetchCachePlugin_mem_resizer_rspOutputStream_ready;
+  assign FetchCachePlugin_mem_resizer_rspOutputStream_payload = FetchCachePlugin_mem_resizer_ret_rsp_translated_payload;
+  assign FetchCachePlugin_mem_rsp_valid = FetchCachePlugin_mem_resizer_rspOutputStream_valid;
+  assign FetchCachePlugin_mem_rsp_payload_data = FetchCachePlugin_mem_resizer_rspOutputStream_payload;
+  assign FetchCachePlugin_mem_rsp_payload_error = FetchCachePlugin_mem_resizer_ret_rsp_payload_error;
+  assign FetchCachePlugin_mem_resizer_rspOutputStream_ready = 1'b1;
+  assign iBusAxi_arvalid = FetchCachePlugin_mem_resizer_ret_cmd_valid;
+  assign iBusAxi_araddr = FetchCachePlugin_mem_resizer_ret_cmd_payload_address;
+  assign iBusAxi_arprot = 3'b110;
+  assign iBusAxi_arlen = 8'h07;
+  assign iBusAxi_arsize = 3'b011;
+  assign iBusAxi_arburst = 2'b01;
+  assign FetchCachePlugin_mem_resizer_ret_cmd_ready = iBusAxi_arready;
+  assign FetchCachePlugin_mem_resizer_ret_rsp_valid = iBusAxi_rvalid;
+  assign FetchCachePlugin_mem_resizer_ret_rsp_payload_data = iBusAxi_rdata;
+  assign FetchCachePlugin_mem_resizer_ret_rsp_payload_error = (! (iBusAxi_rresp == 2'b00));
+  assign iBusAxi_rready = 1'b1;
+  assign PrivilegedPlugin_io_int_machine_external = plicCtrl_io_targets[0];
+  assign PrivilegedPlugin_io_int_machine_timer = clintCtrl_io_timerInterrupt[0];
+  assign PrivilegedPlugin_io_int_machine_software = clintCtrl_io_softwareInterrupt[0];
+  assign PrivilegedPlugin_io_int_supervisor_external = plicCtrl_io_targets[1];
+  assign PrivilegedPlugin_io_rdtime = clintCtrl_io_time;
   assign FetchPlugin_stages_1_isFireing = (FetchPlugin_stages_1_valid && FetchPlugin_stages_1_ready);
   assign when_Stage_l170 = (FetchPlugin_stages_1_ready || FetchPlugin_stages_1_isFlushed);
   assign FetchPlugin_stages_1_isFirstCycle = (FetchPlugin_stages_1_valid && (! _zz_FetchPlugin_stages_1_isFirstCycle));

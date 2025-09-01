@@ -20,6 +20,7 @@ import spinal.lib.misc.AxiLite4Clint
 import spinal.lib.misc.plic.AxiLite4Plic
 import spinal.lib.bus.amba4.axi.{Axi4ReadOnly, Axi4SpecRenamer}
 import spinal.lib.bus.amba4.axilite.AxiLite4SpecRenamer
+import naxriscv.misc.PrivilegedPlugin
 
 object NaxRiscvAxi4LinuxPlicClint extends App{
   var ramBlocks = "inferred"
@@ -93,7 +94,8 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
 
   if(blackBoxCombRam) spinalConfig.memBlackBoxers += new CombRamBlackboxer()
 
-  def gen = new NaxRiscv(plugins){
+  def gen = {
+    val cpu = new NaxRiscv(plugins){
         val clintCtrl = new AxiLite4Clint(1, bufferTime = false)
         val plicCtrl = new AxiLite4Plic(
           sourceCount = 31,
@@ -107,8 +109,44 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
 
         AxiLite4SpecRenamer(clint)
         AxiLite4SpecRenamer(plic)
-      }.setDefinitionName("NaxRiscvAxi4LinuxPlicClint")
-  spinalConfig.generateVerilog(if(withIoFf) Rtl.ffIo(gen) else gen)
+    }
+    cpu.setDefinitionName("NaxRiscvAxi4LinuxPlicClint")
+    // CPU modifications to be an Avalon one
+    cpu.rework {
+      for (plugin <- cpu.plugins) plugin match {
+        case plugin: FetchCachePlugin => {
+          val native = plugin.mem.setAsDirectionLess //Unset IO properties of mem bus
+          val axi = master(native.resizer(32).toAxi4())
+              .setName("iBusAxi")
+              .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the ibus (used by QSysify)
+          Axi4SpecRenamer(axi)
+        }
+        // case plugin: DataCachePlugin => {
+        //   val native = plugin.mem.setAsDirectionLess //Unset IO properties of mem bus
+        //   val axi = master(native.toAxi4())
+        //       .setName("dBusAxi")
+        //       .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the ibus (used by QSysify)
+        //   Axi4SpecRenamer(axi)
+        //   // Axi4SpecRenamer(
+        //   //   master(plugin.dBus.toAxi4Shared().toAxi4().toFullConfig())
+        //   //     .setName("dBusAxi")
+        //   //     .addTag(ClockDomainTag(ClockDomain.current))
+        //   // )
+        // }
+        case plugin: PrivilegedPlugin => {
+          // Interrupt connections based on NaxRiscvBmbGenerator.scala and CsrPlugin of VexRiscvAxi4LinuxPlicClint.scala 
+          plugin.io.int.machine.external setAsDirectionLess() := cpu.plicCtrl.io.targets(0)       // external interrupts from PLIC
+          plugin.io.int.machine.timer  setAsDirectionLess() := cpu.clintCtrl.io.timerInterrupt(0)  // timer interrupts from CLINT
+          plugin.io.int.machine.software  setAsDirectionLess() := cpu.clintCtrl.io.softwareInterrupt(0) // software interrupts from CLINT
+          if (plugin.p.withSupervisor) plugin.io.int.supervisor.external  setAsDirectionLess() := cpu.plicCtrl.io.targets(1) // supervisor external interrupts from PLIC
+          plugin.io.rdtime  setAsDirectionLess() := cpu.clintCtrl.io.time // time register from CLINT
+        }
+        case _ =>
+      }
+    }
+    cpu
+  }
 
+  spinalConfig.generateVerilog(if(withIoFf) Rtl.ffIo(gen) else gen)
 //  spinalConfig.generateVerilog(new StreamFifo(UInt(4 bits), 256).setDefinitionName("nax"))
 }
