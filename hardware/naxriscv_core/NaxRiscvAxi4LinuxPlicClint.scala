@@ -53,6 +53,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
       withRvc = false,
       withLoadStore = withLsu,
       withMmu = withLsu,
+      withPerfCounters = false, // Disabled because throws errors with AXI4 dbus for some reason
       withDebug = false,
       withEmbeddedJtagTap = false,
       jtagTunneled = false,
@@ -121,18 +122,13 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
               .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the ibus (used by QSysify)
           Axi4SpecRenamer(axi)
         }
-        // case plugin: DataCachePlugin => {
-        //   val native = plugin.mem.setAsDirectionLess //Unset IO properties of mem bus
-        //   val axi = master(native.toAxi4())
-        //       .setName("dBusAxi")
-        //       .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the ibus (used by QSysify)
-        //   Axi4SpecRenamer(axi)
-        //   // Axi4SpecRenamer(
-        //   //   master(plugin.dBus.toAxi4Shared().toAxi4().toFullConfig())
-        //   //     .setName("dBusAxi")
-        //   //     .addTag(ClockDomainTag(ClockDomain.current))
-        //   // )
-        // }
+        case plugin: DataCachePlugin => {
+          val native = plugin.mem.setAsDirectionLess //Unset IO properties of mem bus
+          val axi = master(native.resizer(32).toAxi4())
+              .setName("dBusAxi")
+              .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the dbus (used by QSysify)
+          Axi4SpecRenamer(axi)
+        }
         case plugin: PrivilegedPlugin => {
           // Interrupt connections based on NaxRiscvBmbGenerator.scala and CsrPlugin of VexRiscvAxi4LinuxPlicClint.scala 
           plugin.io.int.machine.external setAsDirectionLess() := cpu.plicCtrl.io.targets(0)       // external interrupts from PLIC
