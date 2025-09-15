@@ -1,327 +1,485 @@
-// SPDX-FileCopyrightText: 2025 IObundle
+// SPDX-FileCopyrightText: 2023 "Everybody"
 //
 // SPDX-License-Identifier: MIT
 
-package naxriscv.plugin
+package naxriscv.misc
 
-import naxriscv.{NaxRiscv, _}
+import naxriscv._
+import naxriscv.Global._
+import naxriscv.fetch.FetchPlugin
+import naxriscv.interfaces.AddressTranslationPortUsage.LOAD_STORE
+import naxriscv.interfaces.{AddressTranslationPortUsage, AddressTranslationRsp, AddressTranslationService, CsrRamService, CsrService, PostCommitBusy}
+import naxriscv.lsu.DataCachePlugin
+import naxriscv.riscv.CSR
+import naxriscv.utilities.Plugin
+import spinal.core
 import spinal.core._
 import spinal.lib._
+import spinal.lib.fsm._
+import spinal.lib.pipeline.{Stage, Stageable}
 
 import scala.collection.mutable.ArrayBuffer
 
-trait DBusAccessService{
-  def newDBusAccess() : DBusAccess
+case class MmuStorageLevel(id : Int,
+                           ways : Int,
+                           depth : Int){
+  assert(isPow2(depth))
 }
 
-case class DBusAccessCmd() extends Bundle {
-  val address = UInt(32 bits)
-  val size = UInt(2 bits)
-  val write = Bool
-  val data = Bits(32 bits)
-  val writeMask = Bits(4 bits)
-}
+case class MmuStorageParameter(levels : Seq[MmuStorageLevel],
+                               priority : Int)
 
-case class DBusAccessRsp() extends Bundle {
-  val data = Bits(32 bits)
-  val error = Bool()
-  val redo = Bool()
-}
+case class MmuPortParameter(var readAt : Int,
+                            var hitsAt : Int,
+                            var ctrlAt : Int,
+                            var rspAt : Int){
 
-case class DBusAccess() extends Bundle {
-  val cmd = Stream(DBusAccessCmd())
-  val rsp = Flow(DBusAccessRsp())
 }
 
 
-object MmuPort{
-  val PRIORITY_DATA = 1
-  val PRIORITY_INSTRUCTION = 0
+case class MmuSpec(levels : Seq[MmuLevel],
+                   entryBytes : Int,
+                   virtualWidth : Int,
+                   physicalWidth : Int,
+                   satpMode : Int)
+
+case class MmuLevel(virtualWidth : Int,
+                    physicalWidth : Int,
+                    virtualOffset : Int,
+                    physicalOffset : Int,
+                    entryOffset : Int){
+  def vpn(address : UInt) : UInt = address(virtualRange)
+
+  val virtualRange  = virtualOffset  + virtualWidth  -1 downto virtualOffset
+  val entryRange    = entryOffset    + physicalWidth -1 downto entryOffset
+  val physicalRange = physicalOffset + physicalWidth -1 downto physicalOffset
 }
-case class MmuPort(bus : MemoryTranslatorBus, priority : Int, args : MmuPortConfig, id : Int)
 
-case class MmuPortConfig(portTlbSize : Int, latency : Int = 0, earlyRequireMmuLockup : Boolean = false, earlyCacheHits : Boolean = false)
+object MmuSpec{
+  val sv32 = MmuSpec(
+    levels     = List(
+      MmuLevel(virtualWidth = 10, physicalWidth = 10, virtualOffset =  12, physicalOffset = 12, entryOffset =  10),
+      MmuLevel(virtualWidth = 10, physicalWidth = 10, virtualOffset =  22, physicalOffset = 22, entryOffset =  20) //Avoid 34 bits physical address
+    ),
+    entryBytes = 4,
+    virtualWidth   = 32,
+    physicalWidth  = 32,
+    satpMode   = 1
+  )
+  val sv39 = MmuSpec(
+    levels     = List(
+      MmuLevel(virtualWidth = 9, physicalWidth = 9 , virtualOffset =  12, physicalOffset = 12, entryOffset =  10),
+      MmuLevel(virtualWidth = 9, physicalWidth = 9 , virtualOffset =  21, physicalOffset = 21, entryOffset =  19),
+      MmuLevel(virtualWidth = 9, physicalWidth = 26, virtualOffset =  30, physicalOffset = 30, entryOffset =  28)
+    ),
+    entryBytes = 8,
+    virtualWidth   = 39,
+    physicalWidth  = 56,
+    satpMode   = 8
+  )
+}
 
-class MmuPlugin(var ioRange : UInt => Bool,
-                virtualRange : UInt => Bool = address => True,
-//                allowUserIo : Boolean = false,
-                enableMmuInMachineMode : Boolean = false,
-                exportSatp: Boolean = false
-                ) extends Plugin[NaxRiscv] with MemoryTranslator {
+class MmuPlugin(var spec : MmuSpec,
+                var physicalWidth : Int,
+                var ioRange : UInt => Bool,
+                var fetchRange : UInt => Bool,
+                var memRange : UInt => Bool) extends Plugin with AddressTranslationService{
+  override def withTranslation = true
+  override def invalidatePort = setup.invalidatePort
 
-  var dBusAccess : DBusAccess = null
-  val portsInfo = ArrayBuffer[MmuPort]()
 
-  var ioStartAddr : UInt = null
-  var ioSize : UInt = null
-  var ioEndAddr : UInt = null
+  create config {
+    PHYSICAL_WIDTH.set(physicalWidth)
+    VIRTUAL_WIDTH.set(spec.virtualWidth)
+    VIRTUAL_EXT_WIDTH.set(VIRTUAL_WIDTH.get + (VIRTUAL_WIDTH < XLEN).toInt)
+    PC_WIDTH.set(VIRTUAL_EXT_WIDTH)
+    TVAL_WIDTH.set(VIRTUAL_EXT_WIDTH)
+    assert(VIRTUAL_WIDTH.get == XLEN.get || XLEN.get > VIRTUAL_WIDTH.get && VIRTUAL_WIDTH.get > physicalWidth)
 
-  override def newTranslationPort(priority : Int,args : Any): MemoryTranslatorBus = {
-    val config = args.asInstanceOf[MmuPortConfig]
-    val port = MmuPort(MemoryTranslatorBus(MemoryTranslatorBusParameter(wayCount = config.portTlbSize, latency = config.latency)),priority, config, portsInfo.length)
-    portsInfo += port
-    port.bus
   }
 
-  object IS_SFENCE_VMA2 extends Stageable(Bool)
-  override def setup(pipeline: NaxRiscv): Unit = {
-    import Riscv._
-    import pipeline.config._
-    val decoderService = pipeline.service(classOf[DecoderService])
-    decoderService.addDefault(IS_SFENCE_VMA2, False)
-    decoderService.add(SFENCE_VMA, List(IS_SFENCE_VMA2 -> True))
-    if(ioRange == null) {
-      // Define the input parameters for IO (uncached) range
-      ioStartAddr = in(UInt(32 bits).setName("ioStartAddr"))
-      ioSize = in(UInt(32 bits).setName("ioSize"))
-      // Calculate the end address of IO range
-      ioEndAddr = ioStartAddr + ioSize - 1
-    }
+  case class PortSpec(stages: Seq[Stage],
+                      preAddress: Stageable[UInt],
+                      allowRefill : Stageable[Bool],
+                      usage : AddressTranslationPortUsage,
+                      pp: MmuPortParameter,
+                      ss : StorageSpec,
+                      rsp : AddressTranslationRsp){
+    val readStage = stages(pp.readAt)
+    val hitsStage = stages(pp.hitsAt)
+    val ctrlStage = stages(pp.ctrlAt)
+    val rspStage  = stages(pp.ctrlAt)
+  }
+  val portSpecs = ArrayBuffer[PortSpec]()
 
+  case class StorageSpec(p: MmuStorageParameter) extends Nameable
+  val storageSpecs = ArrayBuffer[StorageSpec]()
 
-
-    dBusAccess = pipeline.service(classOf[DBusAccessService]).newDBusAccess()
+  override def newStorage(pAny: Any) : Any = {
+    val p = pAny.asInstanceOf[MmuStorageParameter]
+    storageSpecs.addRet(StorageSpec(p))
   }
 
-  override def build(pipeline: NaxRiscv): Unit = {
-    import pipeline._
-    import pipeline.config._
-    import Riscv._
-    val csrService = pipeline.service(classOf[CsrPlugin])
+  override def newTranslationPort(stages: Seq[Stage],
+                                  preAddress: Stageable[UInt],
+                                  allowRefill : Stageable[Bool],
+                                  usage : AddressTranslationPortUsage,
+                                  portSpec: Any,
+                                  storageSpec: Any) = {
+    val pp = portSpec.asInstanceOf[MmuPortParameter]
+    val ss = storageSpec.asInstanceOf[StorageSpec]
+    portSpecs.addRet(
+      new PortSpec(
+        stages        = stages,
+        preAddress    = preAddress,
+        allowRefill   = allowRefill,
+        usage         = usage,
+        pp = pp,
+        ss = ss,
+        rsp           = new AddressTranslationRsp(this, 1, stages(pp.rspAt), ss.p.levels.map(_.ways).sum)
+      )
+    ).rsp
+  }
 
-    //Sorted by priority
-    val sortedPortsInfo = portsInfo.sortBy(_.priority)
+  val setup = create early new Area{
+    val csr = getService[CsrService]
+    val cache = getService[DataCachePlugin]
+    val ram = getService[CsrRamService]
+    val fetch = getService[FetchPlugin]
 
-    case class CacheLine() extends Bundle {
-      val valid, exception, superPage = Bool
-      val virtualAddress = Vec(UInt(10 bits), UInt(10 bits))
-      val physicalAddress = Vec(UInt(10 bits), UInt(10 bits))
+    csr.retain()
+    ram.allocationLock.retain()
+    fetch.retain()
+
+    val cacheLoad = cache.newLoadPort(priority = 1)
+    val invalidatePort = FlowCmdRsp().setIdleAll()
+  }
+
+  val logic = create late new Area{
+    lock.await()
+    val s = setup.get
+    import s._
+
+    val priv = getService[PrivilegedPlugin]
+
+    val ALLOW_REFILL = Stageable(Bool())
+    def physCap(range : Range) = (range.high min physicalWidth-1) downto range.low
+
+    case class StorageEntry(levelId : Int, depth : Int) extends Bundle {
+      val vw = spec.levels.drop(levelId).map(_.virtualWidth).sum
+      val pw = spec.levels.drop(levelId).map(_.physicalWidth).sum-(spec.physicalWidth-physicalWidth)
+      val valid, pageFault, accessFault = Bool()
+      val virtualAddress  = UInt(vw-log2Up(depth) bits)
+      val physicalAddress = UInt(pw bits)
       val allowRead, allowWrite, allowExecute, allowUser = Bool
 
-      def init = {
-        valid init (False)
-        this
+      def hit(address : UInt) = /*valid && */virtualAddress === address(spec.levels(levelId).virtualOffset + log2Up(depth), vw - log2Up(depth) bits)
+      def physicalAddressFrom(address : UInt) = physicalAddress @@ address(0, spec.levels(levelId).physicalOffset bits)
+    }
+
+
+    val satp = new Area {
+      val (modeOffset, modeWidth, ppnWidth) = Global.XLEN.get match {
+        case 32 => (31, 1, 20) //20 instead of 22 to avoid 34 physical bits
+        case 64 => (60, 4, 44)
+      }
+      val mode = Reg(Bits(modeWidth bits)) init(0)
+      //val asid = Reg(Bits(9 bits))         init(0)
+      val ppn =  Reg(UInt(ppnWidth bits))  init(0)
+    }
+    val status = new Area{
+      val mxr  = RegInit(False)
+      val sum  = RegInit(False)
+      val mprv = RegInit(False) clearWhen(priv.xretAwayFromMachine)
+    }
+
+    for(offset <- List(CSR.MSTATUS, CSR.SSTATUS)) csr.readWrite(offset, 19 -> status.mxr, 18 -> status.sum)
+    csr.readWrite(CSR.MSTATUS, 17 -> status.mprv)
+
+    csr.readWrite(CSR.SATP, satp.modeOffset -> satp.mode/*, 22 -> satp.asid*/, 0 -> satp.ppn)
+    val satpModeWrite = csr.onWriteBits(satp.modeOffset, satp.modeWidth bits)
+    csr.writeCancel(CSR.SATP, satpModeWrite =/= 0 && satpModeWrite =/= spec.satpMode)
+//    csr.readWriteRam(CSR.SATP) not suported by writeCancel
+
+    csr.onDecode(CSR.SATP){
+      when(priv.logic.machine.mstatus.tvm && priv.getPrivilege() === 1){
+        csr.onDecodeTrap()
+      } otherwise {
+        csr.onDecodeFlushPipeline()
+        setup.invalidatePort.cmd.valid := True
       }
     }
 
-    val csr = pipeline plug new Area{
-      val status = new Area{
-        val sum, mxr, mprv = RegInit(False)
-        mprv clearWhen(csrService.xretAwayFromMachine)
-      }
-      val satp = new Area {
-        val mode = RegInit(False)
-        val asid = Reg(Bits(9 bits))
-        val ppn = Reg(UInt(22 bits)) // Bottom 20 bits are used in implementation, but top 2 bits are still stored for OS use.
-        if(exportSatp) {
-          out(mode, asid, ppn)
+    ram.allocationLock.release()
+    csr.release()
+
+
+    assert(storageSpecs.map(_.p.priority).distinct.size == storageSpecs.size, "MMU storages needs different priorities")
+    val storages = for(ss <- storageSpecs) yield new Composite(ss, "logic", false){
+      val refillOngoing = False
+      val sl = for(e <- ss.p.levels) yield new Area{
+        val slp = e
+        val level = spec.levels(slp.id)
+        def newEntry() = StorageEntry(slp.id, slp.depth)
+        val ways = List.fill(slp.ways)(Mem.fill(slp.depth)(newEntry()))
+        val lineRange = level.virtualRange.low + log2Up(slp.depth) -1 downto level.virtualRange.low
+
+        val write = new Area{
+          val mask    = Bits(slp.ways bits)
+          val address = UInt(log2Up(slp.depth) bits)
+          val data    = newEntry()
+
+          mask := 0
+          address.assignDontCare()
+          data.assignDontCare()
+
+          for((way, sel) <- (ways, mask.asBools).zipped){
+            way.write(address, data, sel)
+          }
+        }
+        val allocId = Counter(slp.ways)
+
+        val keys = new Area {
+          setName(s"MMU_L${e.id}")
+          val ENTRIES = Stageable(Vec.fill(slp.ways)(newEntry()))
+          val HITS_PRE_VALID = Stageable(Bits(slp.ways bits))
+          val HITS = Stageable(Bits(slp.ways bits))
         }
       }
-
-      for(offset <- List(CSR.MSTATUS, CSR.SSTATUS)) csrService.rw(offset, 19 -> status.mxr, 18 -> status.sum, 17 -> status.mprv)
-      csrService.rw(CSR.SATP, 31 -> satp.mode, 22 -> satp.asid, 0 -> satp.ppn)
     }
 
-    val core = pipeline plug new Area {
-      val ports = for (port <- sortedPortsInfo) yield new Area {
-        val handle = port
-        val id = port.id
-        val privilegeService = pipeline.serviceElse(classOf[PrivilegeService], PrivilegeServiceDefault())
-        val cache = Vec(Reg(CacheLine()) init, port.args.portTlbSize)
-        val dirty = RegInit(False).allowUnsetRegToAvoidLatch
-        if(port.args.earlyRequireMmuLockup){
-          dirty clearWhen(!port.bus.cmd.last.isStuck)
-        }
 
-        def toRsp[T <: Data](data : T, from : MemoryTranslatorCmd) : T = from match {
-          case _ if from == port.bus.cmd.last => data
-          case _ =>  {
-            val next = port.bus.cmd.dropWhile(_ != from)(1)
-            toRsp(RegNextWhen(data, !next.isStuck), next)
+    val portSpecsSorted = portSpecs.sortBy(_.ss.p.priority).reverse
+    val ports = for(ps <- portSpecsSorted) yield new Composite(ps.rsp, "logic", false){
+      import ps._
+
+      val storage = storages.find(_.self == ps.ss).get
+
+
+      readStage(ALLOW_REFILL) := (if(allowRefill != null) readStage(allowRefill) else True)
+      val allowRefillBypass = for(stageId <- pp.readAt to pp.ctrlAt) yield new Area{
+        val stage = ps.stages(stageId)
+        val reg = RegInit(True)
+        stage.overloaded(ALLOW_REFILL) := stage(ALLOW_REFILL) && !storage.refillOngoing && reg
+        reg := stage.overloaded(ALLOW_REFILL)
+        when(stage.isRemoved || !stage.isStuck){
+          reg := True
+        }
+      }
+
+      val read = for (sl <- storage.sl) yield new Area {
+        val readAddress = readStage(ps.preAddress)(sl.lineRange)
+        for ((way, wayId) <- sl.ways.zipWithIndex) {
+          readStage(sl.keys.ENTRIES)(wayId) := way.readAsync(readAddress)
+          hitsStage(sl.keys.HITS_PRE_VALID)(wayId) := hitsStage(sl.keys.ENTRIES)(wayId).hit(hitsStage(ps.preAddress))
+          ctrlStage(sl.keys.HITS)(wayId) := ctrlStage(sl.keys.HITS_PRE_VALID)(wayId) && ctrlStage(sl.keys.ENTRIES)(wayId).valid
+        }
+      }
+
+
+      val ctrl = new Area{
+        import ctrlStage._
+
+        val hits = Cat(storage.sl.map(s => ctrlStage(s.keys.HITS)))
+        val entries = storage.sl.flatMap(s => ctrlStage(s.keys.ENTRIES))
+        val hit = hits.orR
+        val oh = OHMasking.firstV2(hits)
+
+        def entriesMux[T <: Data](f : StorageEntry => T) : T = OhMux.or(oh, entries.map(f))
+        val lineAllowExecute = entriesMux(_.allowExecute)
+        val lineAllowRead    = entriesMux(_.allowRead)
+        val lineAllowWrite   = entriesMux(_.allowWrite)
+        val lineAllowUser    = entriesMux(_.allowUser)
+        val lineException    = entriesMux(_.pageFault)
+        val lineTranslated   = entriesMux(_.physicalAddressFrom(ps.preAddress))
+        val lineAccessFault  = entriesMux(_.accessFault)
+
+        val requireMmuLockup  = satp.mode === spec.satpMode
+        val needRefill        = isValid && !hit && requireMmuLockup
+        val askRefill         = needRefill && overloaded(ALLOW_REFILL)
+        val askRefillAddress = ctrlStage(ps.preAddress)
+
+        requireMmuLockup clearWhen(!status.mprv && priv.isMachine())
+        when(priv.isMachine()) {
+          if (ps.usage == LOAD_STORE) {
+            requireMmuLockup clearWhen (!status.mprv || priv.logic.machine.mstatus.mpp === 3)
+          } else {
+            requireMmuLockup := False
           }
         }
-        val requireMmuLockupCmd = port.bus.cmd.takeRight(if(port.args.earlyRequireMmuLockup) 2 else 1).head
 
-        val requireMmuLockupCalc = virtualRange(requireMmuLockupCmd.virtualAddress) && !requireMmuLockupCmd.bypassTranslation && csr.satp.mode
-        if(!enableMmuInMachineMode) {
-          requireMmuLockupCalc clearWhen(!csr.status.mprv && privilegeService.isMachine())
-          when(privilegeService.isMachine()) {
-            if (port.priority == MmuPort.PRIORITY_DATA) {
-              requireMmuLockupCalc clearWhen (!csr.status.mprv || pipeline(MPP) === 3)
-            } else {
-              requireMmuLockupCalc := False
-            }
-          }
-        }
-
-        val cacheHitsCmd = port.bus.cmd.takeRight(if(port.args.earlyCacheHits) 2 else 1).head
-        val cacheHitsCalc = B(cache.map(line => line.valid && line.virtualAddress(1) === cacheHitsCmd.virtualAddress(31 downto 22) && (line.superPage || line.virtualAddress(0) === cacheHitsCmd.virtualAddress(21 downto 12))))
-
-
-        val requireMmuLockup = toRsp(requireMmuLockupCalc, requireMmuLockupCmd)
-        val cacheHits = toRsp(cacheHitsCalc, cacheHitsCmd)
-
-        val cacheHit = cacheHits.asBits.orR
-        val cacheLine = MuxOH(cacheHits, cache)
-        val entryToReplace = Counter(port.args.portTlbSize)
-
-
+        import ps.rsp.keys._
+        IO := ioRange(TRANSLATED)
         when(requireMmuLockup) {
-          port.bus.rsp.physicalAddress := cacheLine.physicalAddress(1) @@ (cacheLine.superPage ? port.bus.cmd.last.virtualAddress(21 downto 12) | cacheLine.physicalAddress(0)) @@ port.bus.cmd.last.virtualAddress(11 downto 0)
-          port.bus.rsp.allowRead := cacheLine.allowRead  || csr.status.mxr && cacheLine.allowExecute
-          port.bus.rsp.allowWrite := cacheLine.allowWrite
-          port.bus.rsp.allowExecute := cacheLine.allowExecute
-          port.bus.rsp.exception := !dirty &&  cacheHit && (cacheLine.exception || cacheLine.allowUser && privilegeService.isSupervisor() && !csr.status.sum || !cacheLine.allowUser && privilegeService.isUser())
-          port.bus.rsp.refilling :=  dirty || !cacheHit
-          port.bus.rsp.isPaging := True
+          REDO          := !hit
+          TRANSLATED    := lineTranslated
+          ALLOW_EXECUTE := lineAllowExecute && !(lineAllowUser && priv.isSupervisor())
+          ALLOW_READ    := lineAllowRead || status.mxr && lineAllowExecute
+          ALLOW_WRITE   := lineAllowWrite
+          PAGE_FAULT    := lineException || lineAllowUser && priv.isSupervisor() && !status.sum || !lineAllowUser && priv.isUser()
+          ACCESS_FAULT  := lineAccessFault
         } otherwise {
-          port.bus.rsp.physicalAddress := port.bus.cmd.last.virtualAddress
-          port.bus.rsp.allowRead := True
-          port.bus.rsp.allowWrite := True
-          port.bus.rsp.allowExecute := True
-          port.bus.rsp.exception := False
-          port.bus.rsp.refilling := False
-          port.bus.rsp.isPaging := False
+          REDO          := False
+          TRANSLATED    := ps.preAddress.resized
+          ALLOW_EXECUTE := True
+          ALLOW_READ    := True
+          ALLOW_WRITE   := True
+          PAGE_FAULT    := False
+          ACCESS_FAULT  := ps.preAddress.drop(physicalWidth) =/= 0 || !(memRange(TRANSLATED) || IO)
         }
 
+        ALLOW_EXECUTE clearWhen(!fetchRange(TRANSLATED))
 
-        // Function determines if given address is in IO range configured via inputs
-        val externalIoRange: UInt => Bool = (address: UInt) => {
-          address >= ioStartAddr && address <= ioEndAddr
+        BYPASS_TRANSLATION := !requireMmuLockup
+        WAYS_OH       := oh
+        (WAYS_PHYSICAL, entries.map(_.physicalAddressFrom(ps.preAddress))).zipped.foreach(_ := _)
+      }
+      ps.rsp.pipelineLock.release()
+    }
+
+
+    val refill = new StateMachine{
+      val IDLE, INIT = new State
+      val CMD, RSP = List.fill(spec.levels.size)(new State)
+
+      val busy = !isActive(IDLE)
+
+      val portOhReg = Reg(Bits(ports.size bits))
+      when(busy){
+        (ports, portOhReg.asBools).zipped.foreach(_.storage.refillOngoing setWhen(_))
+      }
+
+      val virtual = Reg(UInt(VIRTUAL_EXT_WIDTH bits))
+
+      val portsRequests = ports.map(_.ctrl.askRefill).asBits()
+      val portsRequest  = portsRequests.orR
+      val portsOh       = OHMasking.first(portsRequests)
+      val portsAddress  = OhMux.or(RegNext(portsOh), ports.map(e => RegNext(e.ctrl.askRefillAddress)))
+
+      val cacheRefill = Reg(Bits(setup.cache.refillCount bits)) init(0)
+      val cacheRefillAny = Reg(Bool()) init(False)
+
+      val cacheRefillSet = cacheRefill.getZero
+      val cacheRefillAnySet = False
+      cacheRefill :=    (cacheRefill | cacheRefillSet) & ~setup.cache.refillCompletions
+      cacheRefillAny := (cacheRefillAny | cacheRefillAnySet) & !setup.cache.refillCompletions.orR
+
+      setEntry(IDLE)
+
+      IDLE whenIsActive {
+        portOhReg := portsOh
+        when(portsRequest) {
+          goto(INIT)
+        }
+      }
+
+      INIT whenIsActive{
+        virtual := portsAddress
+        load.address := (satp.ppn @@ spec.levels.last.vpn(portsAddress) @@ U(0, log2Up(spec.entryBytes) bits)).resized //It relax timings to do it there instead than in IDLE
+        goto(CMD(spec.levels.size - 1))
+      }
+
+      val doWake = isActive(IDLE)
+      portSpecs.foreach(_.rsp.wake := doWake)
+
+      val load = new Area{
+        val address = Reg(UInt(PHYSICAL_WIDTH bits))
+
+        def cmd = setup.cacheLoad.cmd
+        val rspUnbuffered = setup.cacheLoad.rsp
+        val rsp = rspUnbuffered.stage()
+        val readed = rsp.data.subdivideIn(spec.entryBytes*8 bits).read((address >> log2Up(spec.entryBytes)).resized)
+
+        when(rspUnbuffered.valid && rspUnbuffered.redo) {
+          cacheRefillSet    := rspUnbuffered.refillSlot
+          cacheRefillAnySet := rspUnbuffered.refillSlotAny
         }
 
-        if(ioRange != null) 
-          port.bus.rsp.isIoAccess := ioRange(port.bus.rsp.physicalAddress)
-        else
-          port.bus.rsp.isIoAccess := externalIoRange(port.bus.rsp.physicalAddress)
+        cmd.valid             := False
+        cmd.virtual           := address.resized
+        cmd.size              := U(log2Up(spec.entryBytes))
+        cmd.redoOnDataHazard  := True
+        cmd.unlocked          := False
+        cmd.unique          := False
 
+        setup.cacheLoad.translated.physical := address
+        setup.cacheLoad.translated.abord    := False
 
-        port.bus.rsp.bypassTranslation := !requireMmuLockup
-        for(wayId <- 0 until port.args.portTlbSize){
-          port.bus.rsp.ways(wayId).sel := cacheHits(wayId)
-          port.bus.rsp.ways(wayId).physical := cache(wayId).physicalAddress(1) @@ (cache(wayId).superPage ? port.bus.cmd.last.virtualAddress(21 downto 12) | cache(wayId).physicalAddress(0)) @@ port.bus.cmd.last.virtualAddress(11 downto 0)
-        }
+        setup.cacheLoad.cancels := 0
 
-        // Avoid keeping any invalid line in the cache after an exception.
-        // https://github.com/riscv/riscv-linux/blob/8fe28cb58bcb235034b64cbbb7550a8a43fd88be/arch/riscv/include/asm/pgtable.h#L276
-        when(service(classOf[IContextSwitching]).isContextSwitching) {
-          for (line <- cache) {
-            when(line.exception) {
-              line.valid := False
+        val flags = readed.resized.as(MmuEntryFlags())
+        val leaf = flags.R || flags.X
+        val exception = !flags.V || (!flags.R && flags.W) || rsp.fault || (!leaf && (flags.D | flags.A | flags.U))
+        val levelToPhysicalAddress = List.fill(spec.levels.size)(UInt(spec.physicalWidth bits))
+        val levelException = List.fill(spec.levels.size)(False)
+        val nextLevelBase = U(0, PHYSICAL_WIDTH bits)
+        for((level, id) <- spec.levels.zipWithIndex) {
+          nextLevelBase(physCap(level.physicalRange)) := readed(level.entryRange).asUInt.resized
+          levelToPhysicalAddress(id) := 0
+          for((e, eId) <- spec.levels.zipWithIndex){
+            if(eId < id) {
+              levelException(id) setWhen(readed(e.entryRange) =/= 0)
+              levelToPhysicalAddress(id)(e.physicalRange) := e.vpn(virtual)
+            } else {
+              levelToPhysicalAddress(id)(e.physicalRange) := readed(e.entryRange).asUInt
             }
           }
         }
       }
 
-      val shared = new Area {
-        val State = new SpinalEnum{
-          val IDLE, L1_CMD, L1_RSP, L0_CMD, L0_RSP = newElement()
+
+      val fetch = for((level, levelId) <- spec.levels.zipWithIndex) yield new Area{
+        def doneLogic() : Unit = {
+          for(storage <- storages){
+            val storageLevelId = storage.self.p.levels.filter(_.id <= levelId).map(_.id).max
+            val storageLevel = storage.sl.find(_.slp.id == storageLevelId).get
+            val specLevel = storageLevel.level
+
+            val sel = (portOhReg.asBools, ports).zipped.toList.filter(_._2.storage == storage).map(_._1).orR
+            storageLevel.write.mask                 := UIntToOh(storageLevel.allocId).andMask(sel)
+            storageLevel.write.address              := virtual(storageLevel.lineRange)
+            storageLevel.write.data.valid           := True
+            storageLevel.write.data.pageFault       := load.exception || load.levelException(levelId) || !load.flags.A
+            storageLevel.write.data.accessFault     := !storageLevel.write.data.pageFault && load.levelToPhysicalAddress(levelId).drop(physicalWidth) =/= 0
+            storageLevel.write.data.virtualAddress  := virtual(specLevel.virtualOffset + log2Up(storageLevel.slp.depth), widthOf(storageLevel.write.data.virtualAddress) bits)
+            storageLevel.write.data.physicalAddress := (load.levelToPhysicalAddress(levelId) >> specLevel.virtualOffset).resized
+            storageLevel.write.data.allowRead       := load.flags.R
+            storageLevel.write.data.allowWrite      := load.flags.W && load.flags.D
+            storageLevel.write.data.allowExecute    := load.flags.X
+            storageLevel.write.data.allowUser       := load.flags.U
+            storageLevel.allocId.increment()
+          }
+
+          goto(IDLE)
         }
-        val state = RegInit(State.IDLE)
-        val vpn = Reg(Vec(UInt(10 bits), UInt(10 bits)))
-        val portSortedOh = Reg(Bits(portsInfo.length bits))
-        case class PTE() extends Bundle {
-          val V, R, W ,X, U, G, A, D = Bool()
-          val RSW = Bits(2 bits)
-          val PPN0 = UInt(10 bits)
-          val PPN1 = UInt(12 bits)
-        }
 
-        val dBusRspStaged = dBusAccess.rsp.stage()
-        val dBusRsp = new Area{
-          val pte = PTE()
-          pte.assignFromBits(dBusRspStaged.data)
-          val exception = !pte.V || (!pte.R && pte.W) || dBusRspStaged.error
-          val leaf = pte.R || pte.X
-        }
-
-        val pteBuffer = RegNextWhen(dBusRsp.pte, dBusRspStaged.valid && !dBusRspStaged.redo)
-
-        dBusAccess.cmd.valid := False
-        dBusAccess.cmd.write := False
-        dBusAccess.cmd.size := 2
-        dBusAccess.cmd.address.assignDontCare()
-        dBusAccess.cmd.data.assignDontCare()
-        dBusAccess.cmd.writeMask.assignDontCare()
-
-        val refills = OHMasking.last(B(ports.map(port => port.handle.bus.cmd.last.isValid && port.requireMmuLockup && !port.dirty && !port.cacheHit)))
-        switch(state){
-          is(State.IDLE){
-            when(refills.orR){
-              portSortedOh := refills
-              state := State.L1_CMD
-              val address = MuxOH(refills, sortedPortsInfo.map(_.bus.cmd.last.virtualAddress))
-              vpn(1) := address(31 downto 22)
-              vpn(0) := address(21 downto 12)
-            }
-//            for(port <- portsInfo.sortBy(_.priority)){
-//              when(port.bus.cmd.isValid && port.bus.rsp.refilling){
-//                vpn(1) := port.bus.cmd.virtualAddress(31 downto 22)
-//                vpn(0) := port.bus.cmd.virtualAddress(21 downto 12)
-//                portId := port.id
-//                state := State.L1_CMD
-//              }
-//            }
-          }
-          is(State.L1_CMD){
-            dBusAccess.cmd.valid := True
-            // RV spec allows for 34-bit phys address in Sv32 mode; we only implement 32 bits and ignore the top 2 bits of satp.
-            dBusAccess.cmd.address := csr.satp.ppn(19 downto 0) @@ vpn(1) @@ U"00"
-            when(dBusAccess.cmd.ready){
-              state := State.L1_RSP
-            }
-          }
-          is(State.L1_RSP){
-            when(dBusRspStaged.valid){
-              state := State.L0_CMD
-              when(dBusRsp.leaf || dBusRsp.exception){
-                state := State.IDLE
-              }
-              when(dBusRspStaged.redo){
-                state := State.L1_CMD
-              }
-            }
-          }
-          is(State.L0_CMD){
-            dBusAccess.cmd.valid := True
-            dBusAccess.cmd.address := pteBuffer.PPN1(9 downto 0) @@ pteBuffer.PPN0 @@ vpn(0) @@ U"00"
-            when(dBusAccess.cmd.ready){
-              state := State.L0_RSP
-            }
-          }
-          is(State.L0_RSP){
-            when(dBusRspStaged.valid) {
-              state := State.IDLE
-              when(dBusRspStaged.redo){
-                state := State.L0_CMD
-              }
+        CMD(levelId) whenIsActive{
+          when(cacheRefill === 0 && cacheRefillAny === False) {
+            load.cmd.valid := True
+            when(load.cmd.ready) {
+              goto(RSP(levelId))
             }
           }
         }
 
-        for((port, id) <- sortedPortsInfo.zipWithIndex) {
-          port.bus.busy := state =/= State.IDLE && portSortedOh(id)
-        }
-
-        when(dBusRspStaged.valid && !dBusRspStaged.redo && (dBusRsp.leaf || dBusRsp.exception)){
-          for((port, id) <- ports.zipWithIndex) {
-            when(portSortedOh(id)) {
-              port.entryToReplace.increment()
-              if(port.handle.args.earlyRequireMmuLockup) {
-                port.dirty := True
-              } //Avoid having non coherent TLB lookup
-              for ((line, lineId) <- port.cache.zipWithIndex) {
-                when(port.entryToReplace === lineId){
-                  val superPage = state === State.L1_RSP
-                  line.valid := True
-                  line.exception := dBusRsp.exception || (superPage && dBusRsp.pte.PPN0 =/= 0) || !dBusRsp.pte.A
-                  line.virtualAddress := vpn
-                  line.physicalAddress := Vec(dBusRsp.pte.PPN0, dBusRsp.pte.PPN1(9 downto 0))
-                  line.allowRead := dBusRsp.pte.R
-                  line.allowWrite := dBusRsp.pte.W && dBusRsp.pte.D
-                  line.allowExecute := dBusRsp.pte.X
-                  line.allowUser := dBusRsp.pte.U
-                  line.superPage := state === State.L1_RSP
+        RSP(levelId) whenIsActive{
+          if(levelId == 0) load.exception setWhen(!load.leaf)
+          when(load.rsp.valid){
+            when(load.rsp.redo){
+              goto(CMD(levelId))
+            } otherwise {
+              levelId match {
+                case 0 => doneLogic
+                case _ => {
+                  when(load.leaf || load.exception) {
+                    doneLogic
+                  } otherwise {
+                    val targetLevelId = levelId - 1
+                    val targetLevel = spec.levels(targetLevelId)
+                    load.address := load.nextLevelBase
+                    load.address(log2Up(spec.entryBytes), targetLevel.physicalWidth bits) := targetLevel.vpn(virtual)
+                    goto(CMD(targetLevelId))
+                  }
                 }
               }
             }
@@ -330,18 +488,43 @@ class MmuPlugin(var ioRange : UInt => Bool,
       }
     }
 
-    val fenceStage = execute
-
-    //Both SFENCE_VMA and SATP reschedule the next instruction in the CsrPlugin itself with one extra cycle to ensure side effect propagation.
-    fenceStage plug new Area{
-      import fenceStage._
-      when(arbitration.isValid && arbitration.isFiring && input(IS_SFENCE_VMA2)){
-        for(port <- core.ports; line <- port.cache) line.valid := False
+    val invalidate = new Area{
+      val requested = RegInit(True) setWhen(setup.invalidatePort.cmd.valid)
+      val canStart = True
+      val depthMax = storageSpecs.map(_.p.levels.map(_.depth).max).max
+      val counter = Reg(UInt(log2Up(depthMax)+1 bits)) init(0)
+      val done = counter.msb
+      when(!done){
+        refill.portsRequest := False
+        counter := counter + 1
+        for(storage <- storages;
+            sl <- storage.sl){
+          sl.write.mask := (default -> true)
+          sl.write.address := counter.resized
+          sl.write.data.valid := False
+        }
       }
 
-      csrService.onWrite(CSR.SATP){
-        for(port <- core.ports; line <- port.cache) line.valid := False
+      fetch.getStage(0).haltIt(!done || requested)
+
+      when(requested && canStart){
+        counter := 0
+        requested := False
+        refill.portsRequest := False
       }
+
+      when(refill.busy || getServicesOf[PostCommitBusy].map(_.postCommitBusy).orR){
+        canStart := False
+      }
+
+      setup.invalidatePort.rsp.valid setWhen(done.rise(False))
     }
+    fetch.release()
+    core.fiber.hardFork(refill.build())
   }
+}
+
+
+case class MmuEntryFlags() extends Bundle{
+  val V, R, W ,X, U, G, A, D = Bool()
 }
