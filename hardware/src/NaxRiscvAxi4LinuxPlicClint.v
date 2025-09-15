@@ -5,6 +5,7 @@
 `timescale 1ns/1ps
 
 module NaxRiscvAxi4LinuxPlicClint (
+  input  wire [31:0]   externalResetVector,
   input  wire          clint_awvalid,
   output wire          clint_awready,
   input  wire [15:0]   clint_awaddr,
@@ -2963,7 +2964,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [5:0]    PcPlugin_logic_jump_oh;
   (* keep , syn_keep *) wire       [31:0]   PcPlugin_logic_jump_target /* synthesis syn_keep = 1 */ ;
   wire                _zz_PcPlugin_logic_jump_target_1;
-  wire                when_PcPlugin_l55;
+  wire                when_PcPlugin_l57;
   wire                PcPlugin_logic_jump_pcLoad_valid;
   wire       [31:0]   PcPlugin_logic_jump_pcLoad_payload_pc;
   wire                FetchCachePlugin_logic_translationPort_wake;
@@ -5488,11 +5489,11 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                PcPlugin_logic_fetchPc_corrected;
   wire                PcPlugin_logic_fetchPc_pcRegPropagate;
   reg                 PcPlugin_logic_fetchPc_inc;
-  wire                when_PcPlugin_l82;
-  wire                when_PcPlugin_l82_1;
+  wire                when_PcPlugin_l84;
+  wire                when_PcPlugin_l84_1;
   reg        [31:0]   PcPlugin_logic_fetchPc_pc;
   reg                 PcPlugin_logic_fetchPc_flushed;
-  wire                when_PcPlugin_l98;
+  wire                when_PcPlugin_l100;
   wire                PcPlugin_logic_fetchPc_fetcherHalt;
   wire                fetchLastFire /* verilator public */ ;
   wire       [11:0]   fetchLastId /* verilator public */ ;
@@ -8352,7 +8353,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     PcPlugin_logic_jump_target_1 = PcPlugin_logic_jump_target;
-    if(when_PcPlugin_l55) begin
+    if(when_PcPlugin_l57) begin
       PcPlugin_logic_jump_target_1 = (_zz_PcPlugin_logic_jump_target_1 ? BtbPlugin_setup_btbJump_payload_pc : 32'h00000000);
     end
   end
@@ -8765,7 +8766,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign PcPlugin_logic_jump_oh = _zz_PcPlugin_logic_jump_oh_6;
   assign PcPlugin_logic_jump_target = ((((PcPlugin_logic_jump_oh[0] ? PrivilegedPlugin_setup_jump_payload_pc : 32'h00000000) | (PcPlugin_logic_jump_oh[1] ? CommitPlugin_setup_jump_payload_pc : 32'h00000000)) | ((PcPlugin_logic_jump_oh[2] ? DecoderPredictionPlugin_setup_decodeJump_payload_pc : 32'h00000000) | (PcPlugin_logic_jump_oh[3] ? AlignerPlugin_setup_sequenceJump_payload_pc : 32'h00000000))) | (PcPlugin_logic_jump_oh[4] ? FetchCachePlugin_setup_redoJump_payload_pc : 32'h00000000));
   assign _zz_PcPlugin_logic_jump_target_1 = PcPlugin_logic_jump_oh[5];
-  assign when_PcPlugin_l55 = (|_zz_PcPlugin_logic_jump_target_1);
+  assign when_PcPlugin_l57 = (|_zz_PcPlugin_logic_jump_target_1);
   assign PcPlugin_logic_jump_pcLoad_valid = (|{PrivilegedPlugin_setup_jump_valid,{CommitPlugin_setup_jump_valid,{BtbPlugin_setup_btbJump_valid,{DecoderPredictionPlugin_setup_decodeJump_valid,{AlignerPlugin_setup_sequenceJump_valid,FetchCachePlugin_setup_redoJump_valid}}}}});
   assign PcPlugin_logic_jump_pcLoad_payload_pc = PcPlugin_logic_jump_target_1;
   assign FetchCachePlugin_logic_banks_0_read_rsp = FetchCachePlugin_logic_banks_0_mem_spinal_port1;
@@ -20212,8 +20213,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign PcPlugin_logic_fetchPc_output_fire = (PcPlugin_logic_fetchPc_output_valid && PcPlugin_logic_fetchPc_output_ready);
   assign PcPlugin_logic_fetchPc_corrected = (PcPlugin_logic_fetchPc_correction || PcPlugin_logic_fetchPc_correctionReg);
   assign PcPlugin_logic_fetchPc_pcRegPropagate = 1'b0;
-  assign when_PcPlugin_l82 = (PcPlugin_logic_fetchPc_correction || PcPlugin_logic_fetchPc_pcRegPropagate);
-  assign when_PcPlugin_l82_1 = ((! PcPlugin_logic_fetchPc_output_valid) && PcPlugin_logic_fetchPc_output_ready);
+  assign when_PcPlugin_l84 = (PcPlugin_logic_fetchPc_correction || PcPlugin_logic_fetchPc_pcRegPropagate);
+  assign when_PcPlugin_l84_1 = ((! PcPlugin_logic_fetchPc_output_valid) && PcPlugin_logic_fetchPc_output_ready);
   always @(*) begin
     PcPlugin_logic_fetchPc_pc = (PcPlugin_logic_fetchPc_pcReg + _zz_PcPlugin_logic_fetchPc_pc);
     if(PcPlugin_logic_fetchPc_inc) begin
@@ -20233,7 +20234,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign when_PcPlugin_l98 = (PcPlugin_logic_init_booted && ((PcPlugin_logic_fetchPc_output_ready || PcPlugin_logic_fetchPc_correction) || PcPlugin_logic_fetchPc_pcRegPropagate));
+  assign when_PcPlugin_l100 = (PcPlugin_logic_init_booted && ((PcPlugin_logic_fetchPc_output_ready || PcPlugin_logic_fetchPc_correction) || PcPlugin_logic_fetchPc_pcRegPropagate));
   assign PcPlugin_logic_fetchPc_fetcherHalt = 1'b0;
   assign PcPlugin_logic_fetchPc_output_valid = ((! PcPlugin_logic_fetchPc_fetcherHalt) && PcPlugin_logic_init_booted);
   assign PcPlugin_logic_fetchPc_output_payload = PcPlugin_logic_fetchPc_pc;
@@ -20815,7 +20816,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       FrontendPlugin_dispatch_valid <= 1'b0;
       FrontendPlugin_serialized_valid <= 1'b0;
       PcPlugin_logic_init_counter <= 7'h00;
-      PcPlugin_logic_fetchPc_pcReg <= 32'h80000000;
+      PcPlugin_logic_fetchPc_pcReg <= externalResetVector;
       PcPlugin_logic_fetchPc_correctionReg <= 1'b0;
       PcPlugin_logic_fetchPc_inc <= 1'b0;
       FetchPlugin_stages_1_valid <= 1'b0;
@@ -21735,16 +21736,16 @@ module NaxRiscvAxi4LinuxPlicClint (
       if(PcPlugin_logic_fetchPc_output_fire) begin
         PcPlugin_logic_fetchPc_correctionReg <= 1'b0;
       end
-      if(when_PcPlugin_l82) begin
+      if(when_PcPlugin_l84) begin
         PcPlugin_logic_fetchPc_inc <= 1'b0;
       end
       if(PcPlugin_logic_fetchPc_output_fire) begin
         PcPlugin_logic_fetchPc_inc <= 1'b1;
       end
-      if(when_PcPlugin_l82_1) begin
+      if(when_PcPlugin_l84_1) begin
         PcPlugin_logic_fetchPc_inc <= 1'b0;
       end
-      if(when_PcPlugin_l98) begin
+      if(when_PcPlugin_l100) begin
         PcPlugin_logic_fetchPc_pcReg <= PcPlugin_logic_fetchPc_pc;
       end
       if(when_Connection_l54) begin

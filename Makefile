@@ -18,7 +18,7 @@ JDK_HOME := $(shell dirname $$(dirname $$(which java)))
 naxriscv:
 	#mkdir -p $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/platform/asic
 	cp $(NAX_HARDWARE_DIR)/naxriscv_core/NaxRiscvAxi4LinuxPlicClint.scala $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/platform/asic/
-	#cp $(NAX_HARDWARE_DIR)/naxriscv_core/MmuPlugin.scala $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/plugin/
+	cp $(NAX_HARDWARE_DIR)/naxriscv_core/PcPlugin.scala $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/fetch/
 	# (Re-)try to apply these patches: https://github.com/SpinalHDL/NaxRiscv/issues/140#issuecomment-2725576402
 	-make -C submodules/NaxRiscv install-core
 	# Run sbt to build CPU and copy generated verilog to this repo

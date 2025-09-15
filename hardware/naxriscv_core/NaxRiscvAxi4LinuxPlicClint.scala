@@ -23,20 +23,6 @@ import spinal.lib.bus.amba4.axilite.AxiLite4SpecRenamer
 import naxriscv.misc.PrivilegedPlugin
 import naxriscv.fetch.PcPlugin
 
-class CustomPcPlugin(resetVector : BigInt = 0x80000000l, fetchPcIncAt : Int = 1) extends PcPlugin(resetVector, fetchPcIncAt){
-  // Include input port for configurable reset vector
-  var externalResetVector: UInt = null
-  val extendedSetup = create early new Area {
-    if(resetVector == null) {
-      externalResetVector = in(UInt(32 bits).setName("externalResetVector"))
-    }
-  }
-  // Connect external reset vector to pcReg's initial value
-  rework {
-    logic.fetchPc.pcReg.init(if(resetVector != null) resetVector else externalResetVector)
-  }
-}
-
 object NaxRiscvAxi4LinuxPlicClint extends App{
   var ramBlocks = "inferred"
   var regFileFakeRatio = 1
@@ -58,6 +44,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
   LutInputs.set(4)
   def plugins = {
     val l = Config.plugins(
+      resetVector = null, // Setting to null will cause externalResetVector to be an input port
       asic = true,
       withRfLatchRam = withRfLatchRam,
       withRdTime = false,
@@ -89,12 +76,6 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
     l.foreach{
       case p : EmbeddedJtagPlugin => p.debugCd.load(ClockDomain.current.copy(reset = Bool().setName("debug_reset")))
       case _ =>
-    }
-
-    // Replace PcPlugin instance with CustomPcPlugin
-    val idx = l.indexWhere(_.isInstanceOf[PcPlugin])
-    if(idx >= 0) {
-      l.update(idx, new CustomPcPlugin(resetVector = null)) // Passing null will cause it to generate 'externalResetVector' input port
     }
 
     ramBlocks match {
@@ -161,16 +142,6 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
           if (plugin.p.withSupervisor) plugin.io.int.supervisor.external  setAsDirectionLess() := cpu.plicCtrl.io.targets(1) // supervisor external interrupts from PLIC
           plugin.io.rdtime  setAsDirectionLess() := cpu.clintCtrl.io.time // time register from CLINT
         }
-        // Add port for configurable reset vector
-        // case plugin: PcPlugin => {
-        //   // Create externalResetVector input port when CPU's 'resetVector' parameter is null
-        //   var externalResetVector : UInt = null
-        //   if(plugin.resetVector == null)
-        //     externalResetVector = in(UInt(32 bits).setName("externalResetVector"))
-
-        //   // Modify init of pcReg to support externalResetVector
-        //   plugin.logic.fetchPc.pcReg.init(if(plugin.resetVector != null) plugin.resetVector else externalResetVector)
-        // }
         // Add port for configurable (uncached) IO memory range
         //case plugin: MmuPlugin => {
         //}
