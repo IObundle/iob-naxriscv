@@ -21,6 +21,21 @@ import spinal.lib.misc.plic.AxiLite4Plic
 import spinal.lib.bus.amba4.axi.{Axi4ReadOnly, Axi4SpecRenamer}
 import spinal.lib.bus.amba4.axilite.AxiLite4SpecRenamer
 import naxriscv.misc.PrivilegedPlugin
+import naxriscv.fetch.PcPlugin
+
+class CustomPcPlugin(resetVector : BigInt = 0x80000000l, fetchPcIncAt : Int = 1) extends PcPlugin(resetVector, fetchPcIncAt){
+  // Include input port for configurable reset vector
+  var externalResetVector: UInt = null
+  val extendedSetup = create early new Area {
+    if(resetVector == null) {
+      externalResetVector = in(UInt(32 bits).setName("externalResetVector"))
+    }
+  }
+  // Connect external reset vector to pcReg's initial value
+  rework {
+    logic.fetchPc.pcReg.init(if(resetVector != null) resetVector else externalResetVector)
+  }
+}
 
 object NaxRiscvAxi4LinuxPlicClint extends App{
   var ramBlocks = "inferred"
@@ -76,6 +91,12 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
       case _ =>
     }
 
+    // Replace PcPlugin instance with CustomPcPlugin
+    val idx = l.indexWhere(_.isInstanceOf[PcPlugin])
+    if(idx >= 0) {
+      l.update(idx, new CustomPcPlugin(resetVector = null)) // Passing null will cause it to generate 'externalResetVector' input port
+    }
+
     ramBlocks match {
       case "inferred" => l.foreach {
         case p: FetchCachePlugin => p.wayCount = 1; p.cacheSize = 256; p.memDataWidth = 64
@@ -115,6 +136,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
     // CPU modifications to be an Avalon one
     cpu.rework {
       for (plugin <- cpu.plugins) plugin match {
+        // Convert IBus to Axi4
         case plugin: FetchCachePlugin => {
           val native = plugin.mem.setAsDirectionLess //Unset IO properties of mem bus
           val axi = master(native.resizer(32).toAxi4())
@@ -122,6 +144,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
               .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the ibus (used by QSysify)
           Axi4SpecRenamer(axi)
         }
+        // Convert DBus to Axi4
         case plugin: DataCachePlugin => {
           val native = plugin.mem.setAsDirectionLess //Unset IO properties of mem bus
           val axi = master(native.resizer(32).toAxi4())
@@ -129,6 +152,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
               .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the dbus (used by QSysify)
           Axi4SpecRenamer(axi)
         }
+        // Connect interrupt signals to PLIC and CLINT
         case plugin: PrivilegedPlugin => {
           // Interrupt connections based on NaxRiscvBmbGenerator.scala and CsrPlugin of VexRiscvAxi4LinuxPlicClint.scala 
           plugin.io.int.machine.external setAsDirectionLess() := cpu.plicCtrl.io.targets(0)       // external interrupts from PLIC
@@ -137,6 +161,19 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
           if (plugin.p.withSupervisor) plugin.io.int.supervisor.external  setAsDirectionLess() := cpu.plicCtrl.io.targets(1) // supervisor external interrupts from PLIC
           plugin.io.rdtime  setAsDirectionLess() := cpu.clintCtrl.io.time // time register from CLINT
         }
+        // Add port for configurable reset vector
+        // case plugin: PcPlugin => {
+        //   // Create externalResetVector input port when CPU's 'resetVector' parameter is null
+        //   var externalResetVector : UInt = null
+        //   if(plugin.resetVector == null)
+        //     externalResetVector = in(UInt(32 bits).setName("externalResetVector"))
+
+        //   // Modify init of pcReg to support externalResetVector
+        //   plugin.logic.fetchPc.pcReg.init(if(plugin.resetVector != null) plugin.resetVector else externalResetVector)
+        // }
+        // Add port for configurable (uncached) IO memory range
+        //case plugin: MmuPlugin => {
+        //}
         case _ =>
       }
     }
