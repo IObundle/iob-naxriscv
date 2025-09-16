@@ -59,16 +59,25 @@ module NaxRiscvAxi4LinuxPlicClint (
   input  wire [63:0]   iBusAxi_rdata,
   input  wire [1:0]    iBusAxi_rresp,
   input  wire          iBusAxi_rlast,
-  output wire          LsuPlugin_peripheralBus_cmd_valid /* verilator public */ ,
-  input  wire          LsuPlugin_peripheralBus_cmd_ready /* verilator public */ ,
-  output wire          LsuPlugin_peripheralBus_cmd_payload_write /* verilator public */ ,
-  output wire [31:0]   LsuPlugin_peripheralBus_cmd_payload_address /* verilator public */ ,
-  output wire [31:0]   LsuPlugin_peripheralBus_cmd_payload_data /* verilator public */ ,
-  output wire [3:0]    LsuPlugin_peripheralBus_cmd_payload_mask /* verilator public */ ,
-  output wire [1:0]    LsuPlugin_peripheralBus_cmd_payload_size /* verilator public */ ,
-  input  wire          LsuPlugin_peripheralBus_rsp_valid /* verilator public */ ,
-  input  wire          LsuPlugin_peripheralBus_rsp_payload_error /* verilator public */ ,
-  input  wire [31:0]   LsuPlugin_peripheralBus_rsp_payload_data /* verilator public */ ,
+  output wire          pBusAxi_awvalid,
+  input  wire          pBusAxi_awready,
+  output wire [31:0]   pBusAxi_awaddr,
+  output wire [2:0]    pBusAxi_awprot,
+  output wire          pBusAxi_wvalid,
+  input  wire          pBusAxi_wready,
+  output wire [31:0]   pBusAxi_wdata,
+  output wire [3:0]    pBusAxi_wstrb,
+  input  wire          pBusAxi_bvalid,
+  output wire          pBusAxi_bready,
+  input  wire [1:0]    pBusAxi_bresp,
+  output wire          pBusAxi_arvalid,
+  input  wire          pBusAxi_arready,
+  output wire [31:0]   pBusAxi_araddr,
+  output wire [2:0]    pBusAxi_arprot,
+  input  wire          pBusAxi_rvalid,
+  output wire          pBusAxi_rready,
+  input  wire [31:0]   pBusAxi_rdata,
+  input  wire [1:0]    pBusAxi_rresp,
   output wire          dBusAxi_awvalid,
   input  wire          dBusAxi_awready,
   output wire [31:0]   dBusAxi_awaddr,
@@ -834,6 +843,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [0:0]    _zz_EU0_BranchPlugin_logic_process_slices_1;
   wire       [31:0]   _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE;
   wire       [3:0]    _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1;
+  wire       [31:0]   _zz_LsuPlugin_peripheralBus_toAxiLite4_addr;
   reg        [31:0]   _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_4;
   wire       [2:0]    _zz_BranchContextPlugin_logic_onCommit_commitedNext;
   reg        [0:0]    _zz_BranchContextPlugin_logic_onCommit_commitedNext_1;
@@ -3174,6 +3184,16 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 GSharePlugin_logic_onLearn_overflow;
   wire                when_GSharePlugin_l123;
   wire                when_GSharePlugin_l123_1;
+  wire                LsuPlugin_peripheralBus_cmd_valid /* verilator public */ ;
+  reg                 LsuPlugin_peripheralBus_cmd_ready /* verilator public */ ;
+  wire                LsuPlugin_peripheralBus_cmd_payload_write /* verilator public */ ;
+  wire       [31:0]   LsuPlugin_peripheralBus_cmd_payload_address /* verilator public */ ;
+  wire       [31:0]   LsuPlugin_peripheralBus_cmd_payload_data /* verilator public */ ;
+  wire       [3:0]    LsuPlugin_peripheralBus_cmd_payload_mask /* verilator public */ ;
+  wire       [1:0]    LsuPlugin_peripheralBus_cmd_payload_size /* verilator public */ ;
+  wire                LsuPlugin_peripheralBus_rsp_valid /* verilator public */ ;
+  wire                LsuPlugin_peripheralBus_rsp_payload_error /* verilator public */ ;
+  wire       [31:0]   LsuPlugin_peripheralBus_rsp_payload_data /* verilator public */ ;
   wire       [1:0]    DataCachePlugin_logic_load_hits;
   wire                DataCachePlugin_logic_load_hit;
   wire       [1:0]    _zz_DataCachePlugin_logic_load_hits_bools_0;
@@ -3591,6 +3611,36 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                when_AguPlugin_l89;
   wire                EU0_CsrAccessPlugin_logic_wake_wakeRobsSel;
   wire                EU0_CsrAccessPlugin_logic_wake_wakeRegFileSel;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_a_valid;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_a_ready;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_a_payload_write;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_a_payload_address;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_a_payload_data;
+  wire       [3:0]    LsuPlugin_peripheralBus_toAxiLite4_a_payload_mask;
+  wire       [1:0]    LsuPlugin_peripheralBus_toAxiLite4_a_payload_size;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_wRaw_valid;
+  reg                 LsuPlugin_peripheralBus_toAxiLite4_wRaw_ready;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_write;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_address;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_data;
+  wire       [3:0]    LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_mask;
+  wire       [1:0]    LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_size;
+  reg                 LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0;
+  reg                 LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1;
+  wire                when_Stream_l1058;
+  wire                when_Stream_l1058_1;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_a_fire;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_wRaw_fire;
+  wire                when_Stream_l439;
+  reg                 LsuPlugin_peripheralBus_toAxiLite4_w_valid;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_w_ready;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_w_payload_write;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_w_payload_address;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_w_payload_data;
+  wire       [3:0]    LsuPlugin_peripheralBus_toAxiLite4_w_payload_mask;
+  wire       [1:0]    LsuPlugin_peripheralBus_toAxiLite4_w_payload_size;
+  reg                 LsuPlugin_peripheralBus_toAxiLite4_writeSel;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_addr;
   wire                DataCachePlugin_mem_resizer_ret_read_cmd_valid;
   wire                DataCachePlugin_mem_resizer_ret_read_cmd_ready;
   wire       [0:0]    DataCachePlugin_mem_resizer_ret_read_cmd_payload_id;
@@ -3666,12 +3716,12 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [0:0]    DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_id;
   reg                 DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_0;
   reg                 DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_1;
-  wire                when_Stream_l1058;
-  wire                when_Stream_l1058_1;
+  wire                when_Stream_l1058_2;
+  wire                when_Stream_l1058_3;
   wire                DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_fire;
   wire                DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_fire;
   reg                 DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_first;
-  wire                when_Stream_l439;
+  wire                when_Stream_l439_1;
   reg                 DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_valid;
   reg                 DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_ready;
   wire                DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_last;
@@ -6001,6 +6051,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_EU0_BranchPlugin_logic_process_slices = {1'd0, _zz_EU0_BranchPlugin_logic_process_slices_1};
   assign _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1 = ({2'd0,EU0_BranchPlugin_logic_process_slices} <<< 2'd2);
   assign _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE = {28'd0, _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1};
+  assign _zz_LsuPlugin_peripheralBus_toAxiLite4_addr = ({2'd0,LsuPlugin_peripheralBus_toAxiLite4_a_payload_address[31 : 2]} <<< 2'd2);
   assign _zz_BranchContextPlugin_logic_onCommit_commitedNext = {2'd0, _zz_BranchContextPlugin_logic_onCommit_commitedNext_1};
   assign _zz_HistoryPlugin_logic_onCommit_valueNext_1 = {HistoryPlugin_logic_onCommit_valueNext,HistoryPlugin_logic_onCommit_isTaken_0};
   assign _zz_HistoryPlugin_logic_update_pushes_0_stateNext_1 = {HistoryPlugin_logic_update_pushes_0_stateNext,BtbPlugin_setup_historyPush_taken[0]};
@@ -10826,6 +10877,69 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign EU0_CsrAccessPlugin_setup_intFormatPort_valid = EU0_ExecutionUnitBase_pipeline_execute_2_CsrAccessPlugin_SEL;
   assign EU0_CsrAccessPlugin_logic_wake_wakeRobsSel = EU0_ExecutionUnitBase_pipeline_execute_2_CsrAccessPlugin_SEL;
   assign EU0_CsrAccessPlugin_logic_wake_wakeRegFileSel = EU0_ExecutionUnitBase_pipeline_execute_2_CsrAccessPlugin_SEL;
+  always @(*) begin
+    LsuPlugin_peripheralBus_cmd_ready = 1'b1;
+    if(when_Stream_l1058) begin
+      LsuPlugin_peripheralBus_cmd_ready = 1'b0;
+    end
+    if(when_Stream_l1058_1) begin
+      LsuPlugin_peripheralBus_cmd_ready = 1'b0;
+    end
+  end
+
+  assign when_Stream_l1058 = ((! LsuPlugin_peripheralBus_toAxiLite4_a_ready) && LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0);
+  assign when_Stream_l1058_1 = ((! LsuPlugin_peripheralBus_toAxiLite4_wRaw_ready) && LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1);
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_valid = (LsuPlugin_peripheralBus_cmd_valid && LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0);
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_payload_write = LsuPlugin_peripheralBus_cmd_payload_write;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_payload_address = LsuPlugin_peripheralBus_cmd_payload_address;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_payload_data = LsuPlugin_peripheralBus_cmd_payload_data;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_payload_mask = LsuPlugin_peripheralBus_cmd_payload_mask;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_payload_size = LsuPlugin_peripheralBus_cmd_payload_size;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_fire = (LsuPlugin_peripheralBus_toAxiLite4_a_valid && LsuPlugin_peripheralBus_toAxiLite4_a_ready);
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_valid = (LsuPlugin_peripheralBus_cmd_valid && LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1);
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_write = LsuPlugin_peripheralBus_cmd_payload_write;
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_address = LsuPlugin_peripheralBus_cmd_payload_address;
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_data = LsuPlugin_peripheralBus_cmd_payload_data;
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_mask = LsuPlugin_peripheralBus_cmd_payload_mask;
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_size = LsuPlugin_peripheralBus_cmd_payload_size;
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_fire = (LsuPlugin_peripheralBus_toAxiLite4_wRaw_valid && LsuPlugin_peripheralBus_toAxiLite4_wRaw_ready);
+  assign when_Stream_l439 = (! LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_write);
+  always @(*) begin
+    LsuPlugin_peripheralBus_toAxiLite4_w_valid = LsuPlugin_peripheralBus_toAxiLite4_wRaw_valid;
+    if(when_Stream_l439) begin
+      LsuPlugin_peripheralBus_toAxiLite4_w_valid = 1'b0;
+    end
+  end
+
+  always @(*) begin
+    LsuPlugin_peripheralBus_toAxiLite4_wRaw_ready = LsuPlugin_peripheralBus_toAxiLite4_w_ready;
+    if(when_Stream_l439) begin
+      LsuPlugin_peripheralBus_toAxiLite4_wRaw_ready = 1'b1;
+    end
+  end
+
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_write = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_write;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_address = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_address;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_data = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_data;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_mask = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_mask;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_size = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_size;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_ready = (LsuPlugin_peripheralBus_toAxiLite4_a_payload_write ? pBusAxi_awready : pBusAxi_arready);
+  assign LsuPlugin_peripheralBus_toAxiLite4_addr = _zz_LsuPlugin_peripheralBus_toAxiLite4_addr;
+  assign pBusAxi_arvalid = (LsuPlugin_peripheralBus_toAxiLite4_a_valid && (! LsuPlugin_peripheralBus_toAxiLite4_a_payload_write));
+  assign pBusAxi_araddr = LsuPlugin_peripheralBus_toAxiLite4_addr;
+  assign pBusAxi_arprot = ((3'b000 | 3'b000) | 3'b000);
+  assign pBusAxi_awvalid = (LsuPlugin_peripheralBus_toAxiLite4_a_valid && LsuPlugin_peripheralBus_toAxiLite4_a_payload_write);
+  assign pBusAxi_awaddr = LsuPlugin_peripheralBus_toAxiLite4_addr;
+  assign pBusAxi_awprot = ((3'b000 | 3'b000) | 3'b000);
+  assign pBusAxi_wvalid = LsuPlugin_peripheralBus_toAxiLite4_w_valid;
+  assign pBusAxi_wdata = LsuPlugin_peripheralBus_toAxiLite4_w_payload_data;
+  assign pBusAxi_wstrb = LsuPlugin_peripheralBus_toAxiLite4_w_payload_mask;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_ready = pBusAxi_wready;
+  assign LsuPlugin_peripheralBus_rsp_valid = (pBusAxi_rvalid || pBusAxi_bvalid);
+  assign LsuPlugin_peripheralBus_rsp_payload_data = pBusAxi_rdata;
+  assign LsuPlugin_peripheralBus_rsp_payload_error = (! (LsuPlugin_peripheralBus_toAxiLite4_writeSel ? (pBusAxi_bresp == 2'b00) : (pBusAxi_rresp == 2'b00)));
+  assign pBusAxi_bready = 1'b1;
+  assign pBusAxi_rready = 1'b1;
   assign DataCachePlugin_mem_read_resizer_ret_cmd_valid = DataCachePlugin_mem_read_cmd_valid;
   assign DataCachePlugin_mem_read_cmd_ready = DataCachePlugin_mem_read_resizer_ret_cmd_ready;
   assign DataCachePlugin_mem_read_resizer_ret_cmd_payload_id = DataCachePlugin_mem_read_cmd_payload_id;
@@ -10923,16 +11037,16 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign dBusAxi_rready = 1'b1;
   always @(*) begin
     DataCachePlugin_mem_resizer_ret_write_cmd_ready = 1'b1;
-    if(when_Stream_l1058) begin
+    if(when_Stream_l1058_2) begin
       DataCachePlugin_mem_resizer_ret_write_cmd_ready = 1'b0;
     end
-    if(when_Stream_l1058_1) begin
+    if(when_Stream_l1058_3) begin
       DataCachePlugin_mem_resizer_ret_write_cmd_ready = 1'b0;
     end
   end
 
-  assign when_Stream_l1058 = ((! DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_ready) && DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_0);
-  assign when_Stream_l1058_1 = ((! DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_ready) && DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_1);
+  assign when_Stream_l1058_2 = ((! DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_ready) && DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_0);
+  assign when_Stream_l1058_3 = ((! DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_ready) && DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_1);
   assign DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_valid = (DataCachePlugin_mem_resizer_ret_write_cmd_valid && DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_0);
   assign DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_last = DataCachePlugin_mem_resizer_ret_write_cmd_payload_last;
   assign DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_fragment_address = DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_address;
@@ -10945,17 +11059,17 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_data = DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_data;
   assign DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_id = DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_id;
   assign DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_fire = (DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_valid && DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_ready);
-  assign when_Stream_l439 = (! DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_first);
+  assign when_Stream_l439_1 = (! DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_first);
   always @(*) begin
     DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_valid = DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_valid;
-    if(when_Stream_l439) begin
+    if(when_Stream_l439_1) begin
       DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_valid = 1'b0;
     end
   end
 
   always @(*) begin
     DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_ready = DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_ready;
-    if(when_Stream_l439) begin
+    if(when_Stream_l439_1) begin
       DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_ready = 1'b1;
     end
   end
@@ -20647,6 +20761,8 @@ module NaxRiscvAxi4LinuxPlicClint (
       PrivilegedPlugin_logic_rescheduleUnbuffered_rValid <= 1'b0;
       EU0_DivPlugin_logic_feed_cmdSent <= 1'b0;
       AguPlugin_logic_fired <= 1'b0;
+      LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0 <= 1'b1;
+      LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1 <= 1'b1;
       _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_2 <= 1'b0;
       _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_2 <= 1'b0;
       DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_0 <= 1'b1;
@@ -20943,6 +21059,16 @@ module NaxRiscvAxi4LinuxPlicClint (
       end
       if(when_AguPlugin_l89) begin
         AguPlugin_logic_fired <= 1'b0;
+      end
+      if(LsuPlugin_peripheralBus_toAxiLite4_a_fire) begin
+        LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0 <= 1'b0;
+      end
+      if(LsuPlugin_peripheralBus_toAxiLite4_wRaw_fire) begin
+        LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1 <= 1'b0;
+      end
+      if(LsuPlugin_peripheralBus_cmd_ready) begin
+        LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0 <= 1'b1;
+        LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1 <= 1'b1;
       end
       _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_2 <= _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_1;
       _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_2 <= _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_1;
@@ -21877,6 +22003,9 @@ module NaxRiscvAxi4LinuxPlicClint (
       PrivilegedPlugin_logic_rescheduleUnbuffered_rData_epc <= PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc;
       PrivilegedPlugin_logic_rescheduleUnbuffered_rData_tval <= PrivilegedPlugin_logic_rescheduleUnbuffered_payload_tval;
       PrivilegedPlugin_logic_rescheduleUnbuffered_rData_fromCommit <= PrivilegedPlugin_logic_rescheduleUnbuffered_payload_fromCommit;
+    end
+    if(LsuPlugin_peripheralBus_cmd_valid) begin
+      LsuPlugin_peripheralBus_toAxiLite4_writeSel <= LsuPlugin_peripheralBus_cmd_payload_write;
     end
     if(DataCachePlugin_mem_read_resizer_ret_rsp_translated_fire) begin
       _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_payload <= DataCachePlugin_mem_read_resizer_ret_rsp_translated_payload;
