@@ -80,8 +80,8 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
 
     ramBlocks match {
       case "inferred" => l.foreach {
-        case p: FetchCachePlugin => p.wayCount = 1; p.cacheSize = 256; p.memDataWidth = 64
-        case p: DataCachePlugin => p.wayCount = 1; p.cacheSize = 256; p.memDataWidth = 64
+        case p: FetchCachePlugin => p.wayCount = 1; p.cacheSize = 256; p.fetchDataWidth = 32; p.memDataWidth = 32
+        case p: DataCachePlugin => p.wayCount = 1; p.cacheSize = 256; p.memDataWidth = 32
         case p: BtbPlugin => p.entries = 8
         case p: GSharePlugin => p.memBytes = 32
         case p: Lsu2Plugin => p.hitPedictionEntries = 64
@@ -120,7 +120,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
         // Convert IBus to Axi4
         case plugin: FetchCachePlugin => {
           val native = plugin.mem.setAsDirectionLess //Unset IO properties of mem bus
-          val axi = master(native.resizer(32).toAxi4())
+          val axi = master(native.toAxi4())
               .setName("iBusAxi")
               .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the ibus (used by QSysify)
           Axi4SpecRenamer(axi)
@@ -128,7 +128,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
         // Convert DBus to Axi4
         case plugin: DataCachePlugin => {
           val native = plugin.mem.setAsDirectionLess //Unset IO properties of mem bus
-          val axi = master(native.resizer(32).toAxi4())
+          val axi = master(native.toAxi4())
               .setName("dBusAxi")
               .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the dbus (used by QSysify)
           Axi4SpecRenamer(axi)
@@ -136,7 +136,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
         // Convert PBus to Axi4
         case plugin: Lsu2Plugin => {
           val native = plugin.peripheralBus.setAsDirectionLess //Unset IO properties of peripheral bus
-          val axi = master(native.resize(32).toAxiLite4())
+          val axi = master(native.toAxiLite4())
               .setName("pBus")
               .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the dbus (used by QSysify)
           AxiLite4SpecRenamer(axi)
