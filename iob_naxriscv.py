@@ -197,6 +197,13 @@ def setup(py_params_dict):
                     "DATA_W": "AXI_DATA_W",
                 },
             },
+            {
+                "name": "unused_signals",
+                "signals": [
+                    {"name": "dbus_araddr_ignore_bit", "width": "1"},
+                    {"name": "dbus_awaddr_ignore_bit", "width": "1"},
+                ],
+            },
         ],
         "subblocks": [
             {
@@ -234,6 +241,7 @@ def setup(py_params_dict):
                     "AXI_ADDR_W": "AXI_ADDR_W",
                     "AXI_DATA_W": "AXI_DATA_W",
                     "AXI_LEN_W": "AXI_LEN_W",
+                    "AXI_LOCK_W": 1,
                 },
                 "connect": {
                     "axil_s": "pbus_axil_int",
@@ -242,9 +250,11 @@ def setup(py_params_dict):
             },
             {
                 "core_name": "iob_axi_merge",
-                "name": "dbus_axi_merge",
+                "name": "iob_naxriscv_dbus_axi_merge",
                 "instance_name": "dbus_axi_merge",
                 "instance_description": "Merge internal data and peripheral buses into a single data bus",
+                "addr_w": 33,  # Each subordinate has -1 address bit (32 bits each). Manager has 33 bits (1 ignored).
+                "lock_w": 1,
                 "parameters": {
                     "ID_W": "AXI_ID_W",
                     "LEN_W": "AXI_LEN_W",
@@ -255,7 +265,14 @@ def setup(py_params_dict):
                     "reset_i": "rst_i",
                     "s_0_s": "dbus_int",
                     "s_1_s": "pbus_axi_int",
-                    "m_m": "d_bus_m",
+                    "m_m": (
+                        "d_bus_m",
+                        [
+                            # Ignore most significant address bit (we only use 32 bits)
+                            "{dbus_araddr_ignore_bit, dbus_axi_araddr_o}",
+                            "{dbus_awaddr_ignore_bit, dbus_axi_awaddr_o}",
+                        ],
+                    ),
                 },
             },
         ],
