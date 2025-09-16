@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 "Everybody"
+// SPDX-FileCopyrightText: 2025 IObundle
 //
 // SPDX-License-Identifier: MIT
 
@@ -153,6 +153,19 @@ class MmuPlugin(var spec : MmuSpec,
 
     val cacheLoad = cache.newLoadPort(priority = 1)
     val invalidatePort = FlowCmdRsp().setIdleAll()
+
+    var ioStartAddr : UInt = null
+    var ioSize : UInt = null
+    var ioEndAddr : UInt = null
+
+    if(ioRange == null) {
+      // Define the input parameters for IO (uncached) range
+      ioStartAddr = in(UInt(32 bits).setName("ioStartAddr"))
+      ioSize = in(UInt(32 bits).setName("ioSize"))
+      // Calculate the end address of IO range
+      ioEndAddr = ioStartAddr + ioSize - 1
+    }
+
   }
 
   val logic = create late new Area{
@@ -309,7 +322,19 @@ class MmuPlugin(var spec : MmuSpec,
         }
 
         import ps.rsp.keys._
-        IO := ioRange(TRANSLATED)
+
+
+        // Function determines if given address is in IO range configured via inputs
+        val externalIoRange: UInt => Bool = (address: UInt) => {
+          address >= ioStartAddr && address <= ioEndAddr
+        }
+
+        if(ioRange != null) 
+          IO := ioRange(TRANSLATED)
+        else
+          IO := externalIoRange(TRANSLATED)
+
+
         when(requireMmuLockup) {
           REDO          := !hit
           TRANSLATED    := lineTranslated

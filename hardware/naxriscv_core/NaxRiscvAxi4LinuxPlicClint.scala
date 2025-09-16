@@ -70,7 +70,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
       mmuSets = 4,
       regFileFakeRatio = regFileFakeRatio,
       //      withCoherency = true,
-      ioRange = a => a(31 downto 28) === 0x1// || !a(12)//(a(5, 6 bits) ^ a(12, 6 bits)) === 51
+      ioRange = null, // Setting to null will cause ioRange and ioSize to be input ports
     )
 
     l.foreach{
@@ -142,9 +142,6 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
           if (plugin.p.withSupervisor) plugin.io.int.supervisor.external  setAsDirectionLess() := cpu.plicCtrl.io.targets(1) // supervisor external interrupts from PLIC
           plugin.io.rdtime  setAsDirectionLess() := cpu.clintCtrl.io.time // time register from CLINT
         }
-        // Add port for configurable (uncached) IO memory range
-        //case plugin: MmuPlugin => {
-        //}
         case _ =>
       }
     }

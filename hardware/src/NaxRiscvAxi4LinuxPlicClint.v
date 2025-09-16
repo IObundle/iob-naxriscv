@@ -5,6 +5,8 @@
 `timescale 1ns/1ps
 
 module NaxRiscvAxi4LinuxPlicClint (
+  input  wire [31:0]   ioStartAddr,
+  input  wire [31:0]   ioSize,
   input  wire [31:0]   externalResetVector,
   input  wire          clint_awvalid,
   output wire          clint_awready,
@@ -462,6 +464,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                RfDependencyPlugin_logic_forRf_integer_impl_io_reads_1_rsp_valid;
   wire                RfDependencyPlugin_logic_forRf_integer_impl_io_reads_1_rsp_payload_enable;
   wire       [3:0]    RfDependencyPlugin_logic_forRf_integer_impl_io_reads_1_rsp_payload_rob;
+  wire       [31:0]   _zz__zz_FetchPlugin_stages_1_MMU_IO;
   wire       [11:0]   _zz_FetchPlugin_stages_1_FETCH_ID;
   wire       [0:0]    _zz_FetchPlugin_stages_1_FETCH_ID_1;
   wire       [25:0]   _zz_FetchCachePlugin_logic_ways_0_mem_port;
@@ -2722,6 +2725,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                MmuPlugin_setup_cacheLoad_rsp_payload_refillSlotAny;
   reg                 MmuPlugin_setup_invalidatePort_cmd_valid;
   reg                 MmuPlugin_setup_invalidatePort_rsp_valid;
+  wire       [31:0]   _zz_FetchPlugin_stages_1_MMU_IO;
   wire                FetchPlugin_stages_0_valid;
   reg                 _zz_FetchPlugin_stages_1_valid;
   reg                 FetchPlugin_stages_1_valid;
@@ -4741,9 +4745,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                Lsu2Plugin_setup_translationStorage_logic_sl_1_allocId_willOverflowIfInc;
   wire                Lsu2Plugin_setup_translationStorage_logic_sl_1_allocId_willOverflow;
   reg                 Lsu2Plugin_logic_sharedPip_translationPort_logic_allowRefillBypass_0_reg;
-  wire                when_MmuPlugin_l265;
+  wire                when_MmuPlugin_l278;
   reg                 Lsu2Plugin_logic_sharedPip_translationPort_logic_allowRefillBypass_1_reg;
-  wire                when_MmuPlugin_l265_1;
+  wire                when_MmuPlugin_l278_1;
   wire       [1:0]    Lsu2Plugin_logic_sharedPip_translationPort_logic_read_0_readAddress;
   wire       [44:0]   _zz_Lsu2Plugin_logic_sharedPip_stages_0_MMU_L0_ENTRIES_0_valid;
   wire       [44:0]   _zz_Lsu2Plugin_logic_sharedPip_stages_0_MMU_L0_ENTRIES_1_valid;
@@ -4782,9 +4786,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup;
   wire                Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_needRefill;
   wire                Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_askRefill;
-  wire                when_MmuPlugin_l302;
-  wire                when_MmuPlugin_l303;
-  wire                when_MmuPlugin_l305;
+  wire                when_MmuPlugin_l315;
+  wire                when_MmuPlugin_l316;
+  wire                when_MmuPlugin_l318;
   wire                EU0_CsrAccessPlugin_logic_fsm_wantExit;
   reg                 EU0_CsrAccessPlugin_logic_fsm_wantStart;
   wire                EU0_CsrAccessPlugin_logic_fsm_wantKill;
@@ -4951,7 +4955,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                EU0_CsrAccessPlugin_logic_fsm_startLogic_read;
   wire                EU0_CsrAccessPlugin_logic_fsm_startLogic_onDecodeDo;
   wire                when_CsrAccessPlugin_l183;
-  wire                when_MmuPlugin_l205;
+  wire                when_MmuPlugin_l218;
   reg                 EU0_CsrAccessPlugin_logic_fsm_readLogic_onReadsDo;
   reg                 EU0_CsrAccessPlugin_logic_fsm_readLogic_onReadsFireDo;
   reg        [31:0]   _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue;
@@ -5027,9 +5031,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg        [2:0]    EnvCallPlugin_logic_flushes_stateReg;
   reg        [2:0]    EnvCallPlugin_logic_flushes_stateNext;
   wire                when_EnvCallPlugin_l148;
-  wire                when_MmuPlugin_l331;
+  wire                when_MmuPlugin_l356;
   reg                 FetchCachePlugin_logic_translationPort_logic_allowRefillBypass_0_reg;
-  wire                when_MmuPlugin_l265_2;
+  wire                when_MmuPlugin_l278_2;
   wire       [1:0]    FetchCachePlugin_logic_translationPort_logic_read_0_readAddress;
   wire       [44:0]   _zz_FetchPlugin_stages_1_MMU_L0_ENTRIES_0_valid;
   wire       [44:0]   _zz_FetchPlugin_stages_1_MMU_L0_ENTRIES_1_valid;
@@ -5068,9 +5072,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 FetchCachePlugin_logic_translationPort_logic_ctrl_requireMmuLockup;
   wire                FetchCachePlugin_logic_translationPort_logic_ctrl_needRefill;
   wire                FetchCachePlugin_logic_translationPort_logic_ctrl_askRefill;
-  wire                when_MmuPlugin_l302_1;
-  wire                when_MmuPlugin_l303_1;
-  wire                when_MmuPlugin_l331_1;
+  wire                when_MmuPlugin_l315_1;
+  wire                when_MmuPlugin_l316_1;
+  wire                when_MmuPlugin_l356_1;
   wire                MmuPlugin_logic_refill_wantExit;
   reg                 MmuPlugin_logic_refill_wantStart;
   wire                MmuPlugin_logic_refill_wantKill;
@@ -5101,7 +5105,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg        [1:0]    MmuPlugin_logic_refill_load_rsp_payload_refillSlot;
   reg                 MmuPlugin_logic_refill_load_rsp_payload_refillSlotAny;
   wire       [31:0]   MmuPlugin_logic_refill_load_readed;
-  wire                when_MmuPlugin_l393;
+  wire                when_MmuPlugin_l418;
   wire                MmuPlugin_logic_refill_load_flags_V;
   wire                MmuPlugin_logic_refill_load_flags_R;
   wire                MmuPlugin_logic_refill_load_flags_W;
@@ -5118,17 +5122,17 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                MmuPlugin_logic_refill_load_levelException_0;
   reg                 MmuPlugin_logic_refill_load_levelException_1;
   reg        [31:0]   MmuPlugin_logic_refill_load_nextLevelBase;
-  wire                when_MmuPlugin_l421;
+  wire                when_MmuPlugin_l446;
   reg                 MmuPlugin_logic_invalidate_requested;
   reg                 MmuPlugin_logic_invalidate_canStart;
   reg        [2:0]    MmuPlugin_logic_invalidate_counter;
   wire                MmuPlugin_logic_invalidate_done;
-  wire                when_MmuPlugin_l497;
-  wire                FetchPlugin_stages_0_haltRequest_MmuPlugin_l508;
-  wire                when_MmuPlugin_l510;
-  wire                when_MmuPlugin_l516;
+  wire                when_MmuPlugin_l522;
+  wire                FetchPlugin_stages_0_haltRequest_MmuPlugin_l533;
+  wire                when_MmuPlugin_l535;
+  wire                when_MmuPlugin_l541;
   reg                 MmuPlugin_logic_invalidate_done_regNext;
-  wire                when_MmuPlugin_l520;
+  wire                when_MmuPlugin_l545;
   wire                when_Pipeline_l278;
   reg                 Lsu2Plugin_logic_lqSqArbitration_s0_ready_output;
   wire                when_Pipeline_l278_1;
@@ -5144,10 +5148,10 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                when_StateMachine_l253_1;
   reg        [2:0]    MmuPlugin_logic_refill_stateReg;
   reg        [2:0]    MmuPlugin_logic_refill_stateNext;
-  wire                when_MmuPlugin_l457;
-  wire                when_MmuPlugin_l457_1;
-  wire                when_MmuPlugin_l466;
-  wire                when_MmuPlugin_l474;
+  wire                when_MmuPlugin_l482;
+  wire                when_MmuPlugin_l482_1;
+  wire                when_MmuPlugin_l491;
+  wire                when_MmuPlugin_l499;
   wire                DecoderPlugin_logic_slots_0_rdZero;
   wire                _zz_FrontendPlugin_decoded_SQ_ALLOC_0;
   wire                _zz_FrontendPlugin_decoded_SQ_ALLOC_0_1;
@@ -5665,6 +5669,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   endfunction
   wire  _zz_259;
 
+  assign _zz__zz_FetchPlugin_stages_1_MMU_IO = (ioStartAddr + ioSize);
   assign _zz_FetchPlugin_stages_1_FETCH_ID_1 = FetchPlugin_stages_1_isFireing;
   assign _zz_FetchPlugin_stages_1_FETCH_ID = {11'd0, _zz_FetchPlugin_stages_1_FETCH_ID_1};
   assign _zz_FetchCachePlugin_logic_read_onWays_0_hits_bypassHits = (FetchPlugin_stages_1_Fetch_FETCH_PC >>> 4'd8);
@@ -8361,7 +8366,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   always @(*) begin
     MmuPlugin_setup_invalidatePort_cmd_valid = 1'b0;
     if(when_CsrAccessPlugin_l183) begin
-      if(!when_MmuPlugin_l205) begin
+      if(!when_MmuPlugin_l218) begin
         MmuPlugin_setup_invalidatePort_cmd_valid = 1'b1;
       end
     end
@@ -8388,11 +8393,12 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     MmuPlugin_setup_invalidatePort_rsp_valid = 1'b0;
-    if(when_MmuPlugin_l520) begin
+    if(when_MmuPlugin_l545) begin
       MmuPlugin_setup_invalidatePort_rsp_valid = 1'b1;
     end
   end
 
+  assign _zz_FetchPlugin_stages_1_MMU_IO = (_zz__zz_FetchPlugin_stages_1_MMU_IO - 32'h00000001);
   always @(*) begin
     FetchCachePlugin_setup_invalidatePort_cmd_valid = 1'b0;
     case(EnvCallPlugin_logic_flushes_stateReg)
@@ -8672,7 +8678,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       EU0_CsrAccessPlugin_setup_onDecodeTrap = 1'b1;
     end
     if(when_CsrAccessPlugin_l183) begin
-      if(when_MmuPlugin_l205) begin
+      if(when_MmuPlugin_l218) begin
         EU0_CsrAccessPlugin_setup_onDecodeTrap = 1'b1;
       end
     end
@@ -8681,7 +8687,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   always @(*) begin
     EU0_CsrAccessPlugin_setup_onDecodeFlushPipeline = 1'b0;
     if(when_CsrAccessPlugin_l183) begin
-      if(!when_MmuPlugin_l205) begin
+      if(!when_MmuPlugin_l218) begin
         EU0_CsrAccessPlugin_setup_onDecodeFlushPipeline = 1'b1;
       end
     end
@@ -16217,7 +16223,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     FetchCachePlugin_setup_translationStorage_logic_sl_0_write_mask = 4'b0000;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       FetchCachePlugin_setup_translationStorage_logic_sl_0_write_mask = 4'b1111;
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -16245,7 +16251,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     FetchCachePlugin_setup_translationStorage_logic_sl_0_write_address = 2'bxx;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       FetchCachePlugin_setup_translationStorage_logic_sl_0_write_address = MmuPlugin_logic_invalidate_counter[1:0];
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -16273,7 +16279,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     FetchCachePlugin_setup_translationStorage_logic_sl_0_write_data_valid = 1'bx;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       FetchCachePlugin_setup_translationStorage_logic_sl_0_write_data_valid = 1'b0;
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -16536,7 +16542,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     FetchCachePlugin_setup_translationStorage_logic_sl_1_write_mask = 2'b00;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       FetchCachePlugin_setup_translationStorage_logic_sl_1_write_mask = 2'b11;
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -16553,7 +16559,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_write_mask = ((|_zz_FetchCachePlugin_setup_translationStorage_logic_sl_0_write_mask) ? _zz_FetchCachePlugin_setup_translationStorage_logic_sl_1_write_mask : 2'b00);
             end
           end
@@ -16566,7 +16572,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     FetchCachePlugin_setup_translationStorage_logic_sl_1_write_address = 2'bxx;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       FetchCachePlugin_setup_translationStorage_logic_sl_1_write_address = MmuPlugin_logic_invalidate_counter[1:0];
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -16583,7 +16589,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_write_address = MmuPlugin_logic_refill_virtual[23 : 22];
             end
           end
@@ -16596,7 +16602,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_valid = 1'bx;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_valid = 1'b0;
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -16613,7 +16619,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_valid = 1'b1;
             end
           end
@@ -16640,7 +16646,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_pageFault = ((MmuPlugin_logic_refill_load_exception || MmuPlugin_logic_refill_load_levelException_1) || (! MmuPlugin_logic_refill_load_flags_A));
             end
           end
@@ -16667,7 +16673,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_accessFault = ((! FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_pageFault) && 1'b0);
             end
           end
@@ -16694,7 +16700,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_virtualAddress = MmuPlugin_logic_refill_virtual[31 : 24];
             end
           end
@@ -16721,7 +16727,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_physicalAddress = (MmuPlugin_logic_refill_load_levelToPhysicalAddress_1 >>> 5'd22);
             end
           end
@@ -16748,7 +16754,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_allowRead = MmuPlugin_logic_refill_load_flags_R;
             end
           end
@@ -16775,7 +16781,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_allowWrite = (MmuPlugin_logic_refill_load_flags_W && MmuPlugin_logic_refill_load_flags_D);
             end
           end
@@ -16802,7 +16808,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_allowExecute = MmuPlugin_logic_refill_load_flags_X;
             end
           end
@@ -16829,7 +16835,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_write_data_allowUser = MmuPlugin_logic_refill_load_flags_U;
             end
           end
@@ -16856,7 +16862,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               FetchCachePlugin_setup_translationStorage_logic_sl_1_allocId_willIncrement = 1'b1;
             end
           end
@@ -16888,7 +16894,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     Lsu2Plugin_setup_translationStorage_logic_sl_0_write_mask = 4'b0000;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       Lsu2Plugin_setup_translationStorage_logic_sl_0_write_mask = 4'b1111;
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -16916,7 +16922,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     Lsu2Plugin_setup_translationStorage_logic_sl_0_write_address = 2'bxx;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       Lsu2Plugin_setup_translationStorage_logic_sl_0_write_address = MmuPlugin_logic_invalidate_counter[1:0];
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -16944,7 +16950,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     Lsu2Plugin_setup_translationStorage_logic_sl_0_write_data_valid = 1'bx;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       Lsu2Plugin_setup_translationStorage_logic_sl_0_write_data_valid = 1'b0;
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -17207,7 +17213,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     Lsu2Plugin_setup_translationStorage_logic_sl_1_write_mask = 2'b00;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       Lsu2Plugin_setup_translationStorage_logic_sl_1_write_mask = 2'b11;
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -17224,7 +17230,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_write_mask = ((|_zz_Lsu2Plugin_setup_translationStorage_logic_sl_0_write_mask) ? _zz_Lsu2Plugin_setup_translationStorage_logic_sl_1_write_mask : 2'b00);
             end
           end
@@ -17237,7 +17243,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     Lsu2Plugin_setup_translationStorage_logic_sl_1_write_address = 2'bxx;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       Lsu2Plugin_setup_translationStorage_logic_sl_1_write_address = MmuPlugin_logic_invalidate_counter[1:0];
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -17254,7 +17260,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_write_address = MmuPlugin_logic_refill_virtual[23 : 22];
             end
           end
@@ -17267,7 +17273,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_valid = 1'bx;
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_valid = 1'b0;
     end
     case(MmuPlugin_logic_refill_stateReg)
@@ -17284,7 +17290,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_valid = 1'b1;
             end
           end
@@ -17311,7 +17317,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_pageFault = ((MmuPlugin_logic_refill_load_exception || MmuPlugin_logic_refill_load_levelException_1) || (! MmuPlugin_logic_refill_load_flags_A));
             end
           end
@@ -17338,7 +17344,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_accessFault = ((! Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_pageFault) && 1'b0);
             end
           end
@@ -17365,7 +17371,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_virtualAddress = MmuPlugin_logic_refill_virtual[31 : 24];
             end
           end
@@ -17392,7 +17398,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_physicalAddress = (MmuPlugin_logic_refill_load_levelToPhysicalAddress_1 >>> 5'd22);
             end
           end
@@ -17419,7 +17425,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_allowRead = MmuPlugin_logic_refill_load_flags_R;
             end
           end
@@ -17446,7 +17452,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_allowWrite = (MmuPlugin_logic_refill_load_flags_W && MmuPlugin_logic_refill_load_flags_D);
             end
           end
@@ -17473,7 +17479,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_allowExecute = MmuPlugin_logic_refill_load_flags_X;
             end
           end
@@ -17500,7 +17506,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_write_data_allowUser = MmuPlugin_logic_refill_load_flags_U;
             end
           end
@@ -17527,7 +17533,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               Lsu2Plugin_setup_translationStorage_logic_sl_1_allocId_willIncrement = 1'b1;
             end
           end
@@ -17550,9 +17556,9 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   assign Lsu2Plugin_logic_sharedPip_stages_0_MmuPlugin_logic_ALLOW_REFILL = Lsu2Plugin_logic_sharedPip_stages_0_NEED_TRANSLATION;
   assign Lsu2Plugin_logic_sharedPip_stages_0_MmuPlugin_logic_ALLOW_REFILL_overloaded = ((Lsu2Plugin_logic_sharedPip_stages_0_MmuPlugin_logic_ALLOW_REFILL && (! Lsu2Plugin_setup_translationStorage_logic_refillOngoing)) && Lsu2Plugin_logic_sharedPip_translationPort_logic_allowRefillBypass_0_reg);
-  assign when_MmuPlugin_l265 = (Lsu2Plugin_logic_sharedPip_stages_0_isRemoved || (! (Lsu2Plugin_logic_sharedPip_stages_0_valid && (! Lsu2Plugin_logic_sharedPip_stages_0_ready))));
+  assign when_MmuPlugin_l278 = (Lsu2Plugin_logic_sharedPip_stages_0_isRemoved || (! (Lsu2Plugin_logic_sharedPip_stages_0_valid && (! Lsu2Plugin_logic_sharedPip_stages_0_ready))));
   assign Lsu2Plugin_logic_sharedPip_stages_1_MmuPlugin_logic_ALLOW_REFILL_overloaded = ((Lsu2Plugin_logic_sharedPip_stages_1_MmuPlugin_logic_ALLOW_REFILL && (! Lsu2Plugin_setup_translationStorage_logic_refillOngoing)) && Lsu2Plugin_logic_sharedPip_translationPort_logic_allowRefillBypass_1_reg);
-  assign when_MmuPlugin_l265_1 = (Lsu2Plugin_logic_sharedPip_stages_1_isRemoved || (! (Lsu2Plugin_logic_sharedPip_stages_1_valid && (! Lsu2Plugin_logic_sharedPip_stages_1_ready))));
+  assign when_MmuPlugin_l278_1 = (Lsu2Plugin_logic_sharedPip_stages_1_isRemoved || (! (Lsu2Plugin_logic_sharedPip_stages_1_valid && (! Lsu2Plugin_logic_sharedPip_stages_1_ready))));
   assign Lsu2Plugin_logic_sharedPip_translationPort_logic_read_0_readAddress = Lsu2Plugin_logic_sharedPip_stages_0_ADDRESS_PRE_TRANSLATION[13 : 12];
   assign _zz_Lsu2Plugin_logic_sharedPip_stages_0_MMU_L0_ENTRIES_0_valid = Lsu2Plugin_setup_translationStorage_logic_sl_0_ways_0_spinal_port1;
   assign Lsu2Plugin_logic_sharedPip_stages_0_MMU_L0_ENTRIES_0_valid = _zz_Lsu2Plugin_logic_sharedPip_stages_0_MMU_L0_ENTRIES_0_valid[0];
@@ -17676,11 +17682,11 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_lineAccessFault = _zz_Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_lineAccessFault[0];
   always @(*) begin
     Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup = (MmuPlugin_logic_satp_mode == 1'b1);
-    if(when_MmuPlugin_l302) begin
+    if(when_MmuPlugin_l315) begin
       Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup = 1'b0;
     end
-    if(when_MmuPlugin_l303) begin
-      if(when_MmuPlugin_l305) begin
+    if(when_MmuPlugin_l316) begin
+      if(when_MmuPlugin_l318) begin
         Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup = 1'b0;
       end
     end
@@ -17688,9 +17694,9 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   assign Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_needRefill = ((Lsu2Plugin_logic_sharedPip_stages_1_valid && (! Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_hit)) && Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup);
   assign Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_askRefill = (Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_needRefill && Lsu2Plugin_logic_sharedPip_stages_1_MmuPlugin_logic_ALLOW_REFILL_overloaded);
-  assign when_MmuPlugin_l302 = ((! MmuPlugin_logic_status_mprv) && (PrivilegedPlugin_setup_privilege == 2'b11));
-  assign when_MmuPlugin_l303 = (PrivilegedPlugin_setup_privilege == 2'b11);
-  assign when_MmuPlugin_l305 = ((! MmuPlugin_logic_status_mprv) || (PrivilegedPlugin_logic_machine_mstatus_mpp == 2'b11));
+  assign when_MmuPlugin_l315 = ((! MmuPlugin_logic_status_mprv) && (PrivilegedPlugin_setup_privilege == 2'b11));
+  assign when_MmuPlugin_l316 = (PrivilegedPlugin_setup_privilege == 2'b11);
+  assign when_MmuPlugin_l318 = ((! MmuPlugin_logic_status_mprv) || (PrivilegedPlugin_logic_machine_mstatus_mpp == 2'b11));
   assign EU0_CsrAccessPlugin_logic_fsm_wantExit = 1'b0;
   always @(*) begin
     EU0_CsrAccessPlugin_logic_fsm_wantStart = 1'b0;
@@ -18188,7 +18194,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign EU0_CsrAccessPlugin_setup_onDecodeAddress = _zz_EU0_CsrAccessPlugin_setup_onDecodeAddress[31 : 20];
   assign EU0_CsrAccessPlugin_logic_fsm_startLogic_onDecodeDo = (EU0_ExecutionUnitBase_pipeline_execute_0_valid && EU0_ExecutionUnitBase_pipeline_execute_0_CsrAccessPlugin_SEL);
   assign when_CsrAccessPlugin_l183 = (EU0_CsrAccessPlugin_logic_fsm_startLogic_onDecodeDo && COMB_CSR_384);
-  assign when_MmuPlugin_l205 = (PrivilegedPlugin_logic_machine_mstatus_tvm && (PrivilegedPlugin_setup_privilege == 2'b01));
+  assign when_MmuPlugin_l218 = (PrivilegedPlugin_logic_machine_mstatus_tvm && (PrivilegedPlugin_setup_privilege == 2'b01));
   assign EU0_CsrAccessPlugin_setup_onReadAddress = _zz_EU0_CsrAccessPlugin_setup_onReadAddress[31 : 20];
   always @(*) begin
     EU0_CsrAccessPlugin_logic_fsm_readLogic_onReadsDo = 1'b0;
@@ -18651,7 +18657,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign when_EnvCallPlugin_l148 = (EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FENCE_I || EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FENCE_VMA);
-  assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_IO = (Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED[31 : 28] == 4'b0001);
+  assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_IO = ((ioStartAddr <= Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED) && (Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED <= _zz_FetchPlugin_stages_1_MMU_IO));
   always @(*) begin
     if(Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup) begin
       Lsu2Plugin_logic_sharedPip_stages_1_MMU_REDO = (! Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_hit);
@@ -18674,7 +18680,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     end else begin
       Lsu2Plugin_logic_sharedPip_stages_1_MMU_ALLOW_EXECUTE = 1'b1;
     end
-    if(when_MmuPlugin_l331) begin
+    if(when_MmuPlugin_l356) begin
       Lsu2Plugin_logic_sharedPip_stages_1_MMU_ALLOW_EXECUTE = 1'b0;
     end
   end
@@ -18711,7 +18717,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign when_MmuPlugin_l331 = (! (Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED[31 : 28] != 4'b0001));
+  assign when_MmuPlugin_l356 = (! (Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED[31 : 28] != 4'b0001));
   assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_BYPASS_TRANSLATION = (! Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup);
   assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_WAYS_OH = Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_oh;
   assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_WAYS_PHYSICAL_0 = {Lsu2Plugin_logic_sharedPip_stages_1_MMU_L0_ENTRIES_0_physicalAddress,Lsu2Plugin_logic_sharedPip_stages_1_ADDRESS_PRE_TRANSLATION[11 : 0]};
@@ -18722,7 +18728,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_WAYS_PHYSICAL_5 = {Lsu2Plugin_logic_sharedPip_stages_1_MMU_L1_ENTRIES_1_physicalAddress,Lsu2Plugin_logic_sharedPip_stages_1_ADDRESS_PRE_TRANSLATION[21 : 0]};
   assign FetchPlugin_stages_1_MmuPlugin_logic_ALLOW_REFILL = 1'b1;
   assign FetchPlugin_stages_1_MmuPlugin_logic_ALLOW_REFILL_overloaded = ((FetchPlugin_stages_1_MmuPlugin_logic_ALLOW_REFILL && (! FetchCachePlugin_setup_translationStorage_logic_refillOngoing)) && FetchCachePlugin_logic_translationPort_logic_allowRefillBypass_0_reg);
-  assign when_MmuPlugin_l265_2 = (FetchPlugin_stages_1_isRemoved || (! (FetchPlugin_stages_1_valid && (! FetchPlugin_stages_1_ready))));
+  assign when_MmuPlugin_l278_2 = (FetchPlugin_stages_1_isRemoved || (! (FetchPlugin_stages_1_valid && (! FetchPlugin_stages_1_ready))));
   assign FetchCachePlugin_logic_translationPort_logic_read_0_readAddress = FetchPlugin_stages_1_Fetch_FETCH_PC[13 : 12];
   assign _zz_FetchPlugin_stages_1_MMU_L0_ENTRIES_0_valid = FetchCachePlugin_setup_translationStorage_logic_sl_0_ways_0_spinal_port1;
   assign FetchPlugin_stages_1_MMU_L0_ENTRIES_0_valid = _zz_FetchPlugin_stages_1_MMU_L0_ENTRIES_0_valid[0];
@@ -18846,19 +18852,19 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign FetchCachePlugin_logic_translationPort_logic_ctrl_lineAccessFault = _zz_FetchCachePlugin_logic_translationPort_logic_ctrl_lineAccessFault[0];
   always @(*) begin
     FetchCachePlugin_logic_translationPort_logic_ctrl_requireMmuLockup = (MmuPlugin_logic_satp_mode == 1'b1);
-    if(when_MmuPlugin_l302_1) begin
+    if(when_MmuPlugin_l315_1) begin
       FetchCachePlugin_logic_translationPort_logic_ctrl_requireMmuLockup = 1'b0;
     end
-    if(when_MmuPlugin_l303_1) begin
+    if(when_MmuPlugin_l316_1) begin
       FetchCachePlugin_logic_translationPort_logic_ctrl_requireMmuLockup = 1'b0;
     end
   end
 
   assign FetchCachePlugin_logic_translationPort_logic_ctrl_needRefill = ((FetchPlugin_stages_1_valid && (! FetchCachePlugin_logic_translationPort_logic_ctrl_hit)) && FetchCachePlugin_logic_translationPort_logic_ctrl_requireMmuLockup);
   assign FetchCachePlugin_logic_translationPort_logic_ctrl_askRefill = (FetchCachePlugin_logic_translationPort_logic_ctrl_needRefill && FetchPlugin_stages_1_MmuPlugin_logic_ALLOW_REFILL_overloaded);
-  assign when_MmuPlugin_l302_1 = ((! MmuPlugin_logic_status_mprv) && (PrivilegedPlugin_setup_privilege == 2'b11));
-  assign when_MmuPlugin_l303_1 = (PrivilegedPlugin_setup_privilege == 2'b11);
-  assign FetchPlugin_stages_1_MMU_IO = (FetchPlugin_stages_1_MMU_TRANSLATED[31 : 28] == 4'b0001);
+  assign when_MmuPlugin_l315_1 = ((! MmuPlugin_logic_status_mprv) && (PrivilegedPlugin_setup_privilege == 2'b11));
+  assign when_MmuPlugin_l316_1 = (PrivilegedPlugin_setup_privilege == 2'b11);
+  assign FetchPlugin_stages_1_MMU_IO = ((ioStartAddr <= FetchPlugin_stages_1_MMU_TRANSLATED) && (FetchPlugin_stages_1_MMU_TRANSLATED <= _zz_FetchPlugin_stages_1_MMU_IO));
   always @(*) begin
     if(FetchCachePlugin_logic_translationPort_logic_ctrl_requireMmuLockup) begin
       FetchPlugin_stages_1_MMU_REDO = (! FetchCachePlugin_logic_translationPort_logic_ctrl_hit);
@@ -18881,7 +18887,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     end else begin
       FetchPlugin_stages_1_MMU_ALLOW_EXECUTE = 1'b1;
     end
-    if(when_MmuPlugin_l331_1) begin
+    if(when_MmuPlugin_l356_1) begin
       FetchPlugin_stages_1_MMU_ALLOW_EXECUTE = 1'b0;
     end
   end
@@ -18918,7 +18924,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign when_MmuPlugin_l331_1 = (! (FetchPlugin_stages_1_MMU_TRANSLATED[31 : 28] != 4'b0001));
+  assign when_MmuPlugin_l356_1 = (! (FetchPlugin_stages_1_MMU_TRANSLATED[31 : 28] != 4'b0001));
   assign FetchPlugin_stages_1_MMU_BYPASS_TRANSLATION = (! FetchCachePlugin_logic_translationPort_logic_ctrl_requireMmuLockup);
   assign FetchPlugin_stages_1_MMU_WAYS_OH = FetchCachePlugin_logic_translationPort_logic_ctrl_oh;
   assign FetchPlugin_stages_1_MMU_WAYS_PHYSICAL_0 = {FetchPlugin_stages_1_MMU_L0_ENTRIES_0_physicalAddress,FetchPlugin_stages_1_Fetch_FETCH_PC[11 : 0]};
@@ -18956,10 +18962,10 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign MmuPlugin_logic_refill_portsRequests = {FetchCachePlugin_logic_translationPort_logic_ctrl_askRefill,Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_askRefill};
   always @(*) begin
     MmuPlugin_logic_refill_portsRequest = (|MmuPlugin_logic_refill_portsRequests);
-    if(when_MmuPlugin_l497) begin
+    if(when_MmuPlugin_l522) begin
       MmuPlugin_logic_refill_portsRequest = 1'b0;
     end
-    if(when_MmuPlugin_l510) begin
+    if(when_MmuPlugin_l535) begin
       MmuPlugin_logic_refill_portsRequest = 1'b0;
     end
   end
@@ -18970,14 +18976,14 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign MmuPlugin_logic_refill_portsAddress = ((MmuPlugin_logic_refill_portsOh_regNext[0] ? _zz_MmuPlugin_logic_refill_portsAddress : 32'h00000000) | (MmuPlugin_logic_refill_portsOh_regNext[1] ? _zz_MmuPlugin_logic_refill_portsAddress_1 : 32'h00000000));
   always @(*) begin
     MmuPlugin_logic_refill_cacheRefillSet = 2'b00;
-    if(when_MmuPlugin_l393) begin
+    if(when_MmuPlugin_l418) begin
       MmuPlugin_logic_refill_cacheRefillSet = MmuPlugin_setup_cacheLoad_rsp_payload_refillSlot;
     end
   end
 
   always @(*) begin
     MmuPlugin_logic_refill_cacheRefillAnySet = 1'b0;
-    if(when_MmuPlugin_l393) begin
+    if(when_MmuPlugin_l418) begin
       MmuPlugin_logic_refill_cacheRefillAnySet = MmuPlugin_setup_cacheLoad_rsp_payload_refillSlotAny;
     end
   end
@@ -18985,7 +18991,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign FetchCachePlugin_logic_translationPort_wake = MmuPlugin_logic_refill_doWake;
   assign Lsu2Plugin_logic_sharedPip_translationPort_wake = MmuPlugin_logic_refill_doWake;
   assign MmuPlugin_logic_refill_load_readed = MmuPlugin_logic_refill_load_rsp_payload_data[31 : 0];
-  assign when_MmuPlugin_l393 = (MmuPlugin_setup_cacheLoad_rsp_valid && MmuPlugin_setup_cacheLoad_rsp_payload_redo);
+  assign when_MmuPlugin_l418 = (MmuPlugin_setup_cacheLoad_rsp_valid && MmuPlugin_setup_cacheLoad_rsp_payload_redo);
   always @(*) begin
     MmuPlugin_setup_cacheLoad_cmd_valid = 1'b0;
     case(MmuPlugin_logic_refill_stateReg)
@@ -18994,12 +19000,12 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_INIT : begin
       end
       MmuPlugin_logic_refill_enumDef_CMD_0 : begin
-        if(when_MmuPlugin_l457) begin
+        if(when_MmuPlugin_l482) begin
           MmuPlugin_setup_cacheLoad_cmd_valid = 1'b1;
         end
       end
       MmuPlugin_logic_refill_enumDef_CMD_1 : begin
-        if(when_MmuPlugin_l457_1) begin
+        if(when_MmuPlugin_l482_1) begin
           MmuPlugin_setup_cacheLoad_cmd_valid = 1'b1;
         end
       end
@@ -19042,7 +19048,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_CMD_1 : begin
       end
       MmuPlugin_logic_refill_enumDef_RSP_0 : begin
-        if(when_MmuPlugin_l466) begin
+        if(when_MmuPlugin_l491) begin
           MmuPlugin_logic_refill_load_exception = 1'b1;
         end
       end
@@ -19056,7 +19062,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign MmuPlugin_logic_refill_load_levelException_0 = 1'b0;
   always @(*) begin
     MmuPlugin_logic_refill_load_levelException_1 = 1'b0;
-    if(when_MmuPlugin_l421) begin
+    if(when_MmuPlugin_l446) begin
       MmuPlugin_logic_refill_load_levelException_1 = 1'b1;
     end
   end
@@ -19079,20 +19085,20 @@ module NaxRiscvAxi4LinuxPlicClint (
     MmuPlugin_logic_refill_load_levelToPhysicalAddress_1[31 : 22] = MmuPlugin_logic_refill_load_readed[29 : 20];
   end
 
-  assign when_MmuPlugin_l421 = (MmuPlugin_logic_refill_load_readed[19 : 10] != 10'h000);
+  assign when_MmuPlugin_l446 = (MmuPlugin_logic_refill_load_readed[19 : 10] != 10'h000);
   always @(*) begin
     MmuPlugin_logic_invalidate_canStart = 1'b1;
-    if(when_MmuPlugin_l516) begin
+    if(when_MmuPlugin_l541) begin
       MmuPlugin_logic_invalidate_canStart = 1'b0;
     end
   end
 
   assign MmuPlugin_logic_invalidate_done = MmuPlugin_logic_invalidate_counter[2];
-  assign when_MmuPlugin_l497 = (! MmuPlugin_logic_invalidate_done);
-  assign FetchPlugin_stages_0_haltRequest_MmuPlugin_l508 = ((! MmuPlugin_logic_invalidate_done) || MmuPlugin_logic_invalidate_requested);
-  assign when_MmuPlugin_l510 = (MmuPlugin_logic_invalidate_requested && MmuPlugin_logic_invalidate_canStart);
-  assign when_MmuPlugin_l516 = (MmuPlugin_logic_refill_busy || (|Lsu2Plugin_setup_postCommitBusy));
-  assign when_MmuPlugin_l520 = (MmuPlugin_logic_invalidate_done && (! MmuPlugin_logic_invalidate_done_regNext));
+  assign when_MmuPlugin_l522 = (! MmuPlugin_logic_invalidate_done);
+  assign FetchPlugin_stages_0_haltRequest_MmuPlugin_l533 = ((! MmuPlugin_logic_invalidate_done) || MmuPlugin_logic_invalidate_requested);
+  assign when_MmuPlugin_l535 = (MmuPlugin_logic_invalidate_requested && MmuPlugin_logic_invalidate_canStart);
+  assign when_MmuPlugin_l541 = (MmuPlugin_logic_refill_busy || (|Lsu2Plugin_setup_postCommitBusy));
+  assign when_MmuPlugin_l545 = (MmuPlugin_logic_invalidate_done && (! MmuPlugin_logic_invalidate_done_regNext));
   assign Lsu2Plugin_logic_sharedPip_stages_3_isFlushed = CommitPlugin_logic_commit_reschedulePort_valid;
   assign Lsu2Plugin_logic_sharedPip_stages_2_isFlushed = CommitPlugin_logic_commit_reschedulePort_valid;
   assign Lsu2Plugin_logic_sharedPip_stages_1_isRemoved = (Lsu2Plugin_logic_sharedPip_stages_1_isFlushed || Lsu2Plugin_logic_sharedPip_stages_1_isThrown);
@@ -19233,14 +19239,14 @@ module NaxRiscvAxi4LinuxPlicClint (
         MmuPlugin_logic_refill_stateNext = MmuPlugin_logic_refill_enumDef_CMD_1;
       end
       MmuPlugin_logic_refill_enumDef_CMD_0 : begin
-        if(when_MmuPlugin_l457) begin
+        if(when_MmuPlugin_l482) begin
           if(MmuPlugin_setup_cacheLoad_cmd_ready) begin
             MmuPlugin_logic_refill_stateNext = MmuPlugin_logic_refill_enumDef_RSP_0;
           end
         end
       end
       MmuPlugin_logic_refill_enumDef_CMD_1 : begin
-        if(when_MmuPlugin_l457_1) begin
+        if(when_MmuPlugin_l482_1) begin
           if(MmuPlugin_setup_cacheLoad_cmd_ready) begin
             MmuPlugin_logic_refill_stateNext = MmuPlugin_logic_refill_enumDef_RSP_1;
           end
@@ -19260,7 +19266,7 @@ module NaxRiscvAxi4LinuxPlicClint (
           if(MmuPlugin_logic_refill_load_rsp_payload_redo) begin
             MmuPlugin_logic_refill_stateNext = MmuPlugin_logic_refill_enumDef_CMD_1;
           end else begin
-            if(when_MmuPlugin_l474) begin
+            if(when_MmuPlugin_l499) begin
               MmuPlugin_logic_refill_stateNext = MmuPlugin_logic_refill_enumDef_IDLE;
             end else begin
               MmuPlugin_logic_refill_stateNext = MmuPlugin_logic_refill_enumDef_CMD_0;
@@ -19279,10 +19285,10 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign when_MmuPlugin_l457 = ((MmuPlugin_logic_refill_cacheRefill == 2'b00) && (MmuPlugin_logic_refill_cacheRefillAny == 1'b0));
-  assign when_MmuPlugin_l457_1 = ((MmuPlugin_logic_refill_cacheRefill == 2'b00) && (MmuPlugin_logic_refill_cacheRefillAny == 1'b0));
-  assign when_MmuPlugin_l466 = (! MmuPlugin_logic_refill_load_leaf);
-  assign when_MmuPlugin_l474 = (MmuPlugin_logic_refill_load_leaf || MmuPlugin_logic_refill_load_exception);
+  assign when_MmuPlugin_l482 = ((MmuPlugin_logic_refill_cacheRefill == 2'b00) && (MmuPlugin_logic_refill_cacheRefillAny == 1'b0));
+  assign when_MmuPlugin_l482_1 = ((MmuPlugin_logic_refill_cacheRefill == 2'b00) && (MmuPlugin_logic_refill_cacheRefillAny == 1'b0));
+  assign when_MmuPlugin_l491 = (! MmuPlugin_logic_refill_load_leaf);
+  assign when_MmuPlugin_l499 = (MmuPlugin_logic_refill_load_leaf || MmuPlugin_logic_refill_load_exception);
   assign MmuPlugin_logic_refill_doWake = (MmuPlugin_logic_refill_stateReg == MmuPlugin_logic_refill_enumDef_IDLE);
   assign DecoderPlugin_logic_slots_0_rdZero = (FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0[11 : 7] == 5'h00);
   assign FrontendPlugin_decoded_LEGAL_0 = ((|{((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h0000005f) == 32'h00000017),{((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h0000007f) == 32'h0000006f),{((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & _zz_FrontendPlugin_decoded_LEGAL_0) == 32'h00001073),{(_zz_FrontendPlugin_decoded_LEGAL_0_1 == _zz_FrontendPlugin_decoded_LEGAL_0_2),{_zz_FrontendPlugin_decoded_LEGAL_0_3,{_zz_FrontendPlugin_decoded_LEGAL_0_4,_zz_FrontendPlugin_decoded_LEGAL_0_5}}}}}}) && (! FrontendPlugin_decoded_Frontend_INSTRUCTION_ILLEGAL_0));
@@ -20274,7 +20280,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign when_Pipeline_l278_9 = (|{FetchPlugin_stages_0_haltRequest_MmuPlugin_l508,{FetchPlugin_stages_0_haltRequest_EnvCallPlugin_l138,{FetchPlugin_stages_0_haltRequest_PrivilegedPlugin_l975,{FetchPlugin_stages_0_haltRequest_Lsu2Plugin_l1548,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l583,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l552,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l476,FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l389}}}}}}});
+  assign when_Pipeline_l278_9 = (|{FetchPlugin_stages_0_haltRequest_MmuPlugin_l533,{FetchPlugin_stages_0_haltRequest_EnvCallPlugin_l138,{FetchPlugin_stages_0_haltRequest_PrivilegedPlugin_l975,{FetchPlugin_stages_0_haltRequest_Lsu2Plugin_l1548,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l583,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l552,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l476,FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l389}}}}}}});
   always @(*) begin
     _zz_FetchPlugin_stages_2_valid = FetchPlugin_stages_1_valid;
     if(FetchPlugin_stages_1_isFlushingRoot) begin
@@ -21472,11 +21478,11 @@ module NaxRiscvAxi4LinuxPlicClint (
       Lsu2Plugin_setup_translationStorage_logic_sl_0_allocId_value <= Lsu2Plugin_setup_translationStorage_logic_sl_0_allocId_valueNext;
       Lsu2Plugin_setup_translationStorage_logic_sl_1_allocId_value <= Lsu2Plugin_setup_translationStorage_logic_sl_1_allocId_valueNext;
       Lsu2Plugin_logic_sharedPip_translationPort_logic_allowRefillBypass_0_reg <= Lsu2Plugin_logic_sharedPip_stages_0_MmuPlugin_logic_ALLOW_REFILL_overloaded;
-      if(when_MmuPlugin_l265) begin
+      if(when_MmuPlugin_l278) begin
         Lsu2Plugin_logic_sharedPip_translationPort_logic_allowRefillBypass_0_reg <= 1'b1;
       end
       Lsu2Plugin_logic_sharedPip_translationPort_logic_allowRefillBypass_1_reg <= Lsu2Plugin_logic_sharedPip_stages_1_MmuPlugin_logic_ALLOW_REFILL_overloaded;
-      if(when_MmuPlugin_l265_1) begin
+      if(when_MmuPlugin_l278_1) begin
         Lsu2Plugin_logic_sharedPip_translationPort_logic_allowRefillBypass_1_reg <= 1'b1;
       end
       if(when_CsrRamPlugin_l61) begin
@@ -21581,7 +21587,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       EU0_CsrAccessPlugin_logic_fsm_stateReg <= EU0_CsrAccessPlugin_logic_fsm_stateNext;
       EnvCallPlugin_logic_flushes_stateReg <= EnvCallPlugin_logic_flushes_stateNext;
       FetchCachePlugin_logic_translationPort_logic_allowRefillBypass_0_reg <= FetchPlugin_stages_1_MmuPlugin_logic_ALLOW_REFILL_overloaded;
-      if(when_MmuPlugin_l265_2) begin
+      if(when_MmuPlugin_l278_2) begin
         FetchCachePlugin_logic_translationPort_logic_allowRefillBypass_0_reg <= 1'b1;
       end
       MmuPlugin_logic_refill_cacheRefill <= ((MmuPlugin_logic_refill_cacheRefill | MmuPlugin_logic_refill_cacheRefillSet) & (~ DataCachePlugin_setup_refillCompletions));
@@ -21590,10 +21596,10 @@ module NaxRiscvAxi4LinuxPlicClint (
       if(MmuPlugin_setup_invalidatePort_cmd_valid) begin
         MmuPlugin_logic_invalidate_requested <= 1'b1;
       end
-      if(when_MmuPlugin_l497) begin
+      if(when_MmuPlugin_l522) begin
         MmuPlugin_logic_invalidate_counter <= (MmuPlugin_logic_invalidate_counter + 3'b001);
       end
-      if(when_MmuPlugin_l510) begin
+      if(when_MmuPlugin_l535) begin
         MmuPlugin_logic_invalidate_counter <= 3'b000;
         MmuPlugin_logic_invalidate_requested <= 1'b0;
       end
@@ -22526,7 +22532,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       MmuPlugin_logic_refill_enumDef_RSP_1 : begin
         if(MmuPlugin_logic_refill_load_rsp_valid) begin
           if(!MmuPlugin_logic_refill_load_rsp_payload_redo) begin
-            if(!when_MmuPlugin_l474) begin
+            if(!when_MmuPlugin_l499) begin
               MmuPlugin_logic_refill_load_address <= MmuPlugin_logic_refill_load_nextLevelBase;
               MmuPlugin_logic_refill_load_address[11 : 2] <= MmuPlugin_logic_refill_virtual[21 : 12];
             end
