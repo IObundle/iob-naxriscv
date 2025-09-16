@@ -59,25 +59,25 @@ module NaxRiscvAxi4LinuxPlicClint (
   input  wire [63:0]   iBusAxi_rdata,
   input  wire [1:0]    iBusAxi_rresp,
   input  wire          iBusAxi_rlast,
-  output wire          pBusAxi_awvalid,
-  input  wire          pBusAxi_awready,
-  output wire [31:0]   pBusAxi_awaddr,
-  output wire [2:0]    pBusAxi_awprot,
-  output wire          pBusAxi_wvalid,
-  input  wire          pBusAxi_wready,
-  output wire [31:0]   pBusAxi_wdata,
-  output wire [3:0]    pBusAxi_wstrb,
-  input  wire          pBusAxi_bvalid,
-  output wire          pBusAxi_bready,
-  input  wire [1:0]    pBusAxi_bresp,
-  output wire          pBusAxi_arvalid,
-  input  wire          pBusAxi_arready,
-  output wire [31:0]   pBusAxi_araddr,
-  output wire [2:0]    pBusAxi_arprot,
-  input  wire          pBusAxi_rvalid,
-  output wire          pBusAxi_rready,
-  input  wire [31:0]   pBusAxi_rdata,
-  input  wire [1:0]    pBusAxi_rresp,
+  output wire          pBus_awvalid,
+  input  wire          pBus_awready,
+  output wire [31:0]   pBus_awaddr,
+  output wire [2:0]    pBus_awprot,
+  output wire          pBus_wvalid,
+  input  wire          pBus_wready,
+  output wire [31:0]   pBus_wdata,
+  output wire [3:0]    pBus_wstrb,
+  input  wire          pBus_bvalid,
+  output wire          pBus_bready,
+  input  wire [1:0]    pBus_bresp,
+  output wire          pBus_arvalid,
+  input  wire          pBus_arready,
+  output wire [31:0]   pBus_araddr,
+  output wire [2:0]    pBus_arprot,
+  input  wire          pBus_rvalid,
+  output wire          pBus_rready,
+  input  wire [31:0]   pBus_rdata,
+  input  wire [1:0]    pBus_rresp,
   output wire          dBusAxi_awvalid,
   input  wire          dBusAxi_awready,
   output wire [31:0]   dBusAxi_awaddr,
@@ -10923,23 +10923,23 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_data = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_data;
   assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_mask = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_mask;
   assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_size = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_size;
-  assign LsuPlugin_peripheralBus_toAxiLite4_a_ready = (LsuPlugin_peripheralBus_toAxiLite4_a_payload_write ? pBusAxi_awready : pBusAxi_arready);
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_ready = (LsuPlugin_peripheralBus_toAxiLite4_a_payload_write ? pBus_awready : pBus_arready);
   assign LsuPlugin_peripheralBus_toAxiLite4_addr = _zz_LsuPlugin_peripheralBus_toAxiLite4_addr;
-  assign pBusAxi_arvalid = (LsuPlugin_peripheralBus_toAxiLite4_a_valid && (! LsuPlugin_peripheralBus_toAxiLite4_a_payload_write));
-  assign pBusAxi_araddr = LsuPlugin_peripheralBus_toAxiLite4_addr;
-  assign pBusAxi_arprot = ((3'b000 | 3'b000) | 3'b000);
-  assign pBusAxi_awvalid = (LsuPlugin_peripheralBus_toAxiLite4_a_valid && LsuPlugin_peripheralBus_toAxiLite4_a_payload_write);
-  assign pBusAxi_awaddr = LsuPlugin_peripheralBus_toAxiLite4_addr;
-  assign pBusAxi_awprot = ((3'b000 | 3'b000) | 3'b000);
-  assign pBusAxi_wvalid = LsuPlugin_peripheralBus_toAxiLite4_w_valid;
-  assign pBusAxi_wdata = LsuPlugin_peripheralBus_toAxiLite4_w_payload_data;
-  assign pBusAxi_wstrb = LsuPlugin_peripheralBus_toAxiLite4_w_payload_mask;
-  assign LsuPlugin_peripheralBus_toAxiLite4_w_ready = pBusAxi_wready;
-  assign LsuPlugin_peripheralBus_rsp_valid = (pBusAxi_rvalid || pBusAxi_bvalid);
-  assign LsuPlugin_peripheralBus_rsp_payload_data = pBusAxi_rdata;
-  assign LsuPlugin_peripheralBus_rsp_payload_error = (! (LsuPlugin_peripheralBus_toAxiLite4_writeSel ? (pBusAxi_bresp == 2'b00) : (pBusAxi_rresp == 2'b00)));
-  assign pBusAxi_bready = 1'b1;
-  assign pBusAxi_rready = 1'b1;
+  assign pBus_arvalid = (LsuPlugin_peripheralBus_toAxiLite4_a_valid && (! LsuPlugin_peripheralBus_toAxiLite4_a_payload_write));
+  assign pBus_araddr = LsuPlugin_peripheralBus_toAxiLite4_addr;
+  assign pBus_arprot = ((3'b000 | 3'b000) | 3'b000);
+  assign pBus_awvalid = (LsuPlugin_peripheralBus_toAxiLite4_a_valid && LsuPlugin_peripheralBus_toAxiLite4_a_payload_write);
+  assign pBus_awaddr = LsuPlugin_peripheralBus_toAxiLite4_addr;
+  assign pBus_awprot = ((3'b000 | 3'b000) | 3'b000);
+  assign pBus_wvalid = LsuPlugin_peripheralBus_toAxiLite4_w_valid;
+  assign pBus_wdata = LsuPlugin_peripheralBus_toAxiLite4_w_payload_data;
+  assign pBus_wstrb = LsuPlugin_peripheralBus_toAxiLite4_w_payload_mask;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_ready = pBus_wready;
+  assign LsuPlugin_peripheralBus_rsp_valid = (pBus_rvalid || pBus_bvalid);
+  assign LsuPlugin_peripheralBus_rsp_payload_data = pBus_rdata;
+  assign LsuPlugin_peripheralBus_rsp_payload_error = (! (LsuPlugin_peripheralBus_toAxiLite4_writeSel ? (pBus_bresp == 2'b00) : (pBus_rresp == 2'b00)));
+  assign pBus_bready = 1'b1;
+  assign pBus_rready = 1'b1;
   assign DataCachePlugin_mem_read_resizer_ret_cmd_valid = DataCachePlugin_mem_read_cmd_valid;
   assign DataCachePlugin_mem_read_cmd_ready = DataCachePlugin_mem_read_resizer_ret_cmd_ready;
   assign DataCachePlugin_mem_read_resizer_ret_cmd_payload_id = DataCachePlugin_mem_read_cmd_payload_id;

@@ -137,7 +137,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
         case plugin: Lsu2Plugin => {
           val native = plugin.peripheralBus.setAsDirectionLess //Unset IO properties of peripheral bus
           val axi = master(native.resize(32).toAxiLite4())
-              .setName("pBusAxi")
+              .setName("pBus")
               .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the dbus (used by QSysify)
           AxiLite4SpecRenamer(axi)
         }
