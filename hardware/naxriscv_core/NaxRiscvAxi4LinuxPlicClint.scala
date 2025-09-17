@@ -71,6 +71,8 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
       regFileFakeRatio = regFileFakeRatio,
       //      withCoherency = true,
       ioRange = null, // Setting to null will cause ioRange and ioSize to be input ports
+      memRange = _ => True, // By default CPU only allows memory addresses above 0x80000000. This change allows it to access entire address space as memory.
+      fetchRange = _ => True, // By default CPU disallows fetching instructions from ioRange. This change allows it to access entire address space to fetch instructions.
     )
 
     l.foreach{

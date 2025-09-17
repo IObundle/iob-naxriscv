@@ -18516,11 +18516,11 @@ module NaxRiscvAxi4LinuxPlicClint (
     if(Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup) begin
       Lsu2Plugin_logic_sharedPip_stages_1_MMU_ACCESS_FAULT = Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_lineAccessFault;
     end else begin
-      Lsu2Plugin_logic_sharedPip_stages_1_MMU_ACCESS_FAULT = (1'b0 || (! (Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED[31] || Lsu2Plugin_logic_sharedPip_stages_1_MMU_IO)));
+      Lsu2Plugin_logic_sharedPip_stages_1_MMU_ACCESS_FAULT = (1'b0 || (! (1'b1 || Lsu2Plugin_logic_sharedPip_stages_1_MMU_IO)));
     end
   end
 
-  assign when_MmuPlugin_l356 = (! (Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED[31 : 28] != 4'b0001));
+  assign when_MmuPlugin_l356 = (! 1'b1);
   assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_BYPASS_TRANSLATION = (! Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup);
   assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_WAYS_OH = Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_oh;
   assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_WAYS_PHYSICAL_0 = {Lsu2Plugin_logic_sharedPip_stages_1_MMU_L0_ENTRIES_0_physicalAddress,Lsu2Plugin_logic_sharedPip_stages_1_ADDRESS_PRE_TRANSLATION[11 : 0]};
@@ -18723,11 +18723,11 @@ module NaxRiscvAxi4LinuxPlicClint (
     if(FetchCachePlugin_logic_translationPort_logic_ctrl_requireMmuLockup) begin
       FetchPlugin_stages_1_MMU_ACCESS_FAULT = FetchCachePlugin_logic_translationPort_logic_ctrl_lineAccessFault;
     end else begin
-      FetchPlugin_stages_1_MMU_ACCESS_FAULT = (1'b0 || (! (FetchPlugin_stages_1_MMU_TRANSLATED[31] || FetchPlugin_stages_1_MMU_IO)));
+      FetchPlugin_stages_1_MMU_ACCESS_FAULT = (1'b0 || (! (1'b1 || FetchPlugin_stages_1_MMU_IO)));
     end
   end
 
-  assign when_MmuPlugin_l356_1 = (! (FetchPlugin_stages_1_MMU_TRANSLATED[31 : 28] != 4'b0001));
+  assign when_MmuPlugin_l356_1 = (! 1'b1);
   assign FetchPlugin_stages_1_MMU_BYPASS_TRANSLATION = (! FetchCachePlugin_logic_translationPort_logic_ctrl_requireMmuLockup);
   assign FetchPlugin_stages_1_MMU_WAYS_OH = FetchCachePlugin_logic_translationPort_logic_ctrl_oh;
   assign FetchPlugin_stages_1_MMU_WAYS_PHYSICAL_0 = {FetchPlugin_stages_1_MMU_L0_ENTRIES_0_physicalAddress,FetchPlugin_stages_1_Fetch_FETCH_PC[11 : 0]};
