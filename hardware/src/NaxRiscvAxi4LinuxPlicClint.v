@@ -317,6 +317,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   RobPlugin_logic_storage_PC_banks_0_spinal_port1;
   wire       [31:0]   RobPlugin_logic_storage_PC_banks_0_spinal_port2;
   wire       [31:0]   RobPlugin_logic_storage_PC_banks_0_spinal_port3;
+  wire       [31:0]   RobPlugin_logic_storage_PC_banks_0_spinal_port4;
   wire       [0:0]    RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port1;
   wire       [0:0]    RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port2;
   wire       [0:0]    RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port3;
@@ -530,6 +531,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [0:0]    _zz_CommitPlugin_logic_commit_active_2;
   wire       [4:0]    _zz_CommitPlugin_logic_commit_head;
   wire       [3:0]    _zz_CommitPlugin_logic_free_robHit;
+  wire       [31:0]   _zz_commit_pc_0_1;
+  wire       [31:0]   _zz_commit_pc_0_2;
   reg        [0:0]    _zz_CommitDebugFilterPlugin_logic_commits;
   wire       [0:0]    _zz_CommitDebugFilterPlugin_logic_commits_1;
   wire       [31:0]   _zz_CommitDebugFilterPlugin_logic_filters_0_value;
@@ -3074,9 +3077,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [2:0]    BranchContextPlugin_logic_ptr_occupancy;
   wire       [2:0]    BranchContextPlugin_logic_alloc_allocNext;
   reg                 BranchContextPlugin_logic_alloc_full;
-  wire                when_BranchContextPlugin_l93;
-  wire                when_BranchContextPlugin_l106;
-  wire                FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l107;
+  wire                when_BranchContextPlugin_l97;
+  wire                when_BranchContextPlugin_l110;
+  wire                FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l111;
   reg        [23:0]   HistoryPlugin_logic_onCommit_value /* verilator public */ ;
   wire       [23:0]   HistoryPlugin_logic_onCommit_whitebox_0 /* verilator public */ ;
   reg        [3:0]    DecoderPredictionPlugin_logic_ras_ptr_push;
@@ -3255,6 +3258,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [7:0]    reschedule_payload_reason /* verilator public */ ;
   wire                reschedule_payload_skipCommit /* verilator public */ ;
   wire       [7:0]    rescheduleReason /* verilator public */ ;
+  wire       [31:0]   commit_pc_0 /* verilator public */ ;
   wire       [16:0]   CommitDebugFilterPlugin_logic_commits;
   reg        [31:0]   CommitDebugFilterPlugin_logic_filters_0_value;
   reg        [31:0]   CommitDebugFilterPlugin_logic_filters_1_value;
@@ -5341,6 +5345,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                when_RobPlugin_l123;
   wire       [3:0]    _zz_CommitPlugin_logic_commit_active;
   wire       [3:0]    _zz_integer_RfAllocationPlugin_logic_push_mask_0;
+  wire       [3:0]    _zz_commit_pc_0;
   wire       [3:0]    _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc;
   wire       [3:0]    _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC;
   wire       [3:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC;
@@ -5579,14 +5584,14 @@ module NaxRiscvAxi4LinuxPlicClint (
       zz__zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue[2 : 0] = 3'b101;
     end
   endfunction
-  wire [31:0] _zz_258;
+  wire [31:0] _zz_259;
   function  zz_DecoderPlugin_logic_slots_0_x0AlwaysZero(input dummy);
     begin
       zz_DecoderPlugin_logic_slots_0_x0AlwaysZero = 1'bx;
       zz_DecoderPlugin_logic_slots_0_x0AlwaysZero = 1'b1;
     end
   endfunction
-  wire  _zz_259;
+  wire  _zz_260;
 
   assign _zz__zz_FetchPlugin_stages_1_MMU_IO = (ioStartAddr + ioSize);
   assign _zz_FetchPlugin_stages_1_FETCH_ID_1 = FetchPlugin_stages_1_isFireing;
@@ -5625,6 +5630,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_CommitPlugin_logic_commit_active_2 = RobPlugin_logic_storage_Frontend_DISPATCH_MASK_banks_0_spinal_port1[0];
   assign _zz_CommitPlugin_logic_commit_head = (CommitPlugin_logic_ptr_commit + 5'h00);
   assign _zz_CommitPlugin_logic_free_robHit = CommitPlugin_logic_ptr_free[3:0];
+  assign _zz_commit_pc_0_1 = _zz_commit_pc_0_2[31 : 0];
+  assign _zz_commit_pc_0_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port1[31 : 0];
   assign _zz_CommitDebugFilterPlugin_logic_filters_0_value = ($signed(_zz_CommitDebugFilterPlugin_logic_filters_0_value_1) >>> 4);
   assign _zz_CommitDebugFilterPlugin_logic_filters_0_value_1 = _zz_CommitDebugFilterPlugin_logic_filters_0_value_2;
   assign _zz_CommitDebugFilterPlugin_logic_filters_0_value_2 = (_zz_CommitDebugFilterPlugin_logic_filters_0_value_3 - CommitDebugFilterPlugin_logic_filters_0_value);
@@ -5638,7 +5645,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_CommitDebugFilterPlugin_logic_filters_2_value_2 = (_zz_CommitDebugFilterPlugin_logic_filters_2_value_3 - CommitDebugFilterPlugin_logic_filters_2_value);
   assign _zz_CommitDebugFilterPlugin_logic_filters_2_value_3 = {15'd0, CommitDebugFilterPlugin_logic_commits};
   assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_1 = _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_2[31 : 0];
-  assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port1[31 : 0];
+  assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port2[31 : 0];
   assign _zz__zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_SRC2 = ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP[31 : 20];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_ADD_SUB = ($signed(ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_SRC1) + $signed(ALU0_SrcPlugin_logic_addsub_rs2Patched));
   assign _zz_ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_ADD_SUB_1 = _zz_ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_ADD_SUB_2;
@@ -6090,7 +6097,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_1 = _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_2[0 : 0];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_2 = RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port3[0];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC_1 = _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC_2[31 : 0];
-  assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port2[31 : 0];
+  assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port3[31 : 0];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_IntAluPlugin_SEL_1 = _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_IntAluPlugin_SEL_2[0];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_IntAluPlugin_SEL_2 = (|{((ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP & 32'h00002000) == 32'h00002000),{_zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_IntAluPlugin_SEL,((ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP & 32'h00001000) == 32'h00000000)}});
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_completion_SEL_E0 = _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_completion_SEL_E0_1[0];
@@ -6116,7 +6123,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_2[0 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_2 = RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port4[0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_2[31 : 0];
-  assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port3[31 : 0];
+  assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port4[31 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_2[1 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_2 = RobPlugin_logic_storage_BRANCH_ID_banks_0_spinal_port1[1 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_LSU_ID_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_LSU_ID_2[3 : 0];
@@ -6507,6 +6514,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign BranchContextPlugin_logic_mem_finalBranch_spinal_port1 = BranchContextPlugin_logic_mem_finalBranch[BranchContextPlugin_free_learn_bid];
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_DecoderPredictionPlugin_logic_ras_mem_stack.bin",DecoderPredictionPlugin_logic_ras_mem_stack);
+  end
   assign DecoderPredictionPlugin_logic_ras_mem_stack_spinal_port0 = DecoderPredictionPlugin_logic_ras_mem_stack[DecoderPredictionPlugin_logic_ras_ptr_pop];
   always @(posedge clk) begin
     if(_zz_28) begin
@@ -6514,6 +6524,9 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_BtbPlugin_logic_mem.bin",BtbPlugin_logic_mem);
+  end
   always @(posedge clk) begin
     if(FetchPlugin_stages_0_ready) begin
       BtbPlugin_logic_mem_spinal_port1 <= BtbPlugin_logic_mem[BtbPlugin_logic_readCmd_entryAddress];
@@ -6523,6 +6536,9 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_GSharePlugin_logic_mem_counter.bin",GSharePlugin_logic_mem_counter);
+  end
   always @(posedge clk) begin
     if(_zz_26) begin
       GSharePlugin_logic_mem_counter[GSharePlugin_logic_mem_write_payload_address] <= _zz_GSharePlugin_logic_mem_counter_port;
@@ -6689,6 +6705,9 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_Lsu2Plugin_logic_lq_hazardPrediction_mem.bin",Lsu2Plugin_logic_lq_hazardPrediction_mem);
+  end
   always @(posedge clk) begin
     if(_zz_25) begin
       Lsu2Plugin_logic_lq_hazardPrediction_mem[Lsu2Plugin_logic_lq_hazardPrediction_write_takeWhen_payload_address] <= _zz_Lsu2Plugin_logic_lq_hazardPrediction_mem_port;
@@ -6701,6 +6720,9 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_Lsu2Plugin_logic_lq_hitPrediction_mem.bin",Lsu2Plugin_logic_lq_hitPrediction_mem);
+  end
   always @(posedge clk) begin
     if(_zz_24) begin
       Lsu2Plugin_logic_lq_hitPrediction_mem[Lsu2Plugin_logic_lq_hitPrediction_write_takeWhen_payload_address] <= _zz_Lsu2Plugin_logic_lq_hitPrediction_mem_port;
@@ -6946,6 +6968,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign RobPlugin_logic_completionMem_target_spinal_port1 = RobPlugin_logic_completionMem_target[RobPlugin_logic_completionMem_reads_0_targetRead_address];
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_RobPlugin_logic_completionMem_hits_0.bin",RobPlugin_logic_completionMem_hits_0);
+  end
   assign RobPlugin_logic_completionMem_hits_0_spinal_port0 = RobPlugin_logic_completionMem_hits_0[RobPlugin_logic_completionMem_init_0_robId];
   assign RobPlugin_logic_completionMem_hits_0_spinal_port1 = RobPlugin_logic_completionMem_hits_0[Lsu2Plugin_setup_sharedCompletion_payload_id];
   always @(posedge clk) begin
@@ -6955,6 +6980,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign RobPlugin_logic_completionMem_hits_0_spinal_port3 = RobPlugin_logic_completionMem_hits_0[_zz_CommitPlugin_setup_robLineMask_mask];
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_RobPlugin_logic_completionMem_hits_1.bin",RobPlugin_logic_completionMem_hits_1);
+  end
   assign RobPlugin_logic_completionMem_hits_1_spinal_port0 = RobPlugin_logic_completionMem_hits_1[RobPlugin_logic_completionMem_init_0_robId];
   assign RobPlugin_logic_completionMem_hits_1_spinal_port1 = RobPlugin_logic_completionMem_hits_1[Lsu2Plugin_setup_specialCompletion_payload_id];
   always @(posedge clk) begin
@@ -6964,6 +6992,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign RobPlugin_logic_completionMem_hits_1_spinal_port3 = RobPlugin_logic_completionMem_hits_1[_zz_CommitPlugin_setup_robLineMask_mask];
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_RobPlugin_logic_completionMem_hits_2.bin",RobPlugin_logic_completionMem_hits_2);
+  end
   assign RobPlugin_logic_completionMem_hits_2_spinal_port0 = RobPlugin_logic_completionMem_hits_2[RobPlugin_logic_completionMem_init_0_robId];
   assign RobPlugin_logic_completionMem_hits_2_spinal_port1 = RobPlugin_logic_completionMem_hits_2[ALU0_ExecutionUnitBase_pipeline_completion_0_port_payload_id];
   always @(posedge clk) begin
@@ -6973,6 +7004,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign RobPlugin_logic_completionMem_hits_2_spinal_port3 = RobPlugin_logic_completionMem_hits_2[_zz_CommitPlugin_setup_robLineMask_mask];
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_RobPlugin_logic_completionMem_hits_3.bin",RobPlugin_logic_completionMem_hits_3);
+  end
   assign RobPlugin_logic_completionMem_hits_3_spinal_port0 = RobPlugin_logic_completionMem_hits_3[RobPlugin_logic_completionMem_init_0_robId];
   assign RobPlugin_logic_completionMem_hits_3_spinal_port1 = RobPlugin_logic_completionMem_hits_3[EU0_ExecutionUnitBase_pipeline_completion_0_port_payload_id];
   always @(posedge clk) begin
@@ -6996,9 +7030,10 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign RobPlugin_logic_storage_PC_banks_0_spinal_port1 = RobPlugin_logic_storage_PC_banks_0[_zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc];
-  assign RobPlugin_logic_storage_PC_banks_0_spinal_port2 = RobPlugin_logic_storage_PC_banks_0[_zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC];
-  assign RobPlugin_logic_storage_PC_banks_0_spinal_port3 = RobPlugin_logic_storage_PC_banks_0[_zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC];
+  assign RobPlugin_logic_storage_PC_banks_0_spinal_port1 = RobPlugin_logic_storage_PC_banks_0[_zz_commit_pc_0];
+  assign RobPlugin_logic_storage_PC_banks_0_spinal_port2 = RobPlugin_logic_storage_PC_banks_0[_zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc];
+  assign RobPlugin_logic_storage_PC_banks_0_spinal_port3 = RobPlugin_logic_storage_PC_banks_0[_zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC];
+  assign RobPlugin_logic_storage_PC_banks_0_spinal_port4 = RobPlugin_logic_storage_PC_banks_0[_zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC];
   always @(posedge clk) begin
     if(_zz_RobPlugin_logic_storage_WRITE_RD_banks_0_port_1) begin
       RobPlugin_logic_storage_WRITE_RD_banks_0[FrontendPlugin_allocated_ROB_ID] <= _zz_RobPlugin_logic_storage_WRITE_RD_banks_0_port;
@@ -8197,7 +8232,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     _zz_29 = 1'b0;
-    if(when_BranchContextPlugin_l93) begin
+    if(when_BranchContextPlugin_l97) begin
       if(FrontendPlugin_allocated_ready) begin
         _zz_29 = 1'b1;
       end
@@ -8206,7 +8241,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     BranchContextPlugin_logic_alloc_allocNext_1 = BranchContextPlugin_logic_alloc_allocNext;
-    if(when_BranchContextPlugin_l93) begin
+    if(when_BranchContextPlugin_l97) begin
       BranchContextPlugin_logic_alloc_allocNext_1 = (BranchContextPlugin_logic_alloc_allocNext + 3'b001);
     end
   end
@@ -8988,15 +9023,15 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign BranchContextPlugin_logic_alloc_allocNext = BranchContextPlugin_logic_ptr_alloc;
   always @(*) begin
     BranchContextPlugin_logic_alloc_full = 1'b0;
-    if(when_BranchContextPlugin_l106) begin
+    if(when_BranchContextPlugin_l110) begin
       BranchContextPlugin_logic_alloc_full = 1'b1;
     end
   end
 
   assign FrontendPlugin_allocated_BRANCH_ID_0 = BranchContextPlugin_logic_alloc_allocNext[1:0];
-  assign when_BranchContextPlugin_l93 = ((FrontendPlugin_allocated_valid && FrontendPlugin_allocated_BRANCH_SEL_0) && FrontendPlugin_allocated_Frontend_DISPATCH_MASK_0);
-  assign when_BranchContextPlugin_l106 = (3'b011 < BranchContextPlugin_logic_ptr_occupancy);
-  assign FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l107 = BranchContextPlugin_logic_alloc_full;
+  assign when_BranchContextPlugin_l97 = ((FrontendPlugin_allocated_valid && FrontendPlugin_allocated_BRANCH_SEL_0) && FrontendPlugin_allocated_Frontend_DISPATCH_MASK_0);
+  assign when_BranchContextPlugin_l110 = (3'b011 < BranchContextPlugin_logic_ptr_occupancy);
+  assign FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l111 = BranchContextPlugin_logic_alloc_full;
   always @(*) begin
     DecoderPredictionPlugin_logic_ras_ptr_pushIt = 1'b0;
     if(when_DecoderPredictionPlugin_l212) begin
@@ -9301,6 +9336,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign reschedule_payload_reason = CommitPlugin_logic_commit_reschedulePort_payload_reason;
   assign reschedule_payload_skipCommit = CommitPlugin_logic_commit_reschedulePort_payload_skipCommit;
   assign rescheduleReason = CommitPlugin_logic_reschedule_reason;
+  assign commit_pc_0 = _zz_commit_pc_0_1[31 : 0];
   assign CommitDebugFilterPlugin_logic_commits = ({16'd0,_zz_CommitDebugFilterPlugin_logic_commits} <<< 5'd16);
   assign PrivilegedPlugin_logic_defaultTrap_csrPrivilege = EU0_CsrAccessPlugin_setup_onDecodeAddress[9 : 8];
   assign PrivilegedPlugin_logic_defaultTrap_csrReadOnly = (&EU0_CsrAccessPlugin_setup_onDecodeAddress[11 : 10]);
@@ -18036,8 +18072,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign EU0_CsrAccessPlugin_setup_onReadMovingOff = ((! EU0_CsrAccessPlugin_setup_onReadHalt) || EU0_ExecutionUnitBase_pipeline_execute_0_isFlushed);
-  assign _zz_258 = zz__zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue(1'b0);
-  always @(*) _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue = _zz_258;
+  assign _zz_259 = zz__zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue(1'b0);
+  always @(*) _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue = _zz_259;
   assign _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_1[31 : 0] = 32'h40141101;
   always @(*) begin
     _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_2 = 32'h00000000;
@@ -19099,8 +19135,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_FrontendPlugin_decoded_SQ_ALLOC_0 = ((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h10000070) == 32'h00000020);
   assign _zz_FrontendPlugin_decoded_SQ_ALLOC_0_1 = ((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h08000070) == 32'h08000020);
   assign FrontendPlugin_decoded_READ_RS_1_0 = _zz_FrontendPlugin_decoded_READ_RS_1_0[0];
-  assign _zz_259 = zz_DecoderPlugin_logic_slots_0_x0AlwaysZero(1'b0);
-  always @(*) DecoderPlugin_logic_slots_0_x0AlwaysZero = _zz_259;
+  assign _zz_260 = zz_DecoderPlugin_logic_slots_0_x0AlwaysZero(1'b0);
+  always @(*) DecoderPlugin_logic_slots_0_x0AlwaysZero = _zz_260;
   assign _zz_FrontendPlugin_decoded_WRITE_RD_0 = ((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h00000048) == 32'h00000048);
   assign FrontendPlugin_decoded_WRITE_RD_0 = (_zz_FrontendPlugin_decoded_WRITE_RD_0_1[0] && (! (DecoderPlugin_logic_slots_0_rdZero && DecoderPlugin_logic_slots_0_x0AlwaysZero)));
   assign FrontendPlugin_decoded_ALU0_SEL_0 = _zz_FrontendPlugin_decoded_ALU0_SEL_0[0];
@@ -19757,6 +19793,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_CommitPlugin_logic_commit_active = CommitPlugin_logic_ptr_commit[3 : 0];
   assign _zz_integer_RfAllocationPlugin_logic_push_mask_0 = CommitPlugin_logic_free_port_payload_robId;
   assign integer_RfAllocationPlugin_logic_push_mask_0 = _zz_integer_RfAllocationPlugin_logic_push_mask_0_1[0];
+  assign _zz_commit_pc_0 = CommitPlugin_logic_commit_event_robId;
   assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc = CommitPlugin_logic_commit_reschedulePort_payload_robId;
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC = ALU0_ExecutionUnitBase_pipeline_fetch_0_ROB_ID;
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC = EU0_ExecutionUnitBase_pipeline_fetch_0_ROB_ID;
@@ -19925,7 +19962,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign when_Pipeline_l278_7 = (|{FrontendPlugin_allocated_haltRequest_FrontendPlugin_l67,{FrontendPlugin_allocated_haltRequest_CommitPlugin_l95,{FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l107,FrontendPlugin_allocated_haltRequest_RfAllocationPlugin_l55}}});
+  assign when_Pipeline_l278_7 = (|{FrontendPlugin_allocated_haltRequest_FrontendPlugin_l67,{FrontendPlugin_allocated_haltRequest_CommitPlugin_l95,{FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l111,FrontendPlugin_allocated_haltRequest_RfAllocationPlugin_l55}}});
   always @(*) begin
     FrontendPlugin_dispatch_ready = 1'b1;
     if(when_Pipeline_l278_8) begin

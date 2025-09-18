@@ -158,6 +158,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
     cpu
   }
 
-  spinalConfig.generateVerilog(if(withIoFf) Rtl.ffIo(gen) else gen)
+  // Generate with simulation in mind (initialize memories).
+  spinalConfig.includeSimulation.generateVerilog(if(withIoFf) Rtl.ffIo(gen) else gen)
 //  spinalConfig.generateVerilog(new StreamFifo(UInt(4 bits), 256).setDefinitionName("nax"))
 }

@@ -25,7 +25,8 @@ naxriscv:
 	# Run sbt to build CPU and copy generated verilog to this repo
 	cd submodules/NaxRiscv && \
 	sbt -java-home $(JDK_HOME) "runMain naxriscv.platform.asic.$(CPU)" && \
-	cp $(CPU).v $(NAXRISCV_SRC_DIR)/$(CPU).v
+	cp $(CPU).v $(NAXRISCV_SRC_DIR)/$(CPU).v && \
+	cp $(CPU).v_*.bin $(NAX_HARDWARE_DIR)/init_mems
 
 #
 # Clean
