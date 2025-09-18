@@ -3077,9 +3077,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [2:0]    BranchContextPlugin_logic_ptr_occupancy;
   wire       [2:0]    BranchContextPlugin_logic_alloc_allocNext;
   reg                 BranchContextPlugin_logic_alloc_full;
-  wire                when_BranchContextPlugin_l97;
-  wire                when_BranchContextPlugin_l110;
-  wire                FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l111;
+  wire                when_BranchContextPlugin_l93;
+  wire                when_BranchContextPlugin_l106;
+  wire                FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l107;
   reg        [23:0]   HistoryPlugin_logic_onCommit_value /* verilator public */ ;
   wire       [23:0]   HistoryPlugin_logic_onCommit_whitebox_0 /* verilator public */ ;
   reg        [3:0]    DecoderPredictionPlugin_logic_ras_ptr_push;
@@ -8232,7 +8232,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     _zz_29 = 1'b0;
-    if(when_BranchContextPlugin_l97) begin
+    if(when_BranchContextPlugin_l93) begin
       if(FrontendPlugin_allocated_ready) begin
         _zz_29 = 1'b1;
       end
@@ -8241,7 +8241,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     BranchContextPlugin_logic_alloc_allocNext_1 = BranchContextPlugin_logic_alloc_allocNext;
-    if(when_BranchContextPlugin_l97) begin
+    if(when_BranchContextPlugin_l93) begin
       BranchContextPlugin_logic_alloc_allocNext_1 = (BranchContextPlugin_logic_alloc_allocNext + 3'b001);
     end
   end
@@ -9023,15 +9023,15 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign BranchContextPlugin_logic_alloc_allocNext = BranchContextPlugin_logic_ptr_alloc;
   always @(*) begin
     BranchContextPlugin_logic_alloc_full = 1'b0;
-    if(when_BranchContextPlugin_l110) begin
+    if(when_BranchContextPlugin_l106) begin
       BranchContextPlugin_logic_alloc_full = 1'b1;
     end
   end
 
   assign FrontendPlugin_allocated_BRANCH_ID_0 = BranchContextPlugin_logic_alloc_allocNext[1:0];
-  assign when_BranchContextPlugin_l97 = ((FrontendPlugin_allocated_valid && FrontendPlugin_allocated_BRANCH_SEL_0) && FrontendPlugin_allocated_Frontend_DISPATCH_MASK_0);
-  assign when_BranchContextPlugin_l110 = (3'b011 < BranchContextPlugin_logic_ptr_occupancy);
-  assign FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l111 = BranchContextPlugin_logic_alloc_full;
+  assign when_BranchContextPlugin_l93 = ((FrontendPlugin_allocated_valid && FrontendPlugin_allocated_BRANCH_SEL_0) && FrontendPlugin_allocated_Frontend_DISPATCH_MASK_0);
+  assign when_BranchContextPlugin_l106 = (3'b011 < BranchContextPlugin_logic_ptr_occupancy);
+  assign FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l107 = BranchContextPlugin_logic_alloc_full;
   always @(*) begin
     DecoderPredictionPlugin_logic_ras_ptr_pushIt = 1'b0;
     if(when_DecoderPredictionPlugin_l212) begin
@@ -19962,7 +19962,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign when_Pipeline_l278_7 = (|{FrontendPlugin_allocated_haltRequest_FrontendPlugin_l67,{FrontendPlugin_allocated_haltRequest_CommitPlugin_l95,{FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l111,FrontendPlugin_allocated_haltRequest_RfAllocationPlugin_l55}}});
+  assign when_Pipeline_l278_7 = (|{FrontendPlugin_allocated_haltRequest_FrontendPlugin_l67,{FrontendPlugin_allocated_haltRequest_CommitPlugin_l95,{FrontendPlugin_allocated_haltRequest_BranchContextPlugin_l107,FrontendPlugin_allocated_haltRequest_RfAllocationPlugin_l55}}});
   always @(*) begin
     FrontendPlugin_dispatch_ready = 1'b1;
     if(when_Pipeline_l278_8) begin
