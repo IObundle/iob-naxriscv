@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 import os
+import shutil
 
 
 def setup(py_params_dict):
@@ -79,7 +80,7 @@ def setup(py_params_dict):
             },
             {
                 "name": "i_bus_m",
-                "descr": "iob-picorv32 instruction bus",
+                "descr": "CPU instruction bus",
                 "signals": {
                     "type": "axi",
                     "prefix": "ibus_",
@@ -92,7 +93,7 @@ def setup(py_params_dict):
             },
             {
                 "name": "d_bus_m",
-                "descr": "iob-picorv32 data bus",
+                "descr": "CPU data bus",
                 "signals": {
                     "type": "axi",
                     "prefix": "dbus_",
@@ -142,19 +143,40 @@ def setup(py_params_dict):
                 ],
             },
             {
-                "name": "ibus_int",
-                "descr": "ibus internal signals",
-                "signals": [
-                    {"name": "ibus_axi_arregion_int", "width": "4"},
-                ],
+                "name": "dbus_int",
+                "descr": "Internal cached data bus",
+                "signals": {
+                    "type": "axi",
+                    "prefix": "dbus_int_",
+                    "ID_W": "AXI_ID_W",
+                    "ADDR_W": "AXI_ADDR_W",
+                    "DATA_W": "AXI_DATA_W",
+                    "LEN_W": "AXI_LEN_W",
+                    "LOCK_W": 1,
+                },
             },
             {
-                "name": "dbus_int",
-                "descr": "dbus internal signals",
-                "signals": [
-                    {"name": "dbus_axi_awregion_int", "width": "4"},
-                    {"name": "dbus_axi_arregion_int", "width": "4"},
-                ],
+                "name": "pbus_axil_int",
+                "descr": "Internal uncached AXI-Lite peripheral bus",
+                "signals": {
+                    "type": "axil",
+                    "prefix": "pbus_int_",
+                    "ADDR_W": "AXI_ADDR_W",
+                    "DATA_W": "AXI_DATA_W",
+                },
+            },
+            {
+                "name": "pbus_axi_int",
+                "descr": "Internal uncached AXI peripheral bus",
+                "signals": {
+                    "type": "axi",
+                    "prefix": "pbus_int_",
+                    "ID_W": "AXI_ID_W",
+                    "ADDR_W": "AXI_ADDR_W",
+                    "DATA_W": "AXI_DATA_W",
+                    "LEN_W": "AXI_LEN_W",
+                    "LOCK_W": 1,
+                },
             },
             {
                 "name": "clint_cbus_axil",
@@ -175,6 +197,13 @@ def setup(py_params_dict):
                     "ADDR_W": 22,
                     "DATA_W": "AXI_DATA_W",
                 },
+            },
+            {
+                "name": "unused_signals",
+                "signals": [
+                    {"name": "dbus_araddr_ignore_bit", "width": "1"},
+                    {"name": "dbus_awaddr_ignore_bit", "width": "1"},
+                ],
             },
         ],
         "subblocks": [
@@ -204,17 +233,60 @@ def setup(py_params_dict):
                     "axil_m": "plic_cbus_axil",
                 },
             },
+            {
+                "core_name": "iob_axil2axi",
+                "instance_name": "pbus_axil2axi",
+                "instance_description": "Convert AXI-Lite to AXI for peripheral bus",
+                "parameters": {
+                    "AXI_ID_W": "AXI_ID_W",
+                    "AXI_ADDR_W": "AXI_ADDR_W",
+                    "AXI_DATA_W": "AXI_DATA_W",
+                    "AXI_LEN_W": "AXI_LEN_W",
+                    "AXI_LOCK_W": 1,
+                },
+                "connect": {
+                    "axil_s": "pbus_axil_int",
+                    "axi_m": "pbus_axi_int",
+                },
+            },
+            {
+                "core_name": "iob_axi_merge",
+                "name": "iob_naxriscv_dbus_axi_merge",
+                "instance_name": "dbus_axi_merge",
+                "instance_description": "Merge internal data and peripheral buses into a single data bus",
+                "addr_w": 33,  # Each subordinate has -1 address bit (32 bits each). Manager has 33 bits (1 ignored).
+                "lock_w": 1,
+                "parameters": {
+                    "ID_W": "AXI_ID_W",
+                    "LEN_W": "AXI_LEN_W",
+                },
+                "num_subordinates": 2,
+                "connect": {
+                    "clk_en_rst_s": "clk_en_rst_s",
+                    "reset_i": "rst_i",
+                    "s_0_s": "dbus_int",
+                    "s_1_s": "pbus_axi_int",
+                    "m_m": (
+                        "d_bus_m",
+                        [
+                            # Ignore most significant address bit (we only use 32 bits)
+                            "{dbus_araddr_ignore_bit, dbus_axi_araddr_o}",
+                            "{dbus_awaddr_ignore_bit, dbus_axi_awaddr_o}",
+                        ],
+                    ),
+                },
+            },
         ],
         "snippets": [
             {
                 "verilog_code": """
-    wire [7:0] ibus_axi_arlen_int;
-    wire [7:0] dbus_axi_arlen_int;
-    wire [7:0] dbus_axi_awlen_int;
+   wire [7:0] ibus_axi_arlen_int;
+   wire [7:0] dbus_int_axi_arlen_int;
+   wire [7:0] dbus_int_axi_awlen_int;
 
 
-  // Instantiation of NaxRiscv, Plic, and Clint
-  NaxRiscvAxi4LinuxPlicClint CPU (
+   // Instantiation of NaxRiscv, Plic, and Clint
+   NaxRiscvAxi4LinuxPlicClint CPU (
       // CLINT
       .clint_awvalid(clint_axil_awvalid),
       .clint_awready(clint_axil_awready),
@@ -268,61 +340,78 @@ def setup(py_params_dict):
       .iBusAxi_arvalid(ibus_axi_arvalid_o),
       .iBusAxi_arready(ibus_axi_arready_i),
       .iBusAxi_araddr(ibus_axi_araddr_o),
-      .iBusAxi_arid(ibus_axi_arid_o),
-      .iBusAxi_arregion(ibus_axi_arregion_int),
+      //.iBusAxi_arid(ibus_axi_arid_o), // Not available
       .iBusAxi_arlen(ibus_axi_arlen_int),
       .iBusAxi_arsize(ibus_axi_arsize_o),
       .iBusAxi_arburst(ibus_axi_arburst_o),
-      .iBusAxi_arlock(ibus_axi_arlock_o),
-      .iBusAxi_arcache(ibus_axi_arcache_o),
-      .iBusAxi_arqos(ibus_axi_arqos_o),
+      //.iBusAxi_arlock(ibus_axi_arlock_o), // Not available
+      //.iBusAxi_arcache(ibus_axi_arcache_o), // Not available
+      //.iBusAxi_arqos(ibus_axi_arqos_o), // Not available
       .iBusAxi_arprot(),
       .iBusAxi_rvalid(ibus_axi_rvalid_i),
       .iBusAxi_rready(ibus_axi_rready_o),
       .iBusAxi_rdata(ibus_axi_rdata_i),
-      .iBusAxi_rid(ibus_axi_rid_i),
+      //.iBusAxi_rid(ibus_axi_rid_i), // Not available
       .iBusAxi_rresp(ibus_axi_rresp_i),
       .iBusAxi_rlast(ibus_axi_rlast_i),
-      // Data Bus
-      .dBusAxi_awvalid(dbus_axi_awvalid_o),
-      .dBusAxi_awready(dbus_axi_awready_i),
-      .dBusAxi_awaddr(dbus_axi_awaddr_o),
-      .dBusAxi_awid(dbus_axi_awid_o),
-      .dBusAxi_awregion(dbus_axi_awregion_int),
-      .dBusAxi_awlen(dbus_axi_awlen_int),
-      .dBusAxi_awsize(dbus_axi_awsize_o),
-      .dBusAxi_awburst(dbus_axi_awburst_o),
-      .dBusAxi_awlock(dbus_axi_awlock_o),
-      .dBusAxi_awcache(dbus_axi_awcache_o),
-      .dBusAxi_awqos(dbus_axi_awqos_o),
+      // (Cached) Data Bus
+      .dBusAxi_awvalid(dbus_int_axi_awvalid),
+      .dBusAxi_awready(dbus_int_axi_awready),
+      .dBusAxi_awaddr(dbus_int_axi_awaddr),
+      .dBusAxi_awid(dbus_int_axi_awid),
+      .dBusAxi_awlen(dbus_int_axi_awlen_int),
+      .dBusAxi_awsize(dbus_int_axi_awsize),
+      .dBusAxi_awburst(dbus_int_axi_awburst),
+      //.dBusAxi_awlock(dbus_int_axi_awlock), // Not available
+      //.dBusAxi_awcache(dbus_int_axi_awcache), // Not available
+      //.dBusAxi_awqos(dbus_int_axi_awqos), // Not available
       .dBusAxi_awprot(),
-      .dBusAxi_wvalid(dbus_axi_wvalid_o),
-      .dBusAxi_wready(dbus_axi_wready_i),
-      .dBusAxi_wdata(dbus_axi_wdata_o),
-      .dBusAxi_wstrb(dbus_axi_wstrb_o),
-      .dBusAxi_wlast(dbus_axi_wlast_o),
-      .dBusAxi_bvalid(dbus_axi_bvalid_i),
-      .dBusAxi_bready(dbus_axi_bready_o),
-      .dBusAxi_bid(dbus_axi_bid_i),
-      .dBusAxi_bresp(dbus_axi_bresp_i),
-      .dBusAxi_arvalid(dbus_axi_arvalid_o),
-      .dBusAxi_arready(dbus_axi_arready_i),
-      .dBusAxi_araddr(dbus_axi_araddr_o),
-      .dBusAxi_arid(dbus_axi_arid_o),
-      .dBusAxi_arregion(dbus_axi_arregion_int),
-      .dBusAxi_arlen(dbus_axi_arlen_int),
-      .dBusAxi_arsize(dbus_axi_arsize_o),
-      .dBusAxi_arburst(dbus_axi_arburst_o),
-      .dBusAxi_arlock(dbus_axi_arlock_o),
-      .dBusAxi_arcache(dbus_axi_arcache_o),
-      .dBusAxi_arqos(dbus_axi_arqos_o),
+      .dBusAxi_wvalid(dbus_int_axi_wvalid),
+      .dBusAxi_wready(dbus_int_axi_wready),
+      .dBusAxi_wdata(dbus_int_axi_wdata),
+      .dBusAxi_wstrb(dbus_int_axi_wstrb),
+      .dBusAxi_wlast(dbus_int_axi_wlast),
+      .dBusAxi_bvalid(dbus_int_axi_bvalid),
+      .dBusAxi_bready(dbus_int_axi_bready),
+      .dBusAxi_bid(dbus_int_axi_bid),
+      .dBusAxi_bresp(dbus_int_axi_bresp),
+      .dBusAxi_arvalid(dbus_int_axi_arvalid),
+      .dBusAxi_arready(dbus_int_axi_arready),
+      .dBusAxi_araddr(dbus_int_axi_araddr),
+      .dBusAxi_arid(dbus_int_axi_arid),
+      .dBusAxi_arlen(dbus_int_axi_arlen_int),
+      .dBusAxi_arsize(dbus_int_axi_arsize),
+      .dBusAxi_arburst(dbus_int_axi_arburst),
+      //.dBusAxi_arlock(dbus_int_axi_arlock), // Not available
+      //.dBusAxi_arcache(dbus_int_axi_arcache), // Not available
+      //.dBusAxi_arqos(dbus_int_axi_arqos), // Not available
       .dBusAxi_arprot(),
-      .dBusAxi_rvalid(dbus_axi_rvalid_i),
-      .dBusAxi_rready(dbus_axi_rready_o),
-      .dBusAxi_rdata(dbus_axi_rdata_i),
-      .dBusAxi_rid(dbus_axi_rid_i),
-      .dBusAxi_rresp(dbus_axi_rresp_i),
-      .dBusAxi_rlast(dbus_axi_rlast_i),
+      .dBusAxi_rvalid(dbus_int_axi_rvalid),
+      .dBusAxi_rready(dbus_int_axi_rready),
+      .dBusAxi_rdata(dbus_int_axi_rdata),
+      .dBusAxi_rid(dbus_int_axi_rid),
+      .dBusAxi_rresp(dbus_int_axi_rresp),
+      .dBusAxi_rlast(dbus_int_axi_rlast),
+      // (Uncached) Peripheral Bus
+      .pBus_awvalid(pbus_int_axil_awvalid),
+      .pBus_awready(pbus_int_axil_awready),
+      .pBus_awaddr(pbus_int_axil_awaddr),
+      .pBus_awprot(),
+      .pBus_wvalid(pbus_int_axil_wvalid),
+      .pBus_wready(pbus_int_axil_wready),
+      .pBus_wdata(pbus_int_axil_wdata),
+      .pBus_wstrb(pbus_int_axil_wstrb),
+      .pBus_bvalid(pbus_int_axil_bvalid),
+      .pBus_bready(pbus_int_axil_bready),
+      .pBus_bresp(pbus_int_axil_bresp),
+      .pBus_arvalid(pbus_int_axil_arvalid),
+      .pBus_arready(pbus_int_axil_arready),
+      .pBus_araddr(pbus_int_axil_araddr),
+      .pBus_arprot(),
+      .pBus_rvalid(pbus_int_axil_rvalid),
+      .pBus_rready(pbus_int_axil_rready),
+      .pBus_rdata(pbus_int_axil_rdata),
+      .pBus_rresp(pbus_int_axil_rresp),
       // Clock and Reset
       .clk(clk_i),
       .reset(cpu_reset)
@@ -332,6 +421,7 @@ def setup(py_params_dict):
 
    assign cpu_reset = rst_i | arst_i;
 
+   // Unused ibus write signals
    assign ibus_axi_awvalid_o = 1'b0;
    assign ibus_axi_awaddr_o = {AXI_ADDR_W{1'b0}};
    assign ibus_axi_awid_o = 1'b0;
@@ -347,15 +437,28 @@ def setup(py_params_dict):
    assign ibus_axi_wlast_o = 1'b0;
    assign ibus_axi_bready_o = 1'b0;
 
+   // Unused AXI signals
+   assign ibus_axi_arid_o = 'b0;
+   assign ibus_axi_arlock_o = 'b0;
+   assign ibus_axi_arcache_o = 'b0;
+   assign ibus_axi_arqos_o = 'b0;
+   // ibus_axi_rid_i // Unused input
+   assign dbus_int_axi_awlock = 'b0;
+   assign dbus_int_axi_awcache = 'b0;
+   assign dbus_int_axi_awqos = 'b0;
+   assign dbus_int_axi_arlock = 'b0;
+   assign dbus_int_axi_arcache = 'b0;
+   assign dbus_int_axi_arqos = 'b0;
+
    generate
       if (AXI_LEN_W < 8) begin : gen_if_less_than_8
          assign ibus_axi_arlen_o = ibus_axi_arlen_int[AXI_LEN_W-1:0];
-         assign dbus_axi_arlen_o = dbus_axi_arlen_int[AXI_LEN_W-1:0];
-         assign dbus_axi_awlen_o = dbus_axi_awlen_int[AXI_LEN_W-1:0];
+         assign dbus_int_axi_arlen = dbus_int_axi_arlen_int[AXI_LEN_W-1:0];
+         assign dbus_int_axi_awlen = dbus_int_axi_awlen_int[AXI_LEN_W-1:0];
       end else begin : gen_if_equal_8
          assign ibus_axi_arlen_o = ibus_axi_arlen_int;
-         assign dbus_axi_arlen_o = dbus_axi_arlen_int;
-         assign dbus_axi_awlen_o = dbus_axi_awlen_int;
+         assign dbus_int_axi_arlen = dbus_int_axi_arlen_int;
+         assign dbus_int_axi_awlen = dbus_int_axi_awlen_int;
       end
    endgenerate
 """
@@ -363,9 +466,9 @@ def setup(py_params_dict):
         ],
     }
 
-    # Disable linter for `NaxRiscvAxi4LinuxPlicClint.v` source.
     if py_params_dict.get("py2hwsw_target", "") == "setup":
         build_dir = py_params_dict.get("build_dir")
+        # Disable linter for `NaxRiscvAxi4LinuxPlicClint.v` source.
         os.makedirs(f"{build_dir}/hardware/lint/verilator", exist_ok=True)
         with open(f"{build_dir}/hardware/lint/verilator_config.vlt", "a") as file:
             file.write(
@@ -373,6 +476,21 @@ def setup(py_params_dict):
 // Lines generated by {os.path.basename(__file__)}
 lint_off -file "*/NaxRiscvAxi4LinuxPlicClint.v"
 """
+            )
+        # Copy CPU memory initialization binaries to build directory
+        os.makedirs(f"{build_dir}/hardware/simulation", exist_ok=True)
+        os.makedirs(f"{build_dir}/hardware/fpga", exist_ok=True)
+        mem_bin_dir = f"{os.path.dirname(__file__)}/hardware/init_mems"
+        bin_files = os.listdir(mem_bin_dir)
+        for file in bin_files:
+            # copy binaries to simulation directory
+            shutil.copyfile(
+                f"{mem_bin_dir}/{file}", f"{build_dir}/hardware/simulation/{file}"
+            )
+            # symlink binaries in fpga directory as well
+            os.symlink(
+                f"../simulation/{file}",
+                f"{build_dir}/hardware/fpga/{file}",
             )
 
     return attributes_dict

@@ -56,19 +56,28 @@ module NaxRiscvAxi4LinuxPlicClint (
   output wire [2:0]    iBusAxi_arprot,
   input  wire          iBusAxi_rvalid,
   output wire          iBusAxi_rready,
-  input  wire [63:0]   iBusAxi_rdata,
+  input  wire [31:0]   iBusAxi_rdata,
   input  wire [1:0]    iBusAxi_rresp,
   input  wire          iBusAxi_rlast,
-  output wire          LsuPlugin_peripheralBus_cmd_valid /* verilator public */ ,
-  input  wire          LsuPlugin_peripheralBus_cmd_ready /* verilator public */ ,
-  output wire          LsuPlugin_peripheralBus_cmd_payload_write /* verilator public */ ,
-  output wire [31:0]   LsuPlugin_peripheralBus_cmd_payload_address /* verilator public */ ,
-  output wire [31:0]   LsuPlugin_peripheralBus_cmd_payload_data /* verilator public */ ,
-  output wire [3:0]    LsuPlugin_peripheralBus_cmd_payload_mask /* verilator public */ ,
-  output wire [1:0]    LsuPlugin_peripheralBus_cmd_payload_size /* verilator public */ ,
-  input  wire          LsuPlugin_peripheralBus_rsp_valid /* verilator public */ ,
-  input  wire          LsuPlugin_peripheralBus_rsp_payload_error /* verilator public */ ,
-  input  wire [31:0]   LsuPlugin_peripheralBus_rsp_payload_data /* verilator public */ ,
+  output wire          pBus_awvalid,
+  input  wire          pBus_awready,
+  output wire [31:0]   pBus_awaddr,
+  output wire [2:0]    pBus_awprot,
+  output wire          pBus_wvalid,
+  input  wire          pBus_wready,
+  output wire [31:0]   pBus_wdata,
+  output wire [3:0]    pBus_wstrb,
+  input  wire          pBus_bvalid,
+  output wire          pBus_bready,
+  input  wire [1:0]    pBus_bresp,
+  output wire          pBus_arvalid,
+  input  wire          pBus_arready,
+  output wire [31:0]   pBus_araddr,
+  output wire [2:0]    pBus_arprot,
+  input  wire          pBus_rvalid,
+  output wire          pBus_rready,
+  input  wire [31:0]   pBus_rdata,
+  input  wire [1:0]    pBus_rresp,
   output wire          dBusAxi_awvalid,
   input  wire          dBusAxi_awready,
   output wire [31:0]   dBusAxi_awaddr,
@@ -213,13 +222,13 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                RfDependencyPlugin_logic_forRf_integer_impl_io_commits_4_valid;
   wire                RfDependencyPlugin_logic_forRf_integer_impl_io_reads_0_cmd_valid;
   wire                RfDependencyPlugin_logic_forRf_integer_impl_io_reads_1_cmd_valid;
-  reg        [63:0]   FetchCachePlugin_logic_banks_0_mem_spinal_port1;
+  reg        [31:0]   FetchCachePlugin_logic_banks_0_mem_spinal_port1;
   wire       [25:0]   FetchCachePlugin_logic_ways_0_mem_spinal_port1;
   wire       [32:0]   BranchContextPlugin_logic_mem_earlyBranch_spinal_port1;
   wire       [64:0]   BranchContextPlugin_logic_mem_finalBranch_spinal_port1;
   wire       [31:0]   DecoderPredictionPlugin_logic_ras_mem_stack_spinal_port0;
-  reg        [49:0]   BtbPlugin_logic_mem_spinal_port1;
-  reg        [3:0]    GSharePlugin_logic_mem_counter_spinal_port1;
+  reg        [48:0]   BtbPlugin_logic_mem_spinal_port1;
+  reg        [1:0]    GSharePlugin_logic_mem_counter_spinal_port1;
   wire       [31:0]   Lsu2Plugin_logic_lq_mem_addressPre_spinal_port1;
   wire       [31:0]   Lsu2Plugin_logic_lq_mem_addressPre_spinal_port2;
   wire       [31:0]   Lsu2Plugin_logic_lq_mem_addressPost_spinal_port0;
@@ -289,7 +298,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [24:0]   Lsu2Plugin_setup_translationStorage_logic_sl_1_ways_0_spinal_port1;
   wire       [24:0]   Lsu2Plugin_setup_translationStorage_logic_sl_1_ways_1_spinal_port1;
   wire       [31:0]   CsrRamPlugin_logic_mem_spinal_port1;
-  wire       [28:0]   BranchContextPlugin_free_dispatchMem_mem_spinal_port1;
+  wire       [26:0]   BranchContextPlugin_free_dispatchMem_mem_spinal_port1;
   wire       [0:0]    RobPlugin_logic_completionMem_target_spinal_port1;
   wire       [0:0]    RobPlugin_logic_completionMem_hits_0_spinal_port0;
   wire       [0:0]    RobPlugin_logic_completionMem_hits_0_spinal_port1;
@@ -308,6 +317,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   RobPlugin_logic_storage_PC_banks_0_spinal_port1;
   wire       [31:0]   RobPlugin_logic_storage_PC_banks_0_spinal_port2;
   wire       [31:0]   RobPlugin_logic_storage_PC_banks_0_spinal_port3;
+  wire       [31:0]   RobPlugin_logic_storage_PC_banks_0_spinal_port4;
   wire       [0:0]    RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port1;
   wire       [0:0]    RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port2;
   wire       [0:0]    RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port3;
@@ -389,7 +399,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                DataCachePlugin_logic_cache_io_mem_write_cmd_valid;
   wire                DataCachePlugin_logic_cache_io_mem_write_cmd_payload_last;
   wire       [31:0]   DataCachePlugin_logic_cache_io_mem_write_cmd_payload_fragment_address;
-  wire       [63:0]   DataCachePlugin_logic_cache_io_mem_write_cmd_payload_fragment_data;
+  wire       [31:0]   DataCachePlugin_logic_cache_io_mem_write_cmd_payload_fragment_data;
   wire       [0:0]    DataCachePlugin_logic_cache_io_mem_write_cmd_payload_fragment_id;
   wire       [1:0]    DataCachePlugin_logic_cache_io_refillCompletions;
   wire                DataCachePlugin_logic_cache_io_refillEvent;
@@ -470,13 +480,10 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [25:0]   _zz_FetchCachePlugin_logic_ways_0_mem_port;
   wire                _zz_FetchCachePlugin_logic_ways_0_mem_port_1;
   wire       [23:0]   _zz_FetchCachePlugin_logic_read_onWays_0_hits_bypassHits;
-  reg        [1:0]    _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT;
-  wire       [0:0]    _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT_1;
-  reg        [1:0]    _zz_AlignerPlugin_setup_s2m_MASK_BACK;
   wire       [0:0]    _zz_AlignerPlugin_logic_extractors_0_usable;
   reg        [31:0]   _zz_AlignerPlugin_logic_extractors_0_pcWord;
   wire       [0:0]    _zz_AlignerPlugin_logic_extractors_0_pcWord_1;
-  wire       [28:0]   _zz_FrontendPlugin_aligned_PC_0;
+  wire       [29:0]   _zz_FrontendPlugin_aligned_PC_0;
   wire       [32:0]   _zz_BranchContextPlugin_logic_mem_earlyBranch_port;
   wire       [3:0]    _zz_DecoderPredictionPlugin_logic_ras_ptr_push;
   wire       [3:0]    _zz_DecoderPredictionPlugin_logic_ras_ptr_push_1;
@@ -489,15 +496,13 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [3:0]    _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_3;
   wire       [0:0]    _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_4;
   wire       [31:0]   _zz_DecoderPredictionPlugin_logic_ras_mem_stack_port;
-  wire       [49:0]   _zz_BtbPlugin_logic_mem_port;
-  wire       [28:0]   _zz_BtbPlugin_logic_onLearn_port_payload_address;
-  wire       [29:0]   _zz_BtbPlugin_logic_onLearn_port_payload_data_slice;
-  wire       [28:0]   _zz_BtbPlugin_logic_readCmd_entryAddress;
-  reg                 _zz_BtbPlugin_logic_applyIt_prediction;
-  wire       [3:0]    _zz_GSharePlugin_logic_mem_counter_port;
-  wire       [5:0]    _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1;
+  wire       [48:0]   _zz_BtbPlugin_logic_mem_port;
+  wire       [29:0]   _zz_BtbPlugin_logic_onLearn_port_payload_address;
+  wire       [29:0]   _zz_BtbPlugin_logic_readCmd_entryAddress;
+  wire       [1:0]    _zz_GSharePlugin_logic_mem_counter_port;
+  wire       [6:0]    _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1;
   wire       [23:0]   _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_2;
-  wire       [5:0]    _zz_GSharePlugin_logic_onLearn_hash_1;
+  wire       [6:0]    _zz_GSharePlugin_logic_onLearn_hash_1;
   wire       [23:0]   _zz_GSharePlugin_logic_onLearn_hash_2;
   wire       [4:0]    _zz_CommitPlugin_logic_ptr_allocNext;
   wire       [0:0]    _zz_CommitPlugin_logic_ptr_allocNext_1;
@@ -526,6 +531,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [0:0]    _zz_CommitPlugin_logic_commit_active_2;
   wire       [4:0]    _zz_CommitPlugin_logic_commit_head;
   wire       [3:0]    _zz_CommitPlugin_logic_free_robHit;
+  wire       [31:0]   _zz_commit_pc_0_1;
+  wire       [31:0]   _zz_commit_pc_0_2;
   reg        [0:0]    _zz_CommitDebugFilterPlugin_logic_commits;
   wire       [0:0]    _zz_CommitDebugFilterPlugin_logic_commits_1;
   wire       [31:0]   _zz_CommitDebugFilterPlugin_logic_filters_0_value;
@@ -834,7 +841,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [0:0]    _zz_EU0_BranchPlugin_logic_process_slices_1;
   wire       [31:0]   _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE;
   wire       [3:0]    _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1;
-  reg        [31:0]   _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_4;
+  wire       [31:0]   _zz_LsuPlugin_peripheralBus_toAxiLite4_addr;
   wire       [2:0]    _zz_BranchContextPlugin_logic_onCommit_commitedNext;
   reg        [0:0]    _zz_BranchContextPlugin_logic_onCommit_commitedNext_1;
   wire       [0:0]    _zz_BranchContextPlugin_logic_onCommit_commitedNext_2;
@@ -1269,6 +1276,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [0:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_ZERO_2;
   wire       [0:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED_1;
   wire       [0:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED_2;
+  wire       [1:0]    _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0;
   wire       [3:0]    _zz_DispatchPlugin_logic_ptr_next;
   wire       [7:0]    _zz_DispatchPlugin_logic_push_slots_0_events_0;
   wire       [2:0]    _zz_DispatchPlugin_logic_push_slots_0_events_0_1;
@@ -1357,7 +1365,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [6:0]    _zz_PcPlugin_logic_init_counter;
   wire       [0:0]    _zz_PcPlugin_logic_init_counter_1;
   wire       [31:0]   _zz_PcPlugin_logic_fetchPc_pc;
-  wire       [3:0]    _zz_PcPlugin_logic_fetchPc_pc_1;
+  wire       [2:0]    _zz_PcPlugin_logic_fetchPc_pc_1;
   wire       [31:0]   _zz_PrivilegedPlugin_setup_ramWrite_data;
   wire       [31:0]   _zz_PrivilegedPlugin_setup_ramWrite_data_1;
   wire       [31:0]   _zz_PrivilegedPlugin_logic_readed;
@@ -1375,14 +1383,11 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FetchPlugin_stages_2_isFlushed;
   reg        [31:0]   FetchPlugin_stages_2_Fetch_FETCH_PC_INC;
   reg        [1:0]    FetchPlugin_stages_2_GSHARE_COUNTER_0;
-  reg        [1:0]    FetchPlugin_stages_2_GSHARE_COUNTER_1;
   reg                 FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE;
-  reg        [0:0]    FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE;
   reg                 FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALID;
   reg        [31:0]   FetchPlugin_stages_2_Prediction_WORD_BRANCH_PC_NEXT;
-  reg        [1:0]    FetchPlugin_stages_2_AlignerPlugin_MASK_FRONT;
+  reg        [0:0]    FetchPlugin_stages_2_AlignerPlugin_MASK_FRONT;
   reg                 FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID;
-  reg        [0:0]    FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE;
   reg        [23:0]   FetchPlugin_stages_1_BRANCH_HISTORY;
   reg        [11:0]   FetchPlugin_stages_2_FETCH_ID;
   reg        [31:0]   FetchPlugin_stages_1_Fetch_FETCH_PC_INC;
@@ -1400,11 +1405,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FrontendPlugin_allocated_DispatchPlugin_FENCE_YOUNGER_0;
   wire                FrontendPlugin_allocated_DispatchPlugin_FENCE_OLDER_0;
   wire       [1:0]    FrontendPlugin_allocated_GSHARE_COUNTER_0_0;
-  wire       [1:0]    FrontendPlugin_allocated_GSHARE_COUNTER_0_1;
   reg        [1:0]    FrontendPlugin_serialized_GSHARE_COUNTER_0_0;
-  reg        [1:0]    FrontendPlugin_serialized_GSHARE_COUNTER_0_1;
   wire       [1:0]    FrontendPlugin_decoded_GSHARE_COUNTER_0_0;
-  wire       [1:0]    FrontendPlugin_decoded_GSHARE_COUNTER_0_1;
   wire                FrontendPlugin_allocated_Prediction_IS_BRANCH_0;
   wire                FrontendPlugin_allocated_SQ_ALLOC_0;
   reg                 FrontendPlugin_serialized_SQ_ALLOC_0;
@@ -1512,7 +1514,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 FrontendPlugin_dispatch_DispatchPlugin_FENCE_YOUNGER_0;
   reg                 FrontendPlugin_dispatch_DispatchPlugin_FENCE_OLDER_0;
   reg        [1:0]    FrontendPlugin_dispatch_GSHARE_COUNTER_0_0;
-  reg        [1:0]    FrontendPlugin_dispatch_GSHARE_COUNTER_0_1;
   reg        [23:0]   FrontendPlugin_dispatch_BRANCH_HISTORY_0;
   reg        [1:0]    FrontendPlugin_dispatch_BRANCH_ID_0;
   reg                 FrontendPlugin_dispatch_BRANCH_SEL_0;
@@ -1707,9 +1708,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FrontendPlugin_decoded_BAD_RET_PC_0;
   wire       [31:0]   FrontendPlugin_decoded_PC_TARGET_PRE_RAS_0;
   wire       [31:0]   FrontendPlugin_decoded_PC_INC_0;
-  wire       [1:0]    FrontendPlugin_decoded_Prediction_CONDITIONAL_TAKE_IT_0;
+  wire       [0:0]    FrontendPlugin_decoded_Prediction_CONDITIONAL_TAKE_IT_0;
   wire                FrontendPlugin_decoded_CONDITIONAL_PREDICTION_0;
-  wire       [0:0]    FrontendPlugin_decoded_LAST_SLICE_0;
   wire                FrontendPlugin_decoded_RAS_POP_0;
   wire                FrontendPlugin_decoded_RAS_PUSH_0;
   wire       [31:0]   FrontendPlugin_decoded_OFFSET_0;
@@ -2575,31 +2575,24 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 CommitPlugin_logic_commit_continue_1;
   wire       [0:0]    FrontendPlugin_allocated_ROB_MSB_0;
   wire       [1:0]    FrontendPlugin_decompressed_GSHARE_COUNTER_0_0;
-  wire       [1:0]    FrontendPlugin_decompressed_GSHARE_COUNTER_0_1;
-  wire       [1:0]    FrontendPlugin_decompressed_Prediction_CONDITIONAL_TAKE_IT_0;
-  reg        [5:0]    FetchPlugin_stages_1_GSharePlugin_logic_HASH;
+  wire       [0:0]    FrontendPlugin_decompressed_Prediction_CONDITIONAL_TAKE_IT_0;
+  reg        [6:0]    FetchPlugin_stages_1_GSharePlugin_logic_HASH;
   reg                 FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_valid;
-  reg        [5:0]    FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_address;
+  reg        [6:0]    FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_address;
   reg        [1:0]    FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_0;
-  reg        [1:0]    FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_1;
   wire                FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_valid;
-  wire       [5:0]    FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_address;
+  wire       [6:0]    FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_address;
   wire       [1:0]    FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_0;
-  wire       [1:0]    FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_1;
   wire       [23:0]   FetchPlugin_stages_0_BRANCH_HISTORY;
-  wire       [5:0]    FetchPlugin_stages_0_GSharePlugin_logic_HASH;
+  wire       [6:0]    FetchPlugin_stages_0_GSharePlugin_logic_HASH;
   reg                 _zz_26;
   wire                FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALUE;
-  wire       [0:0]    FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_SLICE;
   wire                FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALID;
   wire       [31:0]   FetchPlugin_stages_1_Prediction_WORD_BRANCH_PC_NEXT;
-  wire       [0:0]    FetchPlugin_stages_1_Prediction_WORD_BRANCH_SLICE;
   wire                FetchPlugin_stages_1_Prediction_WORD_BRANCH_VALID;
   (* keep , syn_keep *) reg        [1:0]    FetchPlugin_stages_1_GSHARE_COUNTER_0 /* synthesis syn_keep = 1 */ ;
-  (* keep , syn_keep *) reg        [1:0]    FetchPlugin_stages_1_GSHARE_COUNTER_1 /* synthesis syn_keep = 1 */ ;
   wire                FetchPlugin_stages_1_BtbPlugin_logic_HIT;
   (* keep , syn_keep *) wire       [15:0]   FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash /* synthesis syn_keep = 1 */ ;
-  (* keep , syn_keep *) wire       [0:0]    FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice /* synthesis syn_keep = 1 */ ;
   (* keep , syn_keep *) wire       [31:0]   FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_pcTarget /* synthesis syn_keep = 1 */ ;
   (* keep , syn_keep *) wire                FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_isBranch /* synthesis syn_keep = 1 */ ;
   reg                 _zz_27;
@@ -2630,13 +2623,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg        [11:0]   FrontendPlugin_aligned_FETCH_ID_0;
   reg        [31:0]   AlignerPlugin_setup_s2m_Fetch_FETCH_PC;
   reg        [1:0]    AlignerPlugin_setup_s2m_GSHARE_COUNTER_0;
-  reg        [1:0]    AlignerPlugin_setup_s2m_GSHARE_COUNTER_1;
   reg        [1:0]    FrontendPlugin_aligned_GSHARE_COUNTER_0_0;
-  reg        [1:0]    FrontendPlugin_aligned_GSHARE_COUNTER_0_1;
   reg                 AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALUE;
   reg                 FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_VALUE_0;
-  reg        [0:0]    AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_SLICE;
-  reg        [0:0]    FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_SLICE_0;
   reg                 AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALID;
   reg                 FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_VALID_0;
   reg        [23:0]   AlignerPlugin_setup_s2m_BRANCH_HISTORY;
@@ -2647,15 +2636,14 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   FrontendPlugin_aligned_PC_0;
   wire                FrontendPlugin_aligned_Frontend_MASK_ALIGNED_0;
   wire       [31:0]   FrontendPlugin_aligned_Frontend_INSTRUCTION_ALIGNED_0;
-  reg        [3:0]    AlignerPlugin_logic_slices_remains_1;
-  reg        [3:0]    AlignerPlugin_logic_slices_carry_1;
-  reg        [3:0]    AlignerPlugin_logic_slices_used_1;
-  reg        [1:0]    AlignerPlugin_setup_s2m_MASK_FRONT;
-  reg        [63:0]   AlignerPlugin_setup_s2m_Fetch_WORD;
+  reg        [1:0]    AlignerPlugin_logic_slices_remains_1;
+  reg        [1:0]    AlignerPlugin_logic_slices_carry_1;
+  reg        [1:0]    AlignerPlugin_logic_slices_used_1;
+  reg        [0:0]    AlignerPlugin_setup_s2m_MASK_FRONT;
+  reg        [31:0]   AlignerPlugin_setup_s2m_Fetch_WORD;
   reg                 AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID;
-  reg        [0:0]    AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE;
-  reg        [1:0]    AlignerPlugin_setup_s2m_MASK_BACK;
-  wire       [1:0]    FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT;
+  reg        [0:0]    AlignerPlugin_setup_s2m_MASK_BACK;
+  wire       [0:0]    FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT;
   wire                AlignerPlugin_setup_s2m_isFlushingRoot;
   reg        [23:0]   FetchPlugin_stages_2_BRANCH_HISTORY;
   reg                 FetchPlugin_stages_2_MMU_IO;
@@ -2687,17 +2675,17 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 FetchPlugin_stages_1_FetchCachePlugin_logic_WAYS_TAGS_0_loaded;
   reg                 FetchPlugin_stages_1_FetchCachePlugin_logic_WAYS_TAGS_0_error;
   reg        [23:0]   FetchPlugin_stages_1_FetchCachePlugin_logic_WAYS_TAGS_0_address;
-  reg        [63:0]   FetchPlugin_stages_2_FetchCachePlugin_logic_BANKS_MUXES_0;
+  reg        [31:0]   FetchPlugin_stages_2_FetchCachePlugin_logic_BANKS_MUXES_0;
   reg                 FetchPlugin_stages_2_FetchCachePlugin_logic_WAYS_HITS_0;
-  wire       [63:0]   FetchPlugin_stages_2_Fetch_WORD;
+  wire       [31:0]   FetchPlugin_stages_2_Fetch_WORD;
   reg        [31:0]   FetchPlugin_stages_1_Fetch_FETCH_PC;
-  wire       [63:0]   FetchPlugin_stages_1_FetchCachePlugin_logic_BANKS_MUXES_0;
+  wire       [31:0]   FetchPlugin_stages_1_FetchCachePlugin_logic_BANKS_MUXES_0;
   wire       [31:0]   FetchPlugin_stages_0_Fetch_FETCH_PC;
   reg                 FetchPlugin_stages_0_ready;
   wire                FetchPlugin_stages_0_FetchCachePlugin_logic_WAYS_TAGS_0_loaded;
   wire                FetchPlugin_stages_0_FetchCachePlugin_logic_WAYS_TAGS_0_error;
   wire       [23:0]   FetchPlugin_stages_0_FetchCachePlugin_logic_WAYS_TAGS_0_address;
-  wire       [63:0]   FetchPlugin_stages_1_FetchCachePlugin_logic_BANKS_WORDS_0;
+  wire       [31:0]   FetchPlugin_stages_1_FetchCachePlugin_logic_BANKS_WORDS_0;
   reg                 _zz_30;
   reg        [31:0]   PcPlugin_logic_jump_target_1;
   wire                FetchPlugin_stages_1_isFlushed;
@@ -2738,7 +2726,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FetchCachePlugin_mem_cmd_payload_io;
   wire                FetchCachePlugin_mem_rsp_valid;
   wire                FetchCachePlugin_mem_rsp_ready;
-  wire       [63:0]   FetchCachePlugin_mem_rsp_payload_data;
+  wire       [31:0]   FetchCachePlugin_mem_rsp_payload_data;
   wire                FetchCachePlugin_mem_rsp_payload_error;
   reg                 FetchCachePlugin_setup_redoJump_valid;
   wire       [31:0]   FetchCachePlugin_setup_redoJump_payload_pc;
@@ -2939,20 +2927,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   EU0_CsrAccessPlugin_setup_trap_payload_tval;
   wire                EU0_CsrAccessPlugin_setup_trap_payload_skipCommit;
   wire       [7:0]    EU0_CsrAccessPlugin_setup_trap_payload_reason;
-  wire                FetchCachePlugin_mem_resizer_ret_cmd_valid;
-  wire                FetchCachePlugin_mem_resizer_ret_cmd_ready;
-  wire       [31:0]   FetchCachePlugin_mem_resizer_ret_cmd_payload_address;
-  wire                FetchCachePlugin_mem_resizer_ret_cmd_payload_io;
-  wire                FetchCachePlugin_mem_resizer_ret_rsp_valid;
-  wire                FetchCachePlugin_mem_resizer_ret_rsp_ready;
-  wire       [63:0]   FetchCachePlugin_mem_resizer_ret_rsp_payload_data;
-  wire                FetchCachePlugin_mem_resizer_ret_rsp_payload_error;
-  wire                FetchCachePlugin_mem_resizer_rspOutputStream_valid;
-  wire                FetchCachePlugin_mem_resizer_rspOutputStream_ready;
-  wire       [63:0]   FetchCachePlugin_mem_resizer_rspOutputStream_payload;
-  wire                FetchCachePlugin_mem_resizer_ret_rsp_translated_valid;
-  wire                FetchCachePlugin_mem_resizer_ret_rsp_translated_ready;
-  wire       [63:0]   FetchCachePlugin_mem_resizer_ret_rsp_translated_payload;
   wire                FetchPlugin_stages_1_isFireing;
   reg                 _zz_FetchPlugin_stages_1_isFirstCycle;
   wire                when_Stage_l170;
@@ -2973,11 +2947,11 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   PcPlugin_logic_jump_pcLoad_payload_pc;
   wire                FetchCachePlugin_logic_translationPort_wake;
   wire                FetchCachePlugin_logic_banks_0_write_valid;
-  wire       [4:0]    FetchCachePlugin_logic_banks_0_write_payload_address;
-  wire       [63:0]   FetchCachePlugin_logic_banks_0_write_payload_data;
+  wire       [5:0]    FetchCachePlugin_logic_banks_0_write_payload_address;
+  wire       [31:0]   FetchCachePlugin_logic_banks_0_write_payload_data;
   wire                FetchCachePlugin_logic_banks_0_read_cmd_valid;
-  wire       [4:0]    FetchCachePlugin_logic_banks_0_read_cmd_payload;
-  (* keep , syn_keep *) wire       [63:0]   FetchCachePlugin_logic_banks_0_read_rsp /* synthesis syn_keep = 1 */ ;
+  wire       [5:0]    FetchCachePlugin_logic_banks_0_read_cmd_payload;
+  (* keep , syn_keep *) wire       [31:0]   FetchCachePlugin_logic_banks_0_read_rsp /* synthesis syn_keep = 1 */ ;
   reg        [0:0]    FetchCachePlugin_logic_waysWrite_mask;
   reg        [1:0]    FetchCachePlugin_logic_waysWrite_address;
   reg                 FetchCachePlugin_logic_waysWrite_tag_loaded;
@@ -3020,7 +2994,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FetchCachePlugin_logic_refill_randomWay_willClear;
   wire                FetchCachePlugin_logic_refill_randomWay_willOverflowIfInc;
   wire                FetchCachePlugin_logic_refill_randomWay_willOverflow;
-  (* keep , syn_keep *) reg        [2:0]    FetchCachePlugin_logic_refill_wordIndex /* synthesis syn_keep = 1 */ ;
+  (* keep , syn_keep *) reg        [3:0]    FetchCachePlugin_logic_refill_wordIndex /* synthesis syn_keep = 1 */ ;
   wire                when_FetchCachePlugin_l470;
   wire                FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l476;
   wire                FetchCachePlugin_logic_read_onWays_0_hits_wayTlbHits_0;
@@ -3040,69 +3014,48 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                AlignerPlugin_logic_ignoreInput;
   wire                AlignerPlugin_logic_isInputValid;
   wire                when_AlignerPlugin_l98;
-  reg        [63:0]   AlignerPlugin_logic_buffer_data;
-  reg        [1:0]    AlignerPlugin_logic_buffer_mask;
+  reg        [31:0]   AlignerPlugin_logic_buffer_data;
+  reg        [0:0]    AlignerPlugin_logic_buffer_mask;
   reg        [31:0]   AlignerPlugin_logic_buffer_pc;
   reg                 AlignerPlugin_logic_buffer_fault;
   reg                 AlignerPlugin_logic_buffer_fault_page;
   reg                 AlignerPlugin_logic_buffer_branchValid;
-  reg        [0:0]    AlignerPlugin_logic_buffer_branchSlice;
   reg        [31:0]   AlignerPlugin_logic_buffer_branchPcNext;
   reg        [23:0]   AlignerPlugin_logic_buffer_wordContexts_0;
   reg                 AlignerPlugin_logic_buffer_wordContexts_1;
-  reg        [0:0]    AlignerPlugin_logic_buffer_wordContexts_2;
   reg                 AlignerPlugin_logic_buffer_wordContexts_3;
   reg        [1:0]    AlignerPlugin_logic_buffer_wordContexts_4_0;
-  reg        [1:0]    AlignerPlugin_logic_buffer_wordContexts_4_1;
   reg        [11:0]   AlignerPlugin_logic_buffer_firstWordContexts_0;
-  wire       [127:0]  _zz_AlignerPlugin_logic_slices_data_0;
+  wire       [63:0]   _zz_AlignerPlugin_logic_slices_data_0;
   wire       [31:0]   AlignerPlugin_logic_slices_data_0;
   wire       [31:0]   AlignerPlugin_logic_slices_data_1;
-  wire       [31:0]   AlignerPlugin_logic_slices_data_2;
-  wire       [31:0]   AlignerPlugin_logic_slices_data_3;
-  wire       [3:0]    AlignerPlugin_logic_slices_carry;
-  wire       [3:0]    AlignerPlugin_logic_slices_remains;
-  wire       [3:0]    AlignerPlugin_logic_slices_used;
-  wire       [3:0]    AlignerPlugin_logic_decoders_0_usage;
+  wire       [1:0]    AlignerPlugin_logic_slices_carry;
+  wire       [1:0]    AlignerPlugin_logic_slices_remains;
+  wire       [1:0]    AlignerPlugin_logic_slices_used;
+  wire       [1:0]    AlignerPlugin_logic_decoders_0_usage;
   wire                AlignerPlugin_logic_decoders_0_notEnoughData;
   wire                AlignerPlugin_logic_decoders_0_pastPrediction;
   wire                AlignerPlugin_logic_decoders_0_usable;
-  wire       [3:0]    AlignerPlugin_logic_decoders_1_usage;
+  wire       [1:0]    AlignerPlugin_logic_decoders_1_usage;
   wire                AlignerPlugin_logic_decoders_1_notEnoughData;
   wire                AlignerPlugin_logic_decoders_1_pastPrediction;
   wire                AlignerPlugin_logic_decoders_1_usable;
-  wire       [3:0]    AlignerPlugin_logic_decoders_2_usage;
-  wire                AlignerPlugin_logic_decoders_2_notEnoughData;
-  wire                AlignerPlugin_logic_decoders_2_pastPrediction;
-  wire                AlignerPlugin_logic_decoders_2_usable;
-  wire       [3:0]    AlignerPlugin_logic_decoders_3_usage;
-  wire                AlignerPlugin_logic_decoders_3_notEnoughData;
-  wire                AlignerPlugin_logic_decoders_3_pastPrediction;
-  wire                AlignerPlugin_logic_decoders_3_usable;
   wire                _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0;
-  wire       [3:0]    _zz_AlignerPlugin_logic_extractors_0_maskOh;
+  wire       [1:0]    _zz_AlignerPlugin_logic_extractors_0_maskOh;
   wire                _zz_AlignerPlugin_logic_extractors_0_maskOh_1;
-  wire                _zz_AlignerPlugin_logic_extractors_0_maskOh_2;
-  wire                _zz_AlignerPlugin_logic_extractors_0_maskOh_3;
-  reg        [3:0]    _zz_AlignerPlugin_logic_extractors_0_maskOh_4;
-  wire       [3:0]    AlignerPlugin_logic_extractors_0_maskOh;
+  reg        [1:0]    _zz_AlignerPlugin_logic_extractors_0_maskOh_2;
+  wire       [1:0]    AlignerPlugin_logic_extractors_0_maskOh;
   wire                _zz_AlignerPlugin_logic_extractors_0_usage;
   wire                _zz_AlignerPlugin_logic_extractors_0_usage_1;
-  wire                _zz_AlignerPlugin_logic_extractors_0_usage_2;
-  wire                _zz_AlignerPlugin_logic_extractors_0_usage_3;
-  wire       [3:0]    AlignerPlugin_logic_extractors_0_usage;
+  wire       [1:0]    AlignerPlugin_logic_extractors_0_usage;
   wire                AlignerPlugin_logic_extractors_0_usable;
   wire       [31:0]   AlignerPlugin_logic_extractors_0_slice0;
   wire                AlignerPlugin_logic_extractors_0_valid;
-  wire       [0:0]    AlignerPlugin_logic_extractors_0_sliceLast;
   wire                AlignerPlugin_logic_extractors_0_bufferPredictionLast;
   wire                AlignerPlugin_logic_extractors_0_inputPredictionLast;
   wire                AlignerPlugin_logic_extractors_0_lastWord;
-  wire       [3:0]    _zz_AlignerPlugin_logic_extractors_0_sliceOffset;
-  wire                _zz_AlignerPlugin_logic_extractors_0_sliceOffset_1;
-  wire                _zz_AlignerPlugin_logic_extractors_0_sliceOffset_2;
-  wire                _zz_AlignerPlugin_logic_extractors_0_sliceOffset_3;
-  wire       [1:0]    AlignerPlugin_logic_extractors_0_sliceOffset;
+  wire                _zz_AlignerPlugin_logic_extractors_0_sliceOffset;
+  wire       [0:0]    AlignerPlugin_logic_extractors_0_sliceOffset;
   wire                AlignerPlugin_logic_extractors_0_firstWord;
   wire       [31:0]   AlignerPlugin_logic_extractors_0_pcWord;
   wire                when_AlignerPlugin_l230;
@@ -3110,7 +3063,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FrontendPlugin_aligned_isFireing;
   wire                AlignerPlugin_logic_fireOutput;
   wire                AlignerPlugin_logic_fireInput;
-  wire       [1:0]    AlignerPlugin_logic_postMask;
+  wire       [0:0]    AlignerPlugin_logic_postMask;
   reg                 AlignerPlugin_logic_correctionSent;
   wire                when_AlignerPlugin_l264;
   wire                _zz_FetchPlugin_stages_1_isFlushingRoot;
@@ -3144,12 +3097,11 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                BtbPlugin_logic_onLearn_port_valid;
   wire       [2:0]    BtbPlugin_logic_onLearn_port_payload_address;
   wire       [15:0]   BtbPlugin_logic_onLearn_port_payload_data_hash;
-  wire       [0:0]    BtbPlugin_logic_onLearn_port_payload_data_slice;
   wire       [31:0]   BtbPlugin_logic_onLearn_port_payload_data_pcTarget;
   wire                BtbPlugin_logic_onLearn_port_payload_data_isBranch;
   wire                BranchContextPlugin_free_learn_Prediction_IS_BRANCH;
   wire       [2:0]    BtbPlugin_logic_readCmd_entryAddress;
-  wire       [49:0]   _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash;
+  wire       [48:0]   _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash;
   wire                BtbPlugin_logic_hitCalc_postPcPrediction;
   wire                BtbPlugin_logic_applyIt_prediction;
   wire                BtbPlugin_logic_applyIt_needIt;
@@ -3157,23 +3109,28 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                when_BtbPlugin_l109;
   wire                BtbPlugin_logic_applyIt_doIt;
   wire                GSharePlugin_logic_mem_write_valid;
-  wire       [5:0]    GSharePlugin_logic_mem_write_payload_address;
+  wire       [6:0]    GSharePlugin_logic_mem_write_payload_address;
   wire       [1:0]    GSharePlugin_logic_mem_write_payload_data_0;
-  wire       [1:0]    GSharePlugin_logic_mem_write_payload_data_1;
-  wire       [5:0]    _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH;
-  wire       [3:0]    _zz_FetchPlugin_stages_1_GSHARE_COUNTER_0;
+  wire       [6:0]    _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH;
   wire                when_GSharePlugin_l98;
   wire       [23:0]   BranchContextPlugin_free_learn_BRANCH_HISTORY;
-  wire       [5:0]    _zz_GSharePlugin_logic_onLearn_hash;
-  wire       [5:0]    GSharePlugin_logic_onLearn_hash;
+  wire       [6:0]    _zz_GSharePlugin_logic_onLearn_hash;
+  wire       [6:0]    GSharePlugin_logic_onLearn_hash;
   wire       [1:0]    BranchContextPlugin_free_learn_GSHARE_COUNTER_0;
-  wire       [1:0]    BranchContextPlugin_free_learn_GSHARE_COUNTER_1;
   wire       [1:0]    GSharePlugin_logic_onLearn_updated_0;
-  wire       [1:0]    GSharePlugin_logic_onLearn_updated_1;
   wire       [1:0]    GSharePlugin_logic_onLearn_incrValue;
   reg                 GSharePlugin_logic_onLearn_overflow;
   wire                when_GSharePlugin_l123;
-  wire                when_GSharePlugin_l123_1;
+  wire                LsuPlugin_peripheralBus_cmd_valid /* verilator public */ ;
+  reg                 LsuPlugin_peripheralBus_cmd_ready /* verilator public */ ;
+  wire                LsuPlugin_peripheralBus_cmd_payload_write /* verilator public */ ;
+  wire       [31:0]   LsuPlugin_peripheralBus_cmd_payload_address /* verilator public */ ;
+  wire       [31:0]   LsuPlugin_peripheralBus_cmd_payload_data /* verilator public */ ;
+  wire       [3:0]    LsuPlugin_peripheralBus_cmd_payload_mask /* verilator public */ ;
+  wire       [1:0]    LsuPlugin_peripheralBus_cmd_payload_size /* verilator public */ ;
+  wire                LsuPlugin_peripheralBus_rsp_valid /* verilator public */ ;
+  wire                LsuPlugin_peripheralBus_rsp_payload_error /* verilator public */ ;
+  wire       [31:0]   LsuPlugin_peripheralBus_rsp_payload_data /* verilator public */ ;
   wire       [1:0]    DataCachePlugin_logic_load_hits;
   wire                DataCachePlugin_logic_load_hit;
   wire       [1:0]    _zz_DataCachePlugin_logic_load_hits_bools_0;
@@ -3196,13 +3153,13 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                DataCachePlugin_mem_read_rsp_valid;
   wire                DataCachePlugin_mem_read_rsp_ready;
   wire       [0:0]    DataCachePlugin_mem_read_rsp_payload_id;
-  wire       [63:0]   DataCachePlugin_mem_read_rsp_payload_data;
+  wire       [31:0]   DataCachePlugin_mem_read_rsp_payload_data;
   wire                DataCachePlugin_mem_read_rsp_payload_error;
   wire                DataCachePlugin_mem_write_cmd_valid;
-  wire                DataCachePlugin_mem_write_cmd_ready;
+  reg                 DataCachePlugin_mem_write_cmd_ready;
   wire                DataCachePlugin_mem_write_cmd_payload_last;
   wire       [31:0]   DataCachePlugin_mem_write_cmd_payload_fragment_address;
-  wire       [63:0]   DataCachePlugin_mem_write_cmd_payload_fragment_data;
+  wire       [31:0]   DataCachePlugin_mem_write_cmd_payload_fragment_data;
   wire       [0:0]    DataCachePlugin_mem_write_cmd_payload_fragment_id;
   wire                DataCachePlugin_mem_write_rsp_valid;
   wire                DataCachePlugin_mem_write_rsp_payload_error;
@@ -3301,6 +3258,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [7:0]    reschedule_payload_reason /* verilator public */ ;
   wire                reschedule_payload_skipCommit /* verilator public */ ;
   wire       [7:0]    rescheduleReason /* verilator public */ ;
+  wire       [31:0]   commit_pc_0 /* verilator public */ ;
   wire       [16:0]   CommitDebugFilterPlugin_logic_commits;
   reg        [31:0]   CommitDebugFilterPlugin_logic_filters_0_value;
   reg        [31:0]   CommitDebugFilterPlugin_logic_filters_1_value;
@@ -3591,112 +3549,81 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                when_AguPlugin_l89;
   wire                EU0_CsrAccessPlugin_logic_wake_wakeRobsSel;
   wire                EU0_CsrAccessPlugin_logic_wake_wakeRegFileSel;
-  wire                DataCachePlugin_mem_resizer_ret_read_cmd_valid;
-  wire                DataCachePlugin_mem_resizer_ret_read_cmd_ready;
-  wire       [0:0]    DataCachePlugin_mem_resizer_ret_read_cmd_payload_id;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_read_cmd_payload_address;
-  wire                DataCachePlugin_mem_resizer_ret_read_rsp_valid;
-  wire                DataCachePlugin_mem_resizer_ret_read_rsp_ready;
-  wire       [0:0]    DataCachePlugin_mem_resizer_ret_read_rsp_payload_id;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_read_rsp_payload_data;
-  wire                DataCachePlugin_mem_resizer_ret_read_rsp_payload_error;
-  wire                DataCachePlugin_mem_resizer_ret_write_cmd_valid;
-  reg                 DataCachePlugin_mem_resizer_ret_write_cmd_ready;
-  wire                DataCachePlugin_mem_resizer_ret_write_cmd_payload_last;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_address;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_data;
-  wire       [0:0]    DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_id;
-  wire                DataCachePlugin_mem_resizer_ret_write_rsp_valid;
-  wire                DataCachePlugin_mem_resizer_ret_write_rsp_payload_error;
-  wire       [0:0]    DataCachePlugin_mem_resizer_ret_write_rsp_payload_id;
-  wire                DataCachePlugin_mem_read_resizer_ret_cmd_valid;
-  wire                DataCachePlugin_mem_read_resizer_ret_cmd_ready;
-  wire       [0:0]    DataCachePlugin_mem_read_resizer_ret_cmd_payload_id;
-  wire       [31:0]   DataCachePlugin_mem_read_resizer_ret_cmd_payload_address;
-  wire                DataCachePlugin_mem_read_resizer_ret_rsp_valid;
-  wire                DataCachePlugin_mem_read_resizer_ret_rsp_ready;
-  wire       [0:0]    DataCachePlugin_mem_read_resizer_ret_rsp_payload_id;
-  wire       [31:0]   DataCachePlugin_mem_read_resizer_ret_rsp_payload_data;
-  wire                DataCachePlugin_mem_read_resizer_ret_rsp_payload_error;
-  wire                DataCachePlugin_mem_read_resizer_rspOutputStream_valid;
-  wire                DataCachePlugin_mem_read_resizer_rspOutputStream_ready;
-  wire       [63:0]   DataCachePlugin_mem_read_resizer_rspOutputStream_payload;
-  wire                DataCachePlugin_mem_read_resizer_ret_rsp_translated_valid;
-  wire                DataCachePlugin_mem_read_resizer_ret_rsp_translated_ready;
-  wire       [31:0]   DataCachePlugin_mem_read_resizer_ret_rsp_translated_payload;
-  wire                DataCachePlugin_mem_read_resizer_ret_rsp_translated_fire;
-  reg                 _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid;
-  reg        [0:0]    _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_1;
-  reg        [0:0]    _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_2;
-  wire                _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_3;
-  reg        [31:0]   _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_payload;
-  wire                DataCachePlugin_mem_write_resizer_ret_cmd_valid;
-  wire                DataCachePlugin_mem_write_resizer_ret_cmd_ready;
-  wire                DataCachePlugin_mem_write_resizer_ret_cmd_payload_last;
-  wire       [31:0]   DataCachePlugin_mem_write_resizer_ret_cmd_payload_fragment_address;
-  wire       [31:0]   DataCachePlugin_mem_write_resizer_ret_cmd_payload_fragment_data;
-  wire       [0:0]    DataCachePlugin_mem_write_resizer_ret_cmd_payload_fragment_id;
-  wire                DataCachePlugin_mem_write_resizer_ret_rsp_valid;
-  wire                DataCachePlugin_mem_write_resizer_ret_rsp_payload_error;
-  wire       [0:0]    DataCachePlugin_mem_write_resizer_ret_rsp_payload_id;
-  wire                DataCachePlugin_mem_write_resizer_cmdOutputStream_valid;
-  wire                DataCachePlugin_mem_write_resizer_cmdOutputStream_ready;
-  wire                DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_last;
-  wire       [31:0]   DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment;
-  wire                DataCachePlugin_mem_write_cmd_translated_valid;
-  wire                DataCachePlugin_mem_write_cmd_translated_ready;
-  wire       [63:0]   DataCachePlugin_mem_write_cmd_translated_payload;
-  wire                DataCachePlugin_mem_write_resizer_cmdOutputStream_fire;
-  reg                 _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment;
-  reg        [0:0]    _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_1;
-  reg        [0:0]    _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_2;
-  wire                _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_last;
-  wire       [63:0]   _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_3;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_valid;
-  reg                 DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_ready;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_last;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_fragment_address;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_fragment_data;
-  wire       [0:0]    DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_fragment_id;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_valid;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_ready;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_last;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_address;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_data;
-  wire       [0:0]    DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_id;
-  reg                 DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_0;
-  reg                 DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_1;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_a_valid;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_a_ready;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_a_payload_write;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_a_payload_address;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_a_payload_data;
+  wire       [3:0]    LsuPlugin_peripheralBus_toAxiLite4_a_payload_mask;
+  wire       [1:0]    LsuPlugin_peripheralBus_toAxiLite4_a_payload_size;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_wRaw_valid;
+  reg                 LsuPlugin_peripheralBus_toAxiLite4_wRaw_ready;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_write;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_address;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_data;
+  wire       [3:0]    LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_mask;
+  wire       [1:0]    LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_size;
+  reg                 LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0;
+  reg                 LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1;
   wire                when_Stream_l1058;
   wire                when_Stream_l1058_1;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_fire;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_fire;
-  reg                 DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_first;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_a_fire;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_wRaw_fire;
   wire                when_Stream_l439;
-  reg                 DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_valid;
-  reg                 DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_ready;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_last;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_fragment_address;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_fragment_data;
-  wire       [0:0]    DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_fragment_id;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_aw_valid;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_aw_ready;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_aw_payload_last;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_aw_payload_fragment_address;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_aw_payload_fragment_data;
-  wire       [0:0]    DataCachePlugin_mem_resizer_ret_toAxi4_aw_payload_fragment_id;
-  reg                 DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rValid;
-  reg                 DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_last;
-  reg        [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_fragment_address;
-  reg        [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_fragment_data;
-  reg        [0:0]    DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_fragment_id;
+  reg                 LsuPlugin_peripheralBus_toAxiLite4_w_valid;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_w_ready;
+  wire                LsuPlugin_peripheralBus_toAxiLite4_w_payload_write;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_w_payload_address;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_w_payload_data;
+  wire       [3:0]    LsuPlugin_peripheralBus_toAxiLite4_w_payload_mask;
+  wire       [1:0]    LsuPlugin_peripheralBus_toAxiLite4_w_payload_size;
+  reg                 LsuPlugin_peripheralBus_toAxiLite4_writeSel;
+  wire       [31:0]   LsuPlugin_peripheralBus_toAxiLite4_addr;
+  wire                DataCachePlugin_mem_toAxi4_awRaw_valid;
+  reg                 DataCachePlugin_mem_toAxi4_awRaw_ready;
+  wire                DataCachePlugin_mem_toAxi4_awRaw_payload_last;
+  wire       [31:0]   DataCachePlugin_mem_toAxi4_awRaw_payload_fragment_address;
+  wire       [31:0]   DataCachePlugin_mem_toAxi4_awRaw_payload_fragment_data;
+  wire       [0:0]    DataCachePlugin_mem_toAxi4_awRaw_payload_fragment_id;
+  wire                DataCachePlugin_mem_toAxi4_wRaw_valid;
+  wire                DataCachePlugin_mem_toAxi4_wRaw_ready;
+  wire                DataCachePlugin_mem_toAxi4_wRaw_payload_last;
+  wire       [31:0]   DataCachePlugin_mem_toAxi4_wRaw_payload_fragment_address;
+  wire       [31:0]   DataCachePlugin_mem_toAxi4_wRaw_payload_fragment_data;
+  wire       [0:0]    DataCachePlugin_mem_toAxi4_wRaw_payload_fragment_id;
+  reg                 DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_0;
+  reg                 DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_1;
+  wire                when_Stream_l1058_2;
+  wire                when_Stream_l1058_3;
+  wire                DataCachePlugin_mem_toAxi4_awRaw_fire;
+  wire                DataCachePlugin_mem_toAxi4_wRaw_fire;
+  reg                 DataCachePlugin_mem_toAxi4_awRaw_payload_first;
+  wire                when_Stream_l439_1;
+  reg                 DataCachePlugin_mem_toAxi4_awFiltred_valid;
+  reg                 DataCachePlugin_mem_toAxi4_awFiltred_ready;
+  wire                DataCachePlugin_mem_toAxi4_awFiltred_payload_last;
+  wire       [31:0]   DataCachePlugin_mem_toAxi4_awFiltred_payload_fragment_address;
+  wire       [31:0]   DataCachePlugin_mem_toAxi4_awFiltred_payload_fragment_data;
+  wire       [0:0]    DataCachePlugin_mem_toAxi4_awFiltred_payload_fragment_id;
+  wire                DataCachePlugin_mem_toAxi4_aw_valid;
+  wire                DataCachePlugin_mem_toAxi4_aw_ready;
+  wire                DataCachePlugin_mem_toAxi4_aw_payload_last;
+  wire       [31:0]   DataCachePlugin_mem_toAxi4_aw_payload_fragment_address;
+  wire       [31:0]   DataCachePlugin_mem_toAxi4_aw_payload_fragment_data;
+  wire       [0:0]    DataCachePlugin_mem_toAxi4_aw_payload_fragment_id;
+  reg                 DataCachePlugin_mem_toAxi4_awFiltred_rValid;
+  reg                 DataCachePlugin_mem_toAxi4_awFiltred_rData_last;
+  reg        [31:0]   DataCachePlugin_mem_toAxi4_awFiltred_rData_fragment_address;
+  reg        [31:0]   DataCachePlugin_mem_toAxi4_awFiltred_rData_fragment_data;
+  reg        [0:0]    DataCachePlugin_mem_toAxi4_awFiltred_rData_fragment_id;
   wire                when_Stream_l369_1;
-  wire                _zz_DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_ready;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_w_valid;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_w_ready;
-  wire                DataCachePlugin_mem_resizer_ret_toAxi4_w_payload_last;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_w_payload_fragment_address;
-  wire       [31:0]   DataCachePlugin_mem_resizer_ret_toAxi4_w_payload_fragment_data;
-  wire       [0:0]    DataCachePlugin_mem_resizer_ret_toAxi4_w_payload_fragment_id;
+  wire                _zz_DataCachePlugin_mem_toAxi4_wRaw_ready;
+  wire                DataCachePlugin_mem_toAxi4_w_valid;
+  wire                DataCachePlugin_mem_toAxi4_w_ready;
+  wire                DataCachePlugin_mem_toAxi4_w_payload_last;
+  wire       [31:0]   DataCachePlugin_mem_toAxi4_w_payload_fragment_address;
+  wire       [31:0]   DataCachePlugin_mem_toAxi4_w_payload_fragment_data;
+  wire       [0:0]    DataCachePlugin_mem_toAxi4_w_payload_fragment_id;
   wire                FrontendPlugin_allocated_haltRequest_FrontendPlugin_l67;
   wire                integer_RfTranslationPlugin_logic_onCommit_writeRd_0;
   wire       [5:0]    integer_RfTranslationPlugin_logic_onCommit_physRd_0;
@@ -5277,12 +5204,11 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                when_Connection_l74_3;
   wire                BranchContextPlugin_free_dispatchMem_writes_0_port_valid;
   wire       [1:0]    BranchContextPlugin_free_dispatchMem_writes_0_port_payload_address;
-  wire       [28:0]   BranchContextPlugin_free_dispatchMem_writes_0_port_payload_data;
+  wire       [26:0]   BranchContextPlugin_free_dispatchMem_writes_0_port_payload_data;
   wire                BranchContextPlugin_free_learn_valid;
   wire       [1:0]    BranchContextPlugin_free_learn_bid;
   wire       [64:0]   _zz_BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice;
-  wire       [28:0]   BranchContextPlugin_free_learn_raw;
-  wire       [3:0]    _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0;
+  wire       [26:0]   BranchContextPlugin_free_learn_raw;
   wire       [7:0]    DispatchPlugin_logic_queueStaticWakeTransposed_0;
   wire       [7:0]    DispatchPlugin_logic_queueStaticWakeTransposedHistory_0_0;
   reg        [3:0]    DispatchPlugin_logic_ptr_next;
@@ -5419,6 +5345,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                when_RobPlugin_l123;
   wire       [3:0]    _zz_CommitPlugin_logic_commit_active;
   wire       [3:0]    _zz_integer_RfAllocationPlugin_logic_push_mask_0;
+  wire       [3:0]    _zz_commit_pc_0;
   wire       [3:0]    _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc;
   wire       [3:0]    _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC;
   wire       [3:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC;
@@ -5511,21 +5438,18 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                when_Connection_l74_7;
   wire                when_Connection_l74_8;
   reg                 FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid;
-  reg        [63:0]   FetchPlugin_stages_2_Fetch_WORD_s2mBuffer;
+  reg        [31:0]   FetchPlugin_stages_2_Fetch_WORD_s2mBuffer;
   reg        [31:0]   FetchPlugin_stages_2_Fetch_FETCH_PC_s2mBuffer;
   reg                 FetchPlugin_stages_2_Fetch_WORD_FAULT_s2mBuffer;
   reg                 FetchPlugin_stages_2_Fetch_WORD_FAULT_PAGE_s2mBuffer;
   reg        [23:0]   FetchPlugin_stages_2_BRANCH_HISTORY_s2mBuffer;
   reg        [11:0]   FetchPlugin_stages_2_FETCH_ID_s2mBuffer;
-  reg        [0:0]    FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE_s2mBuffer;
   reg                 FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID_s2mBuffer;
-  reg        [1:0]    FetchPlugin_stages_2_AlignerPlugin_MASK_FRONT_s2mBuffer;
+  reg        [0:0]    FetchPlugin_stages_2_AlignerPlugin_MASK_FRONT_s2mBuffer;
   reg        [31:0]   FetchPlugin_stages_2_Prediction_WORD_BRANCH_PC_NEXT_s2mBuffer;
   reg                 FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALID_s2mBuffer;
-  reg        [0:0]    FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE_s2mBuffer;
   reg                 FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE_s2mBuffer;
   reg        [1:0]    FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_0;
-  reg        [1:0]    FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_1;
   reg        [31:0]   FetchPlugin_stages_2_Fetch_FETCH_PC_INC_s2mBuffer;
   reg        [3:0]    PrivilegedPlugin_logic_fsm_stateReg;
   reg        [3:0]    PrivilegedPlugin_logic_fsm_stateNext;
@@ -5571,13 +5495,13 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg [79:0] PrivilegedPlugin_logic_fsm_stateNext_string;
   `endif
 
-  reg [63:0] FetchCachePlugin_logic_banks_0_mem [0:31];
+  reg [31:0] FetchCachePlugin_logic_banks_0_mem [0:63];
   (* ram_style = "distributed" *) reg [25:0] FetchCachePlugin_logic_ways_0_mem [0:3];
   (* ram_style = "distributed" *) reg [32:0] BranchContextPlugin_logic_mem_earlyBranch [0:3];
   (* ram_style = "distributed" *) reg [64:0] BranchContextPlugin_logic_mem_finalBranch [0:3];
   (* ram_style = "distributed" *) reg [31:0] DecoderPredictionPlugin_logic_ras_mem_stack [0:15];
-  reg [49:0] BtbPlugin_logic_mem [0:7];
-  reg [3:0] GSharePlugin_logic_mem_counter [0:63];
+  reg [48:0] BtbPlugin_logic_mem [0:7];
+  reg [1:0] GSharePlugin_logic_mem_counter [0:127];
   (* ram_style = "distributed" *) reg [31:0] Lsu2Plugin_logic_lq_mem_addressPre [0:7];
   (* ram_style = "distributed" *) reg [31:0] Lsu2Plugin_logic_lq_mem_addressPost [0:7];
   (* ram_style = "distributed" *) reg [1:0] Lsu2Plugin_logic_lq_mem_size [0:7];
@@ -5627,7 +5551,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   (* ram_style = "distributed" *) reg [24:0] Lsu2Plugin_setup_translationStorage_logic_sl_1_ways_0 [0:3];
   (* ram_style = "distributed" *) reg [24:0] Lsu2Plugin_setup_translationStorage_logic_sl_1_ways_1 [0:3];
   (* ram_style = "distributed" *) reg [31:0] CsrRamPlugin_logic_mem [0:7];
-  (* ram_style = "distributed" *) reg [28:0] BranchContextPlugin_free_dispatchMem_mem [0:3];
+  (* ram_style = "distributed" *) reg [26:0] BranchContextPlugin_free_dispatchMem_mem [0:3];
   (* ram_style = "distributed" *) reg [0:0] RobPlugin_logic_completionMem_target [0:15];
   (* ram_style = "distributed" *) reg [0:0] RobPlugin_logic_completionMem_hits_0 [0:15];
   (* ram_style = "distributed" *) reg [0:0] RobPlugin_logic_completionMem_hits_1 [0:15];
@@ -5660,21 +5584,21 @@ module NaxRiscvAxi4LinuxPlicClint (
       zz__zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue[2 : 0] = 3'b101;
     end
   endfunction
-  wire [31:0] _zz_258;
+  wire [31:0] _zz_259;
   function  zz_DecoderPlugin_logic_slots_0_x0AlwaysZero(input dummy);
     begin
       zz_DecoderPlugin_logic_slots_0_x0AlwaysZero = 1'bx;
       zz_DecoderPlugin_logic_slots_0_x0AlwaysZero = 1'b1;
     end
   endfunction
-  wire  _zz_259;
+  wire  _zz_260;
 
   assign _zz__zz_FetchPlugin_stages_1_MMU_IO = (ioStartAddr + ioSize);
   assign _zz_FetchPlugin_stages_1_FETCH_ID_1 = FetchPlugin_stages_1_isFireing;
   assign _zz_FetchPlugin_stages_1_FETCH_ID = {11'd0, _zz_FetchPlugin_stages_1_FETCH_ID_1};
   assign _zz_FetchCachePlugin_logic_read_onWays_0_hits_bypassHits = (FetchPlugin_stages_1_Fetch_FETCH_PC >>> 4'd8);
-  assign _zz_AlignerPlugin_logic_extractors_0_usable = (((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_decoders_0_usable : 1'b0) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_decoders_1_usable : 1'b0)) | ((_zz_AlignerPlugin_logic_extractors_0_usage_2 ? AlignerPlugin_logic_decoders_2_usable : 1'b0) | (_zz_AlignerPlugin_logic_extractors_0_usage_3 ? AlignerPlugin_logic_decoders_3_usable : 1'b0)));
-  assign _zz_FrontendPlugin_aligned_PC_0 = (AlignerPlugin_logic_extractors_0_pcWord >>> 2'd3);
+  assign _zz_AlignerPlugin_logic_extractors_0_usable = ((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_decoders_0_usable : 1'b0) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_decoders_1_usable : 1'b0));
+  assign _zz_FrontendPlugin_aligned_PC_0 = (AlignerPlugin_logic_extractors_0_pcWord >>> 2'd2);
   assign _zz_DecoderPredictionPlugin_logic_ras_ptr_push = (DecoderPredictionPlugin_logic_ras_ptr_push + _zz_DecoderPredictionPlugin_logic_ras_ptr_push_1);
   assign _zz_DecoderPredictionPlugin_logic_ras_ptr_push_2 = DecoderPredictionPlugin_logic_ras_ptr_pushIt;
   assign _zz_DecoderPredictionPlugin_logic_ras_ptr_push_1 = {3'd0, _zz_DecoderPredictionPlugin_logic_ras_ptr_push_2};
@@ -5685,13 +5609,12 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_1 = {3'd0, _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_2};
   assign _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_4 = DecoderPredictionPlugin_logic_ras_ptr_popIt;
   assign _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_3 = {3'd0, _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_4};
-  assign _zz_BtbPlugin_logic_onLearn_port_payload_address = (BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice >>> 2'd3);
-  assign _zz_BtbPlugin_logic_onLearn_port_payload_data_slice = (BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice >>> 2'd2);
-  assign _zz_BtbPlugin_logic_readCmd_entryAddress = (FetchPlugin_stages_0_Fetch_FETCH_PC >>> 2'd3);
+  assign _zz_BtbPlugin_logic_onLearn_port_payload_address = (BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice >>> 2'd2);
+  assign _zz_BtbPlugin_logic_readCmd_entryAddress = (FetchPlugin_stages_0_Fetch_FETCH_PC >>> 2'd2);
   assign _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_2 = FetchPlugin_stages_0_BRANCH_HISTORY;
-  assign _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1 = _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_2[5:0];
+  assign _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1 = _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_2[6:0];
   assign _zz_GSharePlugin_logic_onLearn_hash_2 = BranchContextPlugin_free_learn_BRANCH_HISTORY;
-  assign _zz_GSharePlugin_logic_onLearn_hash_1 = _zz_GSharePlugin_logic_onLearn_hash_2[5:0];
+  assign _zz_GSharePlugin_logic_onLearn_hash_1 = _zz_GSharePlugin_logic_onLearn_hash_2[6:0];
   assign _zz_CommitPlugin_logic_ptr_allocNext_1 = (FrontendPlugin_allocated_isFireing ? 1'b1 : 1'b0);
   assign _zz_CommitPlugin_logic_ptr_allocNext = {4'd0, _zz_CommitPlugin_logic_ptr_allocNext_1};
   assign _zz_CommitPlugin_logic_reschedule_commit_rowHit = CommitPlugin_logic_ptr_commitRow[3:0];
@@ -5707,6 +5630,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_CommitPlugin_logic_commit_active_2 = RobPlugin_logic_storage_Frontend_DISPATCH_MASK_banks_0_spinal_port1[0];
   assign _zz_CommitPlugin_logic_commit_head = (CommitPlugin_logic_ptr_commit + 5'h00);
   assign _zz_CommitPlugin_logic_free_robHit = CommitPlugin_logic_ptr_free[3:0];
+  assign _zz_commit_pc_0_1 = _zz_commit_pc_0_2[31 : 0];
+  assign _zz_commit_pc_0_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port1[31 : 0];
   assign _zz_CommitDebugFilterPlugin_logic_filters_0_value = ($signed(_zz_CommitDebugFilterPlugin_logic_filters_0_value_1) >>> 4);
   assign _zz_CommitDebugFilterPlugin_logic_filters_0_value_1 = _zz_CommitDebugFilterPlugin_logic_filters_0_value_2;
   assign _zz_CommitDebugFilterPlugin_logic_filters_0_value_2 = (_zz_CommitDebugFilterPlugin_logic_filters_0_value_3 - CommitDebugFilterPlugin_logic_filters_0_value);
@@ -5720,7 +5645,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_CommitDebugFilterPlugin_logic_filters_2_value_2 = (_zz_CommitDebugFilterPlugin_logic_filters_2_value_3 - CommitDebugFilterPlugin_logic_filters_2_value);
   assign _zz_CommitDebugFilterPlugin_logic_filters_2_value_3 = {15'd0, CommitDebugFilterPlugin_logic_commits};
   assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_1 = _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_2[31 : 0];
-  assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port1[31 : 0];
+  assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port2[31 : 0];
   assign _zz__zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_SRC2 = ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP[31 : 20];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_ADD_SUB = ($signed(ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_SRC1) + $signed(ALU0_SrcPlugin_logic_addsub_rs2Patched));
   assign _zz_ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_ADD_SUB_1 = _zz_ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_ADD_SUB_2;
@@ -6001,6 +5926,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_EU0_BranchPlugin_logic_process_slices = {1'd0, _zz_EU0_BranchPlugin_logic_process_slices_1};
   assign _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1 = ({2'd0,EU0_BranchPlugin_logic_process_slices} <<< 2'd2);
   assign _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE = {28'd0, _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1};
+  assign _zz_LsuPlugin_peripheralBus_toAxiLite4_addr = ({2'd0,LsuPlugin_peripheralBus_toAxiLite4_a_payload_address[31 : 2]} <<< 2'd2);
   assign _zz_BranchContextPlugin_logic_onCommit_commitedNext = {2'd0, _zz_BranchContextPlugin_logic_onCommit_commitedNext_1};
   assign _zz_HistoryPlugin_logic_onCommit_valueNext_1 = {HistoryPlugin_logic_onCommit_valueNext,HistoryPlugin_logic_onCommit_isTaken_0};
   assign _zz_HistoryPlugin_logic_update_pushes_0_stateNext_1 = {HistoryPlugin_logic_update_pushes_0_stateNext,BtbPlugin_setup_historyPush_taken[0]};
@@ -6171,7 +6097,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_1 = _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_2[0 : 0];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_2 = RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port3[0];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC_1 = _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC_2[31 : 0];
-  assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port2[31 : 0];
+  assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port3[31 : 0];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_IntAluPlugin_SEL_1 = _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_IntAluPlugin_SEL_2[0];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_IntAluPlugin_SEL_2 = (|{((ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP & 32'h00002000) == 32'h00002000),{_zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_IntAluPlugin_SEL,((ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP & 32'h00001000) == 32'h00000000)}});
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_completion_SEL_E0 = _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_completion_SEL_E0_1[0];
@@ -6197,7 +6123,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_2[0 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_2 = RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port4[0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_2[31 : 0];
-  assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port3[31 : 0];
+  assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port4[31 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_2[1 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_2 = RobPlugin_logic_storage_BRANCH_ID_banks_0_spinal_port1[1 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_LSU_ID_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_LSU_ID_2[3 : 0];
@@ -6262,6 +6188,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_ZERO_2 = (|_zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_ZERO);
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED_2[0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED_2 = (|_zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED);
+  assign _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0 = BranchContextPlugin_free_learn_raw[25 : 24];
   assign _zz_DispatchPlugin_logic_ptr_next = (CommitPlugin_logic_commit_reschedulePort_payload_robIdNext - 4'b1000);
   assign _zz_DispatchPlugin_logic_push_slots_0_events_0 = (8'h01 <<< _zz_DispatchPlugin_logic_push_slots_0_events_0_1);
   assign _zz_DispatchPlugin_logic_push_slots_0_events_0_2 = (FrontendPlugin_dispatch_RfDependencyPlugin_setup_waits_0_ID_0 - DispatchPlugin_logic_ptr_next);
@@ -6305,8 +6232,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_Lsu2Plugin_logic_sq_onCommit_sqAlloc_0_2 = RobPlugin_logic_storage_SQ_ALLOC_banks_0_spinal_port1[0];
   assign _zz_PcPlugin_logic_init_counter_1 = (! PcPlugin_logic_init_booted);
   assign _zz_PcPlugin_logic_init_counter = {6'd0, _zz_PcPlugin_logic_init_counter_1};
-  assign _zz_PcPlugin_logic_fetchPc_pc_1 = ({3'd0,PcPlugin_logic_fetchPc_inc} <<< 2'd3);
-  assign _zz_PcPlugin_logic_fetchPc_pc = {28'd0, _zz_PcPlugin_logic_fetchPc_pc_1};
+  assign _zz_PcPlugin_logic_fetchPc_pc_1 = ({2'd0,PcPlugin_logic_fetchPc_inc} <<< 2'd2);
+  assign _zz_PcPlugin_logic_fetchPc_pc = {29'd0, _zz_PcPlugin_logic_fetchPc_pc_1};
   assign _zz_PrivilegedPlugin_setup_ramWrite_data = PrivilegedPlugin_logic_reschedule_payload_epc;
   assign _zz_PrivilegedPlugin_setup_ramWrite_data_1 = PrivilegedPlugin_logic_reschedule_payload_tval;
   assign _zz_PrivilegedPlugin_logic_readed = (PrivilegedPlugin_logic_reschedule_payload_epc + _zz_PrivilegedPlugin_logic_readed_1);
@@ -6321,8 +6248,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_BranchContextPlugin_logic_mem_earlyBranch_port = {FrontendPlugin_allocated_BRANCH_EARLY_0_pc,FrontendPlugin_allocated_BRANCH_EARLY_0_taken};
   assign _zz_BranchContextPlugin_logic_mem_finalBranch_port = {EU0_BranchPlugin_logic_branch_finalBranch_payload_data_taken,{EU0_BranchPlugin_logic_branch_finalBranch_payload_data_pcTarget,EU0_BranchPlugin_logic_branch_finalBranch_payload_data_pcOnLastSlice}};
   assign _zz_DecoderPredictionPlugin_logic_ras_mem_stack_port = DecoderPredictionPlugin_logic_ras_write_payload_data;
-  assign _zz_BtbPlugin_logic_mem_port = {BtbPlugin_logic_onLearn_port_payload_data_isBranch,{BtbPlugin_logic_onLearn_port_payload_data_pcTarget,{BtbPlugin_logic_onLearn_port_payload_data_slice,BtbPlugin_logic_onLearn_port_payload_data_hash}}};
-  assign _zz_GSharePlugin_logic_mem_counter_port = {GSharePlugin_logic_mem_write_payload_data_1,GSharePlugin_logic_mem_write_payload_data_0};
+  assign _zz_BtbPlugin_logic_mem_port = {BtbPlugin_logic_onLearn_port_payload_data_isBranch,{BtbPlugin_logic_onLearn_port_payload_data_pcTarget,BtbPlugin_logic_onLearn_port_payload_data_hash}};
+  assign _zz_GSharePlugin_logic_mem_counter_port = GSharePlugin_logic_mem_write_payload_data_0;
   assign _zz_Lsu2Plugin_logic_lq_mem_addressPre_port_1 = AguPlugin_setup_port_payload_address;
   assign _zz_Lsu2Plugin_logic_lq_mem_addressPost_port = Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED;
   assign _zz_Lsu2Plugin_logic_lq_mem_size_port_1 = AguPlugin_setup_port_payload_size;
@@ -6430,7 +6357,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_RobPlugin_logic_storage_LSU_ID_banks_0_port_1 = (FrontendPlugin_dispatch_isFireing && 1'b1);
   assign _zz_RobPlugin_logic_storage_ROB_MSB_banks_0_port = FrontendPlugin_allocated_ROB_MSB_0;
   assign _zz_RobPlugin_logic_storage_ROB_MSB_banks_0_port_1 = (FrontendPlugin_allocated_isFireing && 1'b1);
-  assign _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT_1 = FetchPlugin_stages_1_Fetch_FETCH_PC[2 : 2];
   assign _zz_AlignerPlugin_logic_extractors_0_pcWord_1 = AlignerPlugin_logic_extractors_0_firstWord;
   assign _zz_CommitDebugFilterPlugin_logic_commits_1 = CommitPlugin_logic_commit_event_mask[0];
   assign _zz_BranchContextPlugin_logic_onCommit_commitedNext_2 = BranchContextPlugin_logic_onCommit_isBranchCommit_0;
@@ -6588,6 +6514,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign BranchContextPlugin_logic_mem_finalBranch_spinal_port1 = BranchContextPlugin_logic_mem_finalBranch[BranchContextPlugin_free_learn_bid];
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_DecoderPredictionPlugin_logic_ras_mem_stack.bin",DecoderPredictionPlugin_logic_ras_mem_stack);
+  end
   assign DecoderPredictionPlugin_logic_ras_mem_stack_spinal_port0 = DecoderPredictionPlugin_logic_ras_mem_stack[DecoderPredictionPlugin_logic_ras_ptr_pop];
   always @(posedge clk) begin
     if(_zz_28) begin
@@ -6595,6 +6524,9 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_BtbPlugin_logic_mem.bin",BtbPlugin_logic_mem);
+  end
   always @(posedge clk) begin
     if(FetchPlugin_stages_0_ready) begin
       BtbPlugin_logic_mem_spinal_port1 <= BtbPlugin_logic_mem[BtbPlugin_logic_readCmd_entryAddress];
@@ -6604,6 +6536,9 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_GSharePlugin_logic_mem_counter.bin",GSharePlugin_logic_mem_counter);
+  end
   always @(posedge clk) begin
     if(_zz_26) begin
       GSharePlugin_logic_mem_counter[GSharePlugin_logic_mem_write_payload_address] <= _zz_GSharePlugin_logic_mem_counter_port;
@@ -6770,6 +6705,9 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_Lsu2Plugin_logic_lq_hazardPrediction_mem.bin",Lsu2Plugin_logic_lq_hazardPrediction_mem);
+  end
   always @(posedge clk) begin
     if(_zz_25) begin
       Lsu2Plugin_logic_lq_hazardPrediction_mem[Lsu2Plugin_logic_lq_hazardPrediction_write_takeWhen_payload_address] <= _zz_Lsu2Plugin_logic_lq_hazardPrediction_mem_port;
@@ -6782,6 +6720,9 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_Lsu2Plugin_logic_lq_hitPrediction_mem.bin",Lsu2Plugin_logic_lq_hitPrediction_mem);
+  end
   always @(posedge clk) begin
     if(_zz_24) begin
       Lsu2Plugin_logic_lq_hitPrediction_mem[Lsu2Plugin_logic_lq_hitPrediction_write_takeWhen_payload_address] <= _zz_Lsu2Plugin_logic_lq_hitPrediction_mem_port;
@@ -7027,6 +6968,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign RobPlugin_logic_completionMem_target_spinal_port1 = RobPlugin_logic_completionMem_target[RobPlugin_logic_completionMem_reads_0_targetRead_address];
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_RobPlugin_logic_completionMem_hits_0.bin",RobPlugin_logic_completionMem_hits_0);
+  end
   assign RobPlugin_logic_completionMem_hits_0_spinal_port0 = RobPlugin_logic_completionMem_hits_0[RobPlugin_logic_completionMem_init_0_robId];
   assign RobPlugin_logic_completionMem_hits_0_spinal_port1 = RobPlugin_logic_completionMem_hits_0[Lsu2Plugin_setup_sharedCompletion_payload_id];
   always @(posedge clk) begin
@@ -7036,6 +6980,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign RobPlugin_logic_completionMem_hits_0_spinal_port3 = RobPlugin_logic_completionMem_hits_0[_zz_CommitPlugin_setup_robLineMask_mask];
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_RobPlugin_logic_completionMem_hits_1.bin",RobPlugin_logic_completionMem_hits_1);
+  end
   assign RobPlugin_logic_completionMem_hits_1_spinal_port0 = RobPlugin_logic_completionMem_hits_1[RobPlugin_logic_completionMem_init_0_robId];
   assign RobPlugin_logic_completionMem_hits_1_spinal_port1 = RobPlugin_logic_completionMem_hits_1[Lsu2Plugin_setup_specialCompletion_payload_id];
   always @(posedge clk) begin
@@ -7045,6 +6992,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign RobPlugin_logic_completionMem_hits_1_spinal_port3 = RobPlugin_logic_completionMem_hits_1[_zz_CommitPlugin_setup_robLineMask_mask];
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_RobPlugin_logic_completionMem_hits_2.bin",RobPlugin_logic_completionMem_hits_2);
+  end
   assign RobPlugin_logic_completionMem_hits_2_spinal_port0 = RobPlugin_logic_completionMem_hits_2[RobPlugin_logic_completionMem_init_0_robId];
   assign RobPlugin_logic_completionMem_hits_2_spinal_port1 = RobPlugin_logic_completionMem_hits_2[ALU0_ExecutionUnitBase_pipeline_completion_0_port_payload_id];
   always @(posedge clk) begin
@@ -7054,6 +7004,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign RobPlugin_logic_completionMem_hits_2_spinal_port3 = RobPlugin_logic_completionMem_hits_2[_zz_CommitPlugin_setup_robLineMask_mask];
+  initial begin
+    $readmemb("NaxRiscvAxi4LinuxPlicClint.v_toplevel_RobPlugin_logic_completionMem_hits_3.bin",RobPlugin_logic_completionMem_hits_3);
+  end
   assign RobPlugin_logic_completionMem_hits_3_spinal_port0 = RobPlugin_logic_completionMem_hits_3[RobPlugin_logic_completionMem_init_0_robId];
   assign RobPlugin_logic_completionMem_hits_3_spinal_port1 = RobPlugin_logic_completionMem_hits_3[EU0_ExecutionUnitBase_pipeline_completion_0_port_payload_id];
   always @(posedge clk) begin
@@ -7077,9 +7030,10 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign RobPlugin_logic_storage_PC_banks_0_spinal_port1 = RobPlugin_logic_storage_PC_banks_0[_zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc];
-  assign RobPlugin_logic_storage_PC_banks_0_spinal_port2 = RobPlugin_logic_storage_PC_banks_0[_zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC];
-  assign RobPlugin_logic_storage_PC_banks_0_spinal_port3 = RobPlugin_logic_storage_PC_banks_0[_zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC];
+  assign RobPlugin_logic_storage_PC_banks_0_spinal_port1 = RobPlugin_logic_storage_PC_banks_0[_zz_commit_pc_0];
+  assign RobPlugin_logic_storage_PC_banks_0_spinal_port2 = RobPlugin_logic_storage_PC_banks_0[_zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc];
+  assign RobPlugin_logic_storage_PC_banks_0_spinal_port3 = RobPlugin_logic_storage_PC_banks_0[_zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC];
+  assign RobPlugin_logic_storage_PC_banks_0_spinal_port4 = RobPlugin_logic_storage_PC_banks_0[_zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC];
   always @(posedge clk) begin
     if(_zz_RobPlugin_logic_storage_WRITE_RD_banks_0_port_1) begin
       RobPlugin_logic_storage_WRITE_RD_banks_0[FrontendPlugin_allocated_ROB_ID] <= _zz_RobPlugin_logic_storage_WRITE_RD_banks_0_port;
@@ -7352,13 +7306,13 @@ module NaxRiscvAxi4LinuxPlicClint (
     .io_mem_read_rsp_valid                     (DataCachePlugin_mem_read_rsp_valid                                         ), //i
     .io_mem_read_rsp_ready                     (DataCachePlugin_logic_cache_io_mem_read_rsp_ready                          ), //o
     .io_mem_read_rsp_payload_id                (DataCachePlugin_mem_read_rsp_payload_id                                    ), //i
-    .io_mem_read_rsp_payload_data              (DataCachePlugin_mem_read_rsp_payload_data[63:0]                            ), //i
+    .io_mem_read_rsp_payload_data              (DataCachePlugin_mem_read_rsp_payload_data[31:0]                            ), //i
     .io_mem_read_rsp_payload_error             (DataCachePlugin_mem_read_rsp_payload_error                                 ), //i
     .io_mem_write_cmd_valid                    (DataCachePlugin_logic_cache_io_mem_write_cmd_valid                         ), //o
     .io_mem_write_cmd_ready                    (DataCachePlugin_mem_write_cmd_ready                                        ), //i
     .io_mem_write_cmd_payload_last             (DataCachePlugin_logic_cache_io_mem_write_cmd_payload_last                  ), //o
     .io_mem_write_cmd_payload_fragment_address (DataCachePlugin_logic_cache_io_mem_write_cmd_payload_fragment_address[31:0]), //o
-    .io_mem_write_cmd_payload_fragment_data    (DataCachePlugin_logic_cache_io_mem_write_cmd_payload_fragment_data[63:0]   ), //o
+    .io_mem_write_cmd_payload_fragment_data    (DataCachePlugin_logic_cache_io_mem_write_cmd_payload_fragment_data[31:0]   ), //o
     .io_mem_write_cmd_payload_fragment_id      (DataCachePlugin_logic_cache_io_mem_write_cmd_payload_fragment_id           ), //o
     .io_mem_write_rsp_valid                    (DataCachePlugin_mem_write_rsp_valid                                        ), //i
     .io_mem_write_rsp_payload_error            (DataCachePlugin_mem_write_rsp_payload_error                                ), //i
@@ -7523,20 +7477,6 @@ module NaxRiscvAxi4LinuxPlicClint (
     .reset                         (reset                                                                         )  //i
   );
   always @(*) begin
-    case(_zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT_1)
-      1'b0 : _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT = 2'b11;
-      default : _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT = 2'b10;
-    endcase
-  end
-
-  always @(*) begin
-    case(AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE)
-      1'b0 : _zz_AlignerPlugin_setup_s2m_MASK_BACK = 2'b01;
-      default : _zz_AlignerPlugin_setup_s2m_MASK_BACK = 2'b11;
-    endcase
-  end
-
-  always @(*) begin
     case(_zz_AlignerPlugin_logic_extractors_0_pcWord_1)
       1'b0 : _zz_AlignerPlugin_logic_extractors_0_pcWord = AlignerPlugin_logic_buffer_pc;
       default : _zz_AlignerPlugin_logic_extractors_0_pcWord = AlignerPlugin_setup_s2m_Fetch_FETCH_PC;
@@ -7544,23 +7484,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   always @(*) begin
-    case(FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice)
-      1'b0 : _zz_BtbPlugin_logic_applyIt_prediction = FetchPlugin_stages_1_GSHARE_COUNTER_0[1];
-      default : _zz_BtbPlugin_logic_applyIt_prediction = FetchPlugin_stages_1_GSHARE_COUNTER_1[1];
-    endcase
-  end
-
-  always @(*) begin
     case(_zz_CommitDebugFilterPlugin_logic_commits_1)
       1'b0 : _zz_CommitDebugFilterPlugin_logic_commits = 1'b0;
       default : _zz_CommitDebugFilterPlugin_logic_commits = 1'b1;
-    endcase
-  end
-
-  always @(*) begin
-    case(_zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_2)
-      1'b0 : _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_4 = _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_3[31 : 0];
-      default : _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_4 = _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_3[63 : 32];
     endcase
   end
 
@@ -8322,7 +8248,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     AlignerPlugin_logic_slices_remains_1 = AlignerPlugin_logic_slices_remains;
-    AlignerPlugin_logic_slices_remains_1 = (AlignerPlugin_logic_slices_remains & (~ (AlignerPlugin_logic_extractors_0_valid ? AlignerPlugin_logic_extractors_0_usage : 4'b0000)));
+    AlignerPlugin_logic_slices_remains_1 = (AlignerPlugin_logic_slices_remains & (~ (AlignerPlugin_logic_extractors_0_valid ? AlignerPlugin_logic_extractors_0_usage : 2'b00)));
   end
 
   always @(*) begin
@@ -8725,30 +8651,16 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign plic_rdata = plicCtrl_io_bus_r_payload_data;
   assign plic_rresp = plicCtrl_io_bus_r_payload_resp;
   assign plicCtrl_io_sources = (plicInterrupts >>> 1'd1);
-  assign FetchCachePlugin_mem_resizer_ret_cmd_valid = FetchCachePlugin_mem_cmd_valid;
-  assign FetchCachePlugin_mem_cmd_ready = FetchCachePlugin_mem_resizer_ret_cmd_ready;
-  assign FetchCachePlugin_mem_resizer_ret_cmd_payload_address = FetchCachePlugin_mem_cmd_payload_address;
-  assign FetchCachePlugin_mem_resizer_ret_cmd_payload_io = FetchCachePlugin_mem_cmd_payload_io;
-  assign FetchCachePlugin_mem_resizer_ret_rsp_translated_valid = FetchCachePlugin_mem_resizer_ret_rsp_valid;
-  assign FetchCachePlugin_mem_resizer_ret_rsp_ready = FetchCachePlugin_mem_resizer_ret_rsp_translated_ready;
-  assign FetchCachePlugin_mem_resizer_ret_rsp_translated_payload = FetchCachePlugin_mem_resizer_ret_rsp_payload_data;
-  assign FetchCachePlugin_mem_resizer_rspOutputStream_valid = FetchCachePlugin_mem_resizer_ret_rsp_translated_valid;
-  assign FetchCachePlugin_mem_resizer_ret_rsp_translated_ready = FetchCachePlugin_mem_resizer_rspOutputStream_ready;
-  assign FetchCachePlugin_mem_resizer_rspOutputStream_payload = FetchCachePlugin_mem_resizer_ret_rsp_translated_payload;
-  assign FetchCachePlugin_mem_rsp_valid = FetchCachePlugin_mem_resizer_rspOutputStream_valid;
-  assign FetchCachePlugin_mem_rsp_payload_data = FetchCachePlugin_mem_resizer_rspOutputStream_payload;
-  assign FetchCachePlugin_mem_rsp_payload_error = FetchCachePlugin_mem_resizer_ret_rsp_payload_error;
-  assign FetchCachePlugin_mem_resizer_rspOutputStream_ready = 1'b1;
-  assign iBusAxi_arvalid = FetchCachePlugin_mem_resizer_ret_cmd_valid;
-  assign iBusAxi_araddr = FetchCachePlugin_mem_resizer_ret_cmd_payload_address;
+  assign iBusAxi_arvalid = FetchCachePlugin_mem_cmd_valid;
+  assign iBusAxi_araddr = FetchCachePlugin_mem_cmd_payload_address;
   assign iBusAxi_arprot = 3'b110;
-  assign iBusAxi_arlen = 8'h07;
-  assign iBusAxi_arsize = 3'b011;
+  assign iBusAxi_arlen = 8'h0f;
+  assign iBusAxi_arsize = 3'b010;
   assign iBusAxi_arburst = 2'b01;
-  assign FetchCachePlugin_mem_resizer_ret_cmd_ready = iBusAxi_arready;
-  assign FetchCachePlugin_mem_resizer_ret_rsp_valid = iBusAxi_rvalid;
-  assign FetchCachePlugin_mem_resizer_ret_rsp_payload_data = iBusAxi_rdata;
-  assign FetchCachePlugin_mem_resizer_ret_rsp_payload_error = (! (iBusAxi_rresp == 2'b00));
+  assign FetchCachePlugin_mem_cmd_ready = iBusAxi_arready;
+  assign FetchCachePlugin_mem_rsp_valid = iBusAxi_rvalid;
+  assign FetchCachePlugin_mem_rsp_payload_data = iBusAxi_rdata;
+  assign FetchCachePlugin_mem_rsp_payload_error = (! (iBusAxi_rresp == 2'b00));
   assign iBusAxi_rready = 1'b1;
   assign FetchPlugin_stages_1_isFireing = (FetchPlugin_stages_1_valid && FetchPlugin_stages_1_ready);
   assign when_Stage_l170 = (FetchPlugin_stages_1_ready || FetchPlugin_stages_1_isFlushed);
@@ -8887,12 +8799,12 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign FetchCachePlugin_logic_banks_0_write_payload_address = {FetchCachePlugin_logic_refill_address[7 : 6],FetchCachePlugin_logic_refill_wordIndex};
   assign FetchCachePlugin_logic_banks_0_write_payload_data = FetchCachePlugin_mem_rsp_payload_data;
   assign FetchCachePlugin_mem_rsp_ready = 1'b1;
-  assign when_FetchCachePlugin_l470 = (FetchCachePlugin_logic_refill_wordIndex == 3'b111);
+  assign when_FetchCachePlugin_l470 = (FetchCachePlugin_logic_refill_wordIndex == 4'b1111);
   assign FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l476 = FetchCachePlugin_logic_refill_valid;
   assign FetchCachePlugin_logic_banks_0_read_cmd_valid = (! (FetchPlugin_stages_0_valid && (! FetchPlugin_stages_0_ready)));
-  assign FetchCachePlugin_logic_banks_0_read_cmd_payload = FetchPlugin_stages_0_Fetch_FETCH_PC[7 : 3];
-  assign FetchPlugin_stages_1_FetchCachePlugin_logic_BANKS_MUXES_0 = FetchPlugin_stages_1_FetchCachePlugin_logic_BANKS_WORDS_0[63 : 0];
-  assign FetchPlugin_stages_2_Fetch_WORD = (FetchPlugin_stages_2_FetchCachePlugin_logic_WAYS_HITS_0 ? FetchPlugin_stages_2_FetchCachePlugin_logic_BANKS_MUXES_0 : 64'h0000000000000000);
+  assign FetchCachePlugin_logic_banks_0_read_cmd_payload = FetchPlugin_stages_0_Fetch_FETCH_PC[7 : 2];
+  assign FetchPlugin_stages_1_FetchCachePlugin_logic_BANKS_MUXES_0 = FetchPlugin_stages_1_FetchCachePlugin_logic_BANKS_WORDS_0[31 : 0];
+  assign FetchPlugin_stages_2_Fetch_WORD = (FetchPlugin_stages_2_FetchCachePlugin_logic_WAYS_HITS_0 ? FetchPlugin_stages_2_FetchCachePlugin_logic_BANKS_MUXES_0 : 32'h00000000);
   assign FetchCachePlugin_logic_ways_0_read_cmd_valid = (! (FetchPlugin_stages_0_valid && (! FetchPlugin_stages_0_ready)));
   assign FetchCachePlugin_logic_ways_0_read_cmd_payload = FetchPlugin_stages_0_Fetch_FETCH_PC[7 : 6];
   assign FetchCachePlugin_logic_read_onWays_0_hits_wayTlbHits_0 = ((FetchPlugin_stages_1_FetchCachePlugin_logic_WAYS_TAGS_0_address == FetchPlugin_stages_1_MMU_WAYS_PHYSICAL_0[31 : 8]) && FetchPlugin_stages_1_MMU_WAYS_OH[0]);
@@ -8958,11 +8870,11 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign when_FetchCachePlugin_l593 = ((! FetchCachePlugin_logic_invalidate_done) && FetchCachePlugin_logic_invalidate_firstEver);
   assign AlignerPlugin_logic_ignoreInput = AlignerPlugin_setup_s2m_isFlushingRoot;
   assign AlignerPlugin_logic_isInputValid = (AlignerPlugin_setup_s2m_valid && (! AlignerPlugin_logic_ignoreInput));
-  assign FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT = _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT;
+  assign FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT = 1'b1;
   always @(*) begin
-    AlignerPlugin_setup_s2m_MASK_BACK = _zz_AlignerPlugin_setup_s2m_MASK_BACK;
+    AlignerPlugin_setup_s2m_MASK_BACK = 1'b1;
     if(when_AlignerPlugin_l98) begin
-      AlignerPlugin_setup_s2m_MASK_BACK = 2'b11;
+      AlignerPlugin_setup_s2m_MASK_BACK = 1'b1;
     end
   end
 
@@ -8970,54 +8882,37 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_AlignerPlugin_logic_slices_data_0 = {AlignerPlugin_setup_s2m_Fetch_WORD,AlignerPlugin_logic_buffer_data};
   assign AlignerPlugin_logic_slices_data_0 = _zz_AlignerPlugin_logic_slices_data_0[31 : 0];
   assign AlignerPlugin_logic_slices_data_1 = _zz_AlignerPlugin_logic_slices_data_0[63 : 32];
-  assign AlignerPlugin_logic_slices_data_2 = _zz_AlignerPlugin_logic_slices_data_0[95 : 64];
-  assign AlignerPlugin_logic_slices_data_3 = _zz_AlignerPlugin_logic_slices_data_0[127 : 96];
-  assign AlignerPlugin_logic_slices_carry = {(AlignerPlugin_logic_isInputValid ? AlignerPlugin_setup_s2m_MASK_FRONT : 2'b00),AlignerPlugin_logic_buffer_mask};
+  assign AlignerPlugin_logic_slices_carry = {(AlignerPlugin_logic_isInputValid ? AlignerPlugin_setup_s2m_MASK_FRONT : 1'b0),AlignerPlugin_logic_buffer_mask};
   assign AlignerPlugin_logic_slices_remains = AlignerPlugin_logic_slices_carry;
-  assign AlignerPlugin_logic_slices_used = 4'b0000;
-  assign AlignerPlugin_logic_decoders_0_usage = 4'b0001;
+  assign AlignerPlugin_logic_slices_used = 2'b00;
+  assign AlignerPlugin_logic_decoders_0_usage = 2'b01;
   assign AlignerPlugin_logic_decoders_0_notEnoughData = 1'b0;
   assign AlignerPlugin_logic_decoders_0_pastPrediction = 1'b0;
   assign AlignerPlugin_logic_decoders_0_usable = ((! AlignerPlugin_logic_decoders_0_notEnoughData) && (! AlignerPlugin_logic_decoders_0_pastPrediction));
-  assign AlignerPlugin_logic_decoders_1_usage = 4'b0010;
+  assign AlignerPlugin_logic_decoders_1_usage = 2'b10;
   assign AlignerPlugin_logic_decoders_1_notEnoughData = 1'b0;
   assign AlignerPlugin_logic_decoders_1_pastPrediction = 1'b0;
   assign AlignerPlugin_logic_decoders_1_usable = ((! AlignerPlugin_logic_decoders_1_notEnoughData) && (! AlignerPlugin_logic_decoders_1_pastPrediction));
-  assign AlignerPlugin_logic_decoders_2_usage = 4'b0100;
-  assign AlignerPlugin_logic_decoders_2_notEnoughData = 1'b0;
-  assign AlignerPlugin_logic_decoders_2_pastPrediction = 1'b0;
-  assign AlignerPlugin_logic_decoders_2_usable = ((! AlignerPlugin_logic_decoders_2_notEnoughData) && (! AlignerPlugin_logic_decoders_2_pastPrediction));
-  assign AlignerPlugin_logic_decoders_3_usage = 4'b1000;
-  assign AlignerPlugin_logic_decoders_3_notEnoughData = 1'b0;
-  assign AlignerPlugin_logic_decoders_3_pastPrediction = (AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID && (AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE < 1'b1));
-  assign AlignerPlugin_logic_decoders_3_usable = ((! AlignerPlugin_logic_decoders_3_notEnoughData) && (! AlignerPlugin_logic_decoders_3_pastPrediction));
   assign _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 = 1'b0;
-  assign _zz_AlignerPlugin_logic_extractors_0_maskOh = AlignerPlugin_logic_slices_carry[3 : 0];
+  assign _zz_AlignerPlugin_logic_extractors_0_maskOh = AlignerPlugin_logic_slices_carry[1 : 0];
   assign _zz_AlignerPlugin_logic_extractors_0_maskOh_1 = _zz_AlignerPlugin_logic_extractors_0_maskOh[0];
-  assign _zz_AlignerPlugin_logic_extractors_0_maskOh_2 = _zz_AlignerPlugin_logic_extractors_0_maskOh[1];
-  assign _zz_AlignerPlugin_logic_extractors_0_maskOh_3 = _zz_AlignerPlugin_logic_extractors_0_maskOh[2];
   always @(*) begin
-    _zz_AlignerPlugin_logic_extractors_0_maskOh_4[0] = (_zz_AlignerPlugin_logic_extractors_0_maskOh_1 && (! 1'b0));
-    _zz_AlignerPlugin_logic_extractors_0_maskOh_4[1] = (_zz_AlignerPlugin_logic_extractors_0_maskOh_2 && (! _zz_AlignerPlugin_logic_extractors_0_maskOh_1));
-    _zz_AlignerPlugin_logic_extractors_0_maskOh_4[2] = (_zz_AlignerPlugin_logic_extractors_0_maskOh_3 && (! (|{_zz_AlignerPlugin_logic_extractors_0_maskOh_2,_zz_AlignerPlugin_logic_extractors_0_maskOh_1})));
-    _zz_AlignerPlugin_logic_extractors_0_maskOh_4[3] = (_zz_AlignerPlugin_logic_extractors_0_maskOh[3] && (! (|{_zz_AlignerPlugin_logic_extractors_0_maskOh_3,{_zz_AlignerPlugin_logic_extractors_0_maskOh_2,_zz_AlignerPlugin_logic_extractors_0_maskOh_1}})));
+    _zz_AlignerPlugin_logic_extractors_0_maskOh_2[0] = (_zz_AlignerPlugin_logic_extractors_0_maskOh_1 && (! 1'b0));
+    _zz_AlignerPlugin_logic_extractors_0_maskOh_2[1] = (_zz_AlignerPlugin_logic_extractors_0_maskOh[1] && (! _zz_AlignerPlugin_logic_extractors_0_maskOh_1));
   end
 
-  assign AlignerPlugin_logic_extractors_0_maskOh = _zz_AlignerPlugin_logic_extractors_0_maskOh_4;
+  assign AlignerPlugin_logic_extractors_0_maskOh = _zz_AlignerPlugin_logic_extractors_0_maskOh_2;
   assign _zz_AlignerPlugin_logic_extractors_0_usage = AlignerPlugin_logic_extractors_0_maskOh[0];
   assign _zz_AlignerPlugin_logic_extractors_0_usage_1 = AlignerPlugin_logic_extractors_0_maskOh[1];
-  assign _zz_AlignerPlugin_logic_extractors_0_usage_2 = AlignerPlugin_logic_extractors_0_maskOh[2];
-  assign _zz_AlignerPlugin_logic_extractors_0_usage_3 = AlignerPlugin_logic_extractors_0_maskOh[3];
-  assign AlignerPlugin_logic_extractors_0_usage = (((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_decoders_0_usage : 4'b0000) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_decoders_1_usage : 4'b0000)) | ((_zz_AlignerPlugin_logic_extractors_0_usage_2 ? AlignerPlugin_logic_decoders_2_usage : 4'b0000) | (_zz_AlignerPlugin_logic_extractors_0_usage_3 ? AlignerPlugin_logic_decoders_3_usage : 4'b0000)));
+  assign AlignerPlugin_logic_extractors_0_usage = ((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_decoders_0_usage : 2'b00) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_decoders_1_usage : 2'b00));
   assign AlignerPlugin_logic_extractors_0_usable = _zz_AlignerPlugin_logic_extractors_0_usable[0];
-  assign AlignerPlugin_logic_extractors_0_slice0 = (((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_slices_data_0 : 32'h00000000) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_slices_data_1 : 32'h00000000)) | ((_zz_AlignerPlugin_logic_extractors_0_usage_2 ? AlignerPlugin_logic_slices_data_2 : 32'h00000000) | (_zz_AlignerPlugin_logic_extractors_0_usage_3 ? AlignerPlugin_logic_slices_data_3 : 32'h00000000)));
-  assign AlignerPlugin_logic_extractors_0_valid = ((|AlignerPlugin_logic_slices_carry[3 : 0]) && AlignerPlugin_logic_extractors_0_usable);
+  assign AlignerPlugin_logic_extractors_0_slice0 = ((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_slices_data_0 : 32'h00000000) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_slices_data_1 : 32'h00000000));
+  assign AlignerPlugin_logic_extractors_0_valid = ((|AlignerPlugin_logic_slices_carry[1 : 0]) && AlignerPlugin_logic_extractors_0_usable);
   assign FrontendPlugin_aligned_Frontend_INSTRUCTION_ALIGNED_0 = AlignerPlugin_logic_extractors_0_slice0;
   assign FrontendPlugin_aligned_Frontend_MASK_ALIGNED_0 = AlignerPlugin_logic_extractors_0_valid;
-  assign AlignerPlugin_logic_extractors_0_sliceLast = FrontendPlugin_aligned_PC_0[2 : 2];
-  assign AlignerPlugin_logic_extractors_0_bufferPredictionLast = (AlignerPlugin_logic_buffer_branchSlice == AlignerPlugin_logic_extractors_0_sliceLast);
-  assign AlignerPlugin_logic_extractors_0_inputPredictionLast = (AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE == AlignerPlugin_logic_extractors_0_sliceLast);
-  assign AlignerPlugin_logic_extractors_0_lastWord = (|AlignerPlugin_logic_extractors_0_maskOh[3 : 2]);
+  assign AlignerPlugin_logic_extractors_0_bufferPredictionLast = 1'b1;
+  assign AlignerPlugin_logic_extractors_0_inputPredictionLast = 1'b1;
+  assign AlignerPlugin_logic_extractors_0_lastWord = (|AlignerPlugin_logic_extractors_0_maskOh[1 : 1]);
   always @(*) begin
     if(AlignerPlugin_logic_extractors_0_lastWord) begin
       FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 = ((AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID && (! _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0)) && AlignerPlugin_logic_extractors_0_inputPredictionLast);
@@ -9052,14 +8947,6 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     if(AlignerPlugin_logic_extractors_0_lastWord) begin
-      FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_SLICE_0 = AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_SLICE;
-    end else begin
-      FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_SLICE_0 = AlignerPlugin_logic_buffer_wordContexts_2;
-    end
-  end
-
-  always @(*) begin
-    if(AlignerPlugin_logic_extractors_0_lastWord) begin
       FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_VALUE_0 = AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALUE;
     end else begin
       FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_VALUE_0 = AlignerPlugin_logic_buffer_wordContexts_3;
@@ -9074,22 +8961,11 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  always @(*) begin
-    if(AlignerPlugin_logic_extractors_0_lastWord) begin
-      FrontendPlugin_aligned_GSHARE_COUNTER_0_1 = AlignerPlugin_setup_s2m_GSHARE_COUNTER_1;
-    end else begin
-      FrontendPlugin_aligned_GSHARE_COUNTER_0_1 = AlignerPlugin_logic_buffer_wordContexts_4_1;
-    end
-  end
-
-  assign _zz_AlignerPlugin_logic_extractors_0_sliceOffset = AlignerPlugin_logic_extractors_0_maskOh;
-  assign _zz_AlignerPlugin_logic_extractors_0_sliceOffset_1 = _zz_AlignerPlugin_logic_extractors_0_sliceOffset[3];
-  assign _zz_AlignerPlugin_logic_extractors_0_sliceOffset_2 = (_zz_AlignerPlugin_logic_extractors_0_sliceOffset[1] || _zz_AlignerPlugin_logic_extractors_0_sliceOffset_1);
-  assign _zz_AlignerPlugin_logic_extractors_0_sliceOffset_3 = (_zz_AlignerPlugin_logic_extractors_0_sliceOffset[2] || _zz_AlignerPlugin_logic_extractors_0_sliceOffset_1);
-  assign AlignerPlugin_logic_extractors_0_sliceOffset = {_zz_AlignerPlugin_logic_extractors_0_sliceOffset_3,_zz_AlignerPlugin_logic_extractors_0_sliceOffset_2};
-  assign AlignerPlugin_logic_extractors_0_firstWord = AlignerPlugin_logic_extractors_0_sliceOffset[1];
+  assign _zz_AlignerPlugin_logic_extractors_0_sliceOffset = AlignerPlugin_logic_extractors_0_maskOh[1];
+  assign AlignerPlugin_logic_extractors_0_sliceOffset = _zz_AlignerPlugin_logic_extractors_0_sliceOffset;
+  assign AlignerPlugin_logic_extractors_0_firstWord = AlignerPlugin_logic_extractors_0_sliceOffset[0];
   assign AlignerPlugin_logic_extractors_0_pcWord = _zz_AlignerPlugin_logic_extractors_0_pcWord;
-  assign FrontendPlugin_aligned_PC_0 = {{_zz_FrontendPlugin_aligned_PC_0,AlignerPlugin_logic_extractors_0_sliceOffset[0 : 0]},2'b00};
+  assign FrontendPlugin_aligned_PC_0 = {_zz_FrontendPlugin_aligned_PC_0,2'b00};
   always @(*) begin
     if(AlignerPlugin_logic_extractors_0_firstWord) begin
       FrontendPlugin_aligned_FETCH_ID_0 = AlignerPlugin_setup_s2m_FETCH_ID;
@@ -9122,8 +8998,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign when_AlignerPlugin_l235 = (((! AlignerPlugin_logic_extractors_0_firstWord) || (! AlignerPlugin_logic_extractors_0_lastWord)) && AlignerPlugin_logic_buffer_fault);
   assign FrontendPlugin_aligned_isFireing = (FrontendPlugin_aligned_valid && FrontendPlugin_aligned_ready);
   assign AlignerPlugin_logic_fireOutput = FrontendPlugin_aligned_isFireing;
-  assign AlignerPlugin_logic_fireInput = ((AlignerPlugin_logic_isInputValid && (AlignerPlugin_logic_buffer_mask == 2'b00)) || (AlignerPlugin_logic_fireOutput && (AlignerPlugin_logic_slices_remains_1[1 : 0] == 2'b00)));
-  assign AlignerPlugin_logic_postMask = (_zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 ? 2'b11 : AlignerPlugin_setup_s2m_MASK_BACK);
+  assign AlignerPlugin_logic_fireInput = ((AlignerPlugin_logic_isInputValid && (AlignerPlugin_logic_buffer_mask == 1'b0)) || (AlignerPlugin_logic_fireOutput && (AlignerPlugin_logic_slices_remains_1[0 : 0] == 1'b0)));
+  assign AlignerPlugin_logic_postMask = (_zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 ? 1'b1 : AlignerPlugin_setup_s2m_MASK_BACK);
   assign when_AlignerPlugin_l264 = (AlignerPlugin_setup_s2m_ready || AlignerPlugin_setup_s2m_isFlushed);
   assign _zz_FetchPlugin_stages_1_isFlushingRoot = (_zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 && (! AlignerPlugin_logic_correctionSent));
   assign AlignerPlugin_setup_sequenceJump_valid = (_zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 && (! AlignerPlugin_logic_correctionSent));
@@ -9188,80 +9064,61 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign BtbPlugin_logic_onLearn_hash = BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[18 : 3];
+  assign BtbPlugin_logic_onLearn_hash = BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[17 : 2];
   assign BtbPlugin_logic_onLearn_port_valid = BranchContextPlugin_setup_learnValid;
   assign BtbPlugin_logic_onLearn_port_payload_address = _zz_BtbPlugin_logic_onLearn_port_payload_address[2:0];
   assign BtbPlugin_logic_onLearn_port_payload_data_hash = BtbPlugin_logic_onLearn_hash;
-  assign BtbPlugin_logic_onLearn_port_payload_data_slice = _zz_BtbPlugin_logic_onLearn_port_payload_data_slice[0:0];
   assign BtbPlugin_logic_onLearn_port_payload_data_pcTarget = BranchContextPlugin_learn_BRANCH_FINAL_pcTarget;
   assign BtbPlugin_logic_onLearn_port_payload_data_isBranch = BranchContextPlugin_free_learn_Prediction_IS_BRANCH;
   assign BtbPlugin_logic_readCmd_entryAddress = _zz_BtbPlugin_logic_readCmd_entryAddress[2:0];
   assign _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash = BtbPlugin_logic_mem_spinal_port1;
   assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[15 : 0];
-  assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[16 : 16];
-  assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_pcTarget = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[48 : 17];
-  assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_isBranch = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[49];
-  assign BtbPlugin_logic_hitCalc_postPcPrediction = (FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice < FetchPlugin_stages_1_Fetch_FETCH_PC[2 : 2]);
-  assign FetchPlugin_stages_1_BtbPlugin_logic_HIT = ((FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash == FetchPlugin_stages_1_Fetch_FETCH_PC[18 : 3]) && (! BtbPlugin_logic_hitCalc_postPcPrediction));
-  assign BtbPlugin_logic_applyIt_prediction = _zz_BtbPlugin_logic_applyIt_prediction;
+  assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_pcTarget = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[47 : 16];
+  assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_isBranch = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[48];
+  assign BtbPlugin_logic_hitCalc_postPcPrediction = 1'b0;
+  assign FetchPlugin_stages_1_BtbPlugin_logic_HIT = ((FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash == FetchPlugin_stages_1_Fetch_FETCH_PC[17 : 2]) && (! BtbPlugin_logic_hitCalc_postPcPrediction));
+  assign BtbPlugin_logic_applyIt_prediction = FetchPlugin_stages_1_GSHARE_COUNTER_0[1];
   assign BtbPlugin_logic_applyIt_needIt = ((FetchPlugin_stages_1_valid && FetchPlugin_stages_1_BtbPlugin_logic_HIT) && (! (FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_isBranch && (! BtbPlugin_logic_applyIt_prediction))));
   assign when_BtbPlugin_l109 = (FetchPlugin_stages_1_ready || FetchPlugin_stages_1_isFlushed);
   assign BtbPlugin_logic_applyIt_doIt = (BtbPlugin_logic_applyIt_needIt && (! BtbPlugin_logic_applyIt_correctionSent));
   assign BtbPlugin_setup_btbJump_valid = BtbPlugin_logic_applyIt_doIt;
   assign BtbPlugin_setup_btbJump_payload_pc = FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_pcTarget;
   assign FetchPlugin_stages_1_Prediction_WORD_BRANCH_VALID = BtbPlugin_logic_applyIt_needIt;
-  assign FetchPlugin_stages_1_Prediction_WORD_BRANCH_SLICE = FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice;
   assign FetchPlugin_stages_1_Prediction_WORD_BRANCH_PC_NEXT = FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_pcTarget;
   assign BtbPlugin_setup_historyPush_flush = (((FetchPlugin_stages_1_valid && FetchPlugin_stages_1_BtbPlugin_logic_HIT) && FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_isBranch) && (! BtbPlugin_logic_applyIt_correctionSent));
   assign BtbPlugin_setup_historyPush_mask[0] = BtbPlugin_setup_historyPush_flush;
   assign BtbPlugin_setup_historyPush_taken[0] = BtbPlugin_logic_applyIt_prediction;
   assign FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALID = BtbPlugin_setup_historyPush_flush;
-  assign FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_SLICE = FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice;
   assign FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALUE = BtbPlugin_logic_applyIt_prediction;
-  assign _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH = FetchPlugin_stages_0_Fetch_FETCH_PC[8 : 3];
-  assign FetchPlugin_stages_0_GSharePlugin_logic_HASH = ({_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[0],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[1],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[2],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[3],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[4],_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[5]}}}}} ^ _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1);
+  assign _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH = FetchPlugin_stages_0_Fetch_FETCH_PC[8 : 2];
+  assign FetchPlugin_stages_0_GSharePlugin_logic_HASH = ({_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[0],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[1],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[2],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[3],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[4],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[5],_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[6]}}}}}} ^ _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1);
   assign FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_valid = GSharePlugin_logic_mem_write_valid;
   assign FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_address = GSharePlugin_logic_mem_write_payload_address;
   assign FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_0 = GSharePlugin_logic_mem_write_payload_data_0;
-  assign FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_1 = GSharePlugin_logic_mem_write_payload_data_1;
-  assign _zz_FetchPlugin_stages_1_GSHARE_COUNTER_0 = GSharePlugin_logic_mem_counter_spinal_port1;
   always @(*) begin
-    FetchPlugin_stages_1_GSHARE_COUNTER_0 = _zz_FetchPlugin_stages_1_GSHARE_COUNTER_0[1 : 0];
+    FetchPlugin_stages_1_GSHARE_COUNTER_0 = GSharePlugin_logic_mem_counter_spinal_port1[1 : 0];
     if(when_GSharePlugin_l98) begin
       FetchPlugin_stages_1_GSHARE_COUNTER_0 = FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_0;
     end
   end
 
-  always @(*) begin
-    FetchPlugin_stages_1_GSHARE_COUNTER_1 = _zz_FetchPlugin_stages_1_GSHARE_COUNTER_0[3 : 2];
-    if(when_GSharePlugin_l98) begin
-      FetchPlugin_stages_1_GSHARE_COUNTER_1 = FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_1;
-    end
-  end
-
   assign when_GSharePlugin_l98 = (FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_valid && (FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_address == FetchPlugin_stages_1_GSharePlugin_logic_HASH));
-  assign FrontendPlugin_decompressed_Prediction_CONDITIONAL_TAKE_IT_0 = {FrontendPlugin_decompressed_GSHARE_COUNTER_0_1[1],FrontendPlugin_decompressed_GSHARE_COUNTER_0_0[1]};
-  assign _zz_GSharePlugin_logic_onLearn_hash = BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[8 : 3];
-  assign GSharePlugin_logic_onLearn_hash = ({_zz_GSharePlugin_logic_onLearn_hash[0],{_zz_GSharePlugin_logic_onLearn_hash[1],{_zz_GSharePlugin_logic_onLearn_hash[2],{_zz_GSharePlugin_logic_onLearn_hash[3],{_zz_GSharePlugin_logic_onLearn_hash[4],_zz_GSharePlugin_logic_onLearn_hash[5]}}}}} ^ _zz_GSharePlugin_logic_onLearn_hash_1);
+  assign FrontendPlugin_decompressed_Prediction_CONDITIONAL_TAKE_IT_0 = FrontendPlugin_decompressed_GSHARE_COUNTER_0_0[1];
+  assign _zz_GSharePlugin_logic_onLearn_hash = BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[8 : 2];
+  assign GSharePlugin_logic_onLearn_hash = ({_zz_GSharePlugin_logic_onLearn_hash[0],{_zz_GSharePlugin_logic_onLearn_hash[1],{_zz_GSharePlugin_logic_onLearn_hash[2],{_zz_GSharePlugin_logic_onLearn_hash[3],{_zz_GSharePlugin_logic_onLearn_hash[4],{_zz_GSharePlugin_logic_onLearn_hash[5],_zz_GSharePlugin_logic_onLearn_hash[6]}}}}}} ^ _zz_GSharePlugin_logic_onLearn_hash_1);
   assign GSharePlugin_logic_onLearn_incrValue = (BranchContextPlugin_learn_BRANCH_FINAL_taken ? 2'b01 : 2'b11);
   always @(*) begin
     GSharePlugin_logic_onLearn_overflow = 1'b0;
     if(when_GSharePlugin_l123) begin
       GSharePlugin_logic_onLearn_overflow = 1'b1;
     end
-    if(when_GSharePlugin_l123_1) begin
-      GSharePlugin_logic_onLearn_overflow = 1'b1;
-    end
   end
 
-  assign GSharePlugin_logic_onLearn_updated_0 = (BranchContextPlugin_free_learn_GSHARE_COUNTER_0 + ((BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[2 : 2] == 1'b0) ? GSharePlugin_logic_onLearn_incrValue : 2'b00));
+  assign GSharePlugin_logic_onLearn_updated_0 = (BranchContextPlugin_free_learn_GSHARE_COUNTER_0 + (1'b1 ? GSharePlugin_logic_onLearn_incrValue : 2'b00));
   assign when_GSharePlugin_l123 = (((BranchContextPlugin_learn_BRANCH_FINAL_taken && BranchContextPlugin_free_learn_GSHARE_COUNTER_0[1]) && (! GSharePlugin_logic_onLearn_updated_0[1])) || (((! BranchContextPlugin_learn_BRANCH_FINAL_taken) && (! BranchContextPlugin_free_learn_GSHARE_COUNTER_0[1])) && GSharePlugin_logic_onLearn_updated_0[1]));
-  assign GSharePlugin_logic_onLearn_updated_1 = (BranchContextPlugin_free_learn_GSHARE_COUNTER_1 + ((BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[2 : 2] == 1'b1) ? GSharePlugin_logic_onLearn_incrValue : 2'b00));
-  assign when_GSharePlugin_l123_1 = (((BranchContextPlugin_learn_BRANCH_FINAL_taken && BranchContextPlugin_free_learn_GSHARE_COUNTER_1[1]) && (! GSharePlugin_logic_onLearn_updated_1[1])) || (((! BranchContextPlugin_learn_BRANCH_FINAL_taken) && (! BranchContextPlugin_free_learn_GSHARE_COUNTER_1[1])) && GSharePlugin_logic_onLearn_updated_1[1]));
   assign GSharePlugin_logic_mem_write_valid = ((BranchContextPlugin_setup_learnValid && BranchContextPlugin_free_learn_Prediction_IS_BRANCH) && (! GSharePlugin_logic_onLearn_overflow));
   assign GSharePlugin_logic_mem_write_payload_address = GSharePlugin_logic_onLearn_hash;
   assign GSharePlugin_logic_mem_write_payload_data_0 = GSharePlugin_logic_onLearn_updated_0;
-  assign GSharePlugin_logic_mem_write_payload_data_1 = GSharePlugin_logic_onLearn_updated_1;
   assign DataCachePlugin_setup_writebackBusy = DataCachePlugin_logic_cache_io_writebackBusy;
   assign DataCachePlugin_setup_refillCompletions = DataCachePlugin_logic_cache_io_refillCompletions;
   assign DataCachePlugin_logic_load_hits = {Lsu2Plugin_setup_cacheLoad_cmd_valid,MmuPlugin_setup_cacheLoad_cmd_valid};
@@ -9479,6 +9336,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign reschedule_payload_reason = CommitPlugin_logic_commit_reschedulePort_payload_reason;
   assign reschedule_payload_skipCommit = CommitPlugin_logic_commit_reschedulePort_payload_skipCommit;
   assign rescheduleReason = CommitPlugin_logic_reschedule_reason;
+  assign commit_pc_0 = _zz_commit_pc_0_1[31 : 0];
   assign CommitDebugFilterPlugin_logic_commits = ({16'd0,_zz_CommitDebugFilterPlugin_logic_commits} <<< 5'd16);
   assign PrivilegedPlugin_logic_defaultTrap_csrPrivilege = EU0_CsrAccessPlugin_setup_onDecodeAddress[9 : 8];
   assign PrivilegedPlugin_logic_defaultTrap_csrReadOnly = (&EU0_CsrAccessPlugin_setup_onDecodeAddress[11 : 10]);
@@ -10826,180 +10684,161 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign EU0_CsrAccessPlugin_setup_intFormatPort_valid = EU0_ExecutionUnitBase_pipeline_execute_2_CsrAccessPlugin_SEL;
   assign EU0_CsrAccessPlugin_logic_wake_wakeRobsSel = EU0_ExecutionUnitBase_pipeline_execute_2_CsrAccessPlugin_SEL;
   assign EU0_CsrAccessPlugin_logic_wake_wakeRegFileSel = EU0_ExecutionUnitBase_pipeline_execute_2_CsrAccessPlugin_SEL;
-  assign DataCachePlugin_mem_read_resizer_ret_cmd_valid = DataCachePlugin_mem_read_cmd_valid;
-  assign DataCachePlugin_mem_read_cmd_ready = DataCachePlugin_mem_read_resizer_ret_cmd_ready;
-  assign DataCachePlugin_mem_read_resizer_ret_cmd_payload_id = DataCachePlugin_mem_read_cmd_payload_id;
-  assign DataCachePlugin_mem_read_resizer_ret_cmd_payload_address = DataCachePlugin_mem_read_cmd_payload_address;
-  assign DataCachePlugin_mem_read_resizer_ret_rsp_translated_valid = DataCachePlugin_mem_read_resizer_ret_rsp_valid;
-  assign DataCachePlugin_mem_read_resizer_ret_rsp_ready = DataCachePlugin_mem_read_resizer_ret_rsp_translated_ready;
-  assign DataCachePlugin_mem_read_resizer_ret_rsp_translated_payload = DataCachePlugin_mem_read_resizer_ret_rsp_payload_data;
-  assign DataCachePlugin_mem_read_resizer_ret_rsp_translated_fire = (DataCachePlugin_mem_read_resizer_ret_rsp_translated_valid && DataCachePlugin_mem_read_resizer_ret_rsp_translated_ready);
   always @(*) begin
-    _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid = 1'b0;
-    if(DataCachePlugin_mem_read_resizer_ret_rsp_translated_fire) begin
-      _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid = 1'b1;
+    LsuPlugin_peripheralBus_cmd_ready = 1'b1;
+    if(when_Stream_l1058) begin
+      LsuPlugin_peripheralBus_cmd_ready = 1'b0;
+    end
+    if(when_Stream_l1058_1) begin
+      LsuPlugin_peripheralBus_cmd_ready = 1'b0;
     end
   end
 
-  assign _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_3 = (_zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_2 == 1'b1);
+  assign when_Stream_l1058 = ((! LsuPlugin_peripheralBus_toAxiLite4_a_ready) && LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0);
+  assign when_Stream_l1058_1 = ((! LsuPlugin_peripheralBus_toAxiLite4_wRaw_ready) && LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1);
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_valid = (LsuPlugin_peripheralBus_cmd_valid && LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0);
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_payload_write = LsuPlugin_peripheralBus_cmd_payload_write;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_payload_address = LsuPlugin_peripheralBus_cmd_payload_address;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_payload_data = LsuPlugin_peripheralBus_cmd_payload_data;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_payload_mask = LsuPlugin_peripheralBus_cmd_payload_mask;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_payload_size = LsuPlugin_peripheralBus_cmd_payload_size;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_fire = (LsuPlugin_peripheralBus_toAxiLite4_a_valid && LsuPlugin_peripheralBus_toAxiLite4_a_ready);
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_valid = (LsuPlugin_peripheralBus_cmd_valid && LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1);
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_write = LsuPlugin_peripheralBus_cmd_payload_write;
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_address = LsuPlugin_peripheralBus_cmd_payload_address;
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_data = LsuPlugin_peripheralBus_cmd_payload_data;
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_mask = LsuPlugin_peripheralBus_cmd_payload_mask;
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_size = LsuPlugin_peripheralBus_cmd_payload_size;
+  assign LsuPlugin_peripheralBus_toAxiLite4_wRaw_fire = (LsuPlugin_peripheralBus_toAxiLite4_wRaw_valid && LsuPlugin_peripheralBus_toAxiLite4_wRaw_ready);
+  assign when_Stream_l439 = (! LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_write);
   always @(*) begin
-    _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_1 = (_zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_2 + _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid);
-    if(1'b0) begin
-      _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_1 = 1'b0;
+    LsuPlugin_peripheralBus_toAxiLite4_w_valid = LsuPlugin_peripheralBus_toAxiLite4_wRaw_valid;
+    if(when_Stream_l439) begin
+      LsuPlugin_peripheralBus_toAxiLite4_w_valid = 1'b0;
     end
   end
 
-  assign DataCachePlugin_mem_read_resizer_rspOutputStream_valid = (DataCachePlugin_mem_read_resizer_ret_rsp_translated_valid && _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_3);
-  assign DataCachePlugin_mem_read_resizer_rspOutputStream_payload = {DataCachePlugin_mem_read_resizer_ret_rsp_translated_payload,_zz_DataCachePlugin_mem_read_resizer_rspOutputStream_payload};
-  assign DataCachePlugin_mem_read_resizer_ret_rsp_translated_ready = (! ((! DataCachePlugin_mem_read_resizer_rspOutputStream_ready) && _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_3));
-  assign DataCachePlugin_mem_read_rsp_valid = DataCachePlugin_mem_read_resizer_rspOutputStream_valid;
-  assign DataCachePlugin_mem_read_rsp_payload_data = DataCachePlugin_mem_read_resizer_rspOutputStream_payload;
-  assign DataCachePlugin_mem_read_rsp_payload_id = DataCachePlugin_mem_read_resizer_ret_rsp_payload_id;
-  assign DataCachePlugin_mem_read_rsp_payload_error = DataCachePlugin_mem_read_resizer_ret_rsp_payload_error;
-  assign DataCachePlugin_mem_read_resizer_rspOutputStream_ready = 1'b1;
-  assign DataCachePlugin_mem_resizer_ret_read_cmd_valid = DataCachePlugin_mem_read_resizer_ret_cmd_valid;
-  assign DataCachePlugin_mem_read_resizer_ret_cmd_ready = DataCachePlugin_mem_resizer_ret_read_cmd_ready;
-  assign DataCachePlugin_mem_resizer_ret_read_cmd_payload_id = DataCachePlugin_mem_read_resizer_ret_cmd_payload_id;
-  assign DataCachePlugin_mem_resizer_ret_read_cmd_payload_address = DataCachePlugin_mem_read_resizer_ret_cmd_payload_address;
-  assign DataCachePlugin_mem_read_resizer_ret_rsp_valid = DataCachePlugin_mem_resizer_ret_read_rsp_valid;
-  assign DataCachePlugin_mem_resizer_ret_read_rsp_ready = DataCachePlugin_mem_read_resizer_ret_rsp_ready;
-  assign DataCachePlugin_mem_read_resizer_ret_rsp_payload_id = DataCachePlugin_mem_resizer_ret_read_rsp_payload_id;
-  assign DataCachePlugin_mem_read_resizer_ret_rsp_payload_data = DataCachePlugin_mem_resizer_ret_read_rsp_payload_data;
-  assign DataCachePlugin_mem_read_resizer_ret_rsp_payload_error = DataCachePlugin_mem_resizer_ret_read_rsp_payload_error;
-  assign DataCachePlugin_mem_write_cmd_translated_valid = DataCachePlugin_mem_write_cmd_valid;
-  assign DataCachePlugin_mem_write_cmd_ready = DataCachePlugin_mem_write_cmd_translated_ready;
-  assign DataCachePlugin_mem_write_cmd_translated_payload = DataCachePlugin_mem_write_cmd_payload_fragment_data;
-  assign DataCachePlugin_mem_write_cmd_translated_ready = (DataCachePlugin_mem_write_resizer_cmdOutputStream_ready && _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_last);
-  assign DataCachePlugin_mem_write_resizer_cmdOutputStream_fire = (DataCachePlugin_mem_write_resizer_cmdOutputStream_valid && DataCachePlugin_mem_write_resizer_cmdOutputStream_ready);
   always @(*) begin
-    _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment = 1'b0;
-    if(DataCachePlugin_mem_write_resizer_cmdOutputStream_fire) begin
-      _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment = 1'b1;
+    LsuPlugin_peripheralBus_toAxiLite4_wRaw_ready = LsuPlugin_peripheralBus_toAxiLite4_w_ready;
+    if(when_Stream_l439) begin
+      LsuPlugin_peripheralBus_toAxiLite4_wRaw_ready = 1'b1;
     end
   end
 
-  assign _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_last = (_zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_2 == 1'b1);
-  always @(*) begin
-    _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_1 = (_zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_2 + _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment);
-    if(1'b0) begin
-      _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_1 = 1'b0;
-    end
-  end
-
-  assign DataCachePlugin_mem_write_resizer_cmdOutputStream_valid = DataCachePlugin_mem_write_cmd_translated_valid;
-  assign _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_3 = DataCachePlugin_mem_write_cmd_translated_payload;
-  assign DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment = _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_4;
-  assign DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_last = (DataCachePlugin_mem_write_cmd_payload_last && _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_last);
-  assign DataCachePlugin_mem_write_resizer_ret_cmd_valid = DataCachePlugin_mem_write_resizer_cmdOutputStream_valid;
-  assign DataCachePlugin_mem_write_resizer_cmdOutputStream_ready = DataCachePlugin_mem_write_resizer_ret_cmd_ready;
-  assign DataCachePlugin_mem_write_resizer_ret_cmd_payload_fragment_id = DataCachePlugin_mem_write_cmd_payload_fragment_id;
-  assign DataCachePlugin_mem_write_resizer_ret_cmd_payload_fragment_address = DataCachePlugin_mem_write_cmd_payload_fragment_address;
-  assign DataCachePlugin_mem_write_resizer_ret_cmd_payload_fragment_data = DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment;
-  assign DataCachePlugin_mem_write_resizer_ret_cmd_payload_last = DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_last;
-  assign DataCachePlugin_mem_write_rsp_valid = DataCachePlugin_mem_write_resizer_ret_rsp_valid;
-  assign DataCachePlugin_mem_write_rsp_payload_error = DataCachePlugin_mem_write_resizer_ret_rsp_payload_error;
-  assign DataCachePlugin_mem_write_rsp_payload_id = DataCachePlugin_mem_write_resizer_ret_rsp_payload_id;
-  assign DataCachePlugin_mem_resizer_ret_write_cmd_valid = DataCachePlugin_mem_write_resizer_ret_cmd_valid;
-  assign DataCachePlugin_mem_write_resizer_ret_cmd_ready = DataCachePlugin_mem_resizer_ret_write_cmd_ready;
-  assign DataCachePlugin_mem_resizer_ret_write_cmd_payload_last = DataCachePlugin_mem_write_resizer_ret_cmd_payload_last;
-  assign DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_address = DataCachePlugin_mem_write_resizer_ret_cmd_payload_fragment_address;
-  assign DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_data = DataCachePlugin_mem_write_resizer_ret_cmd_payload_fragment_data;
-  assign DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_id = DataCachePlugin_mem_write_resizer_ret_cmd_payload_fragment_id;
-  assign DataCachePlugin_mem_write_resizer_ret_rsp_valid = DataCachePlugin_mem_resizer_ret_write_rsp_valid;
-  assign DataCachePlugin_mem_write_resizer_ret_rsp_payload_error = DataCachePlugin_mem_resizer_ret_write_rsp_payload_error;
-  assign DataCachePlugin_mem_write_resizer_ret_rsp_payload_id = DataCachePlugin_mem_resizer_ret_write_rsp_payload_id;
-  assign dBusAxi_arvalid = DataCachePlugin_mem_resizer_ret_read_cmd_valid;
-  assign dBusAxi_araddr = DataCachePlugin_mem_resizer_ret_read_cmd_payload_address;
-  assign dBusAxi_arid = DataCachePlugin_mem_resizer_ret_read_cmd_payload_id;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_write = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_write;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_address = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_address;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_data = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_data;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_mask = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_mask;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_payload_size = LsuPlugin_peripheralBus_toAxiLite4_wRaw_payload_size;
+  assign LsuPlugin_peripheralBus_toAxiLite4_a_ready = (LsuPlugin_peripheralBus_toAxiLite4_a_payload_write ? pBus_awready : pBus_arready);
+  assign LsuPlugin_peripheralBus_toAxiLite4_addr = _zz_LsuPlugin_peripheralBus_toAxiLite4_addr;
+  assign pBus_arvalid = (LsuPlugin_peripheralBus_toAxiLite4_a_valid && (! LsuPlugin_peripheralBus_toAxiLite4_a_payload_write));
+  assign pBus_araddr = LsuPlugin_peripheralBus_toAxiLite4_addr;
+  assign pBus_arprot = ((3'b000 | 3'b000) | 3'b000);
+  assign pBus_awvalid = (LsuPlugin_peripheralBus_toAxiLite4_a_valid && LsuPlugin_peripheralBus_toAxiLite4_a_payload_write);
+  assign pBus_awaddr = LsuPlugin_peripheralBus_toAxiLite4_addr;
+  assign pBus_awprot = ((3'b000 | 3'b000) | 3'b000);
+  assign pBus_wvalid = LsuPlugin_peripheralBus_toAxiLite4_w_valid;
+  assign pBus_wdata = LsuPlugin_peripheralBus_toAxiLite4_w_payload_data;
+  assign pBus_wstrb = LsuPlugin_peripheralBus_toAxiLite4_w_payload_mask;
+  assign LsuPlugin_peripheralBus_toAxiLite4_w_ready = pBus_wready;
+  assign LsuPlugin_peripheralBus_rsp_valid = (pBus_rvalid || pBus_bvalid);
+  assign LsuPlugin_peripheralBus_rsp_payload_data = pBus_rdata;
+  assign LsuPlugin_peripheralBus_rsp_payload_error = (! (LsuPlugin_peripheralBus_toAxiLite4_writeSel ? (pBus_bresp == 2'b00) : (pBus_rresp == 2'b00)));
+  assign pBus_bready = 1'b1;
+  assign pBus_rready = 1'b1;
+  assign dBusAxi_arvalid = DataCachePlugin_mem_read_cmd_valid;
+  assign dBusAxi_araddr = DataCachePlugin_mem_read_cmd_payload_address;
+  assign dBusAxi_arid = DataCachePlugin_mem_read_cmd_payload_id;
   assign dBusAxi_arprot = 3'b010;
   assign dBusAxi_arlen = 8'h0f;
   assign dBusAxi_arsize = 3'b010;
   assign dBusAxi_arburst = 2'b01;
-  assign DataCachePlugin_mem_resizer_ret_read_cmd_ready = dBusAxi_arready;
-  assign DataCachePlugin_mem_resizer_ret_read_rsp_valid = dBusAxi_rvalid;
-  assign DataCachePlugin_mem_resizer_ret_read_rsp_payload_data = dBusAxi_rdata;
-  assign DataCachePlugin_mem_resizer_ret_read_rsp_payload_id = dBusAxi_rid;
-  assign DataCachePlugin_mem_resizer_ret_read_rsp_payload_error = (! (dBusAxi_rresp == 2'b00));
+  assign DataCachePlugin_mem_read_cmd_ready = dBusAxi_arready;
+  assign DataCachePlugin_mem_read_rsp_valid = dBusAxi_rvalid;
+  assign DataCachePlugin_mem_read_rsp_payload_data = dBusAxi_rdata;
+  assign DataCachePlugin_mem_read_rsp_payload_id = dBusAxi_rid;
+  assign DataCachePlugin_mem_read_rsp_payload_error = (! (dBusAxi_rresp == 2'b00));
   assign dBusAxi_rready = 1'b1;
   always @(*) begin
-    DataCachePlugin_mem_resizer_ret_write_cmd_ready = 1'b1;
-    if(when_Stream_l1058) begin
-      DataCachePlugin_mem_resizer_ret_write_cmd_ready = 1'b0;
+    DataCachePlugin_mem_write_cmd_ready = 1'b1;
+    if(when_Stream_l1058_2) begin
+      DataCachePlugin_mem_write_cmd_ready = 1'b0;
     end
-    if(when_Stream_l1058_1) begin
-      DataCachePlugin_mem_resizer_ret_write_cmd_ready = 1'b0;
-    end
-  end
-
-  assign when_Stream_l1058 = ((! DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_ready) && DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_0);
-  assign when_Stream_l1058_1 = ((! DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_ready) && DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_1);
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_valid = (DataCachePlugin_mem_resizer_ret_write_cmd_valid && DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_0);
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_last = DataCachePlugin_mem_resizer_ret_write_cmd_payload_last;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_fragment_address = DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_address;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_fragment_data = DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_data;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_fragment_id = DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_id;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_fire = (DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_valid && DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_ready);
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_valid = (DataCachePlugin_mem_resizer_ret_write_cmd_valid && DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_1);
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_last = DataCachePlugin_mem_resizer_ret_write_cmd_payload_last;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_address = DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_address;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_data = DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_data;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_id = DataCachePlugin_mem_resizer_ret_write_cmd_payload_fragment_id;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_fire = (DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_valid && DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_ready);
-  assign when_Stream_l439 = (! DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_first);
-  always @(*) begin
-    DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_valid = DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_valid;
-    if(when_Stream_l439) begin
-      DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_valid = 1'b0;
+    if(when_Stream_l1058_3) begin
+      DataCachePlugin_mem_write_cmd_ready = 1'b0;
     end
   end
 
+  assign when_Stream_l1058_2 = ((! DataCachePlugin_mem_toAxi4_awRaw_ready) && DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_0);
+  assign when_Stream_l1058_3 = ((! DataCachePlugin_mem_toAxi4_wRaw_ready) && DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_1);
+  assign DataCachePlugin_mem_toAxi4_awRaw_valid = (DataCachePlugin_mem_write_cmd_valid && DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_0);
+  assign DataCachePlugin_mem_toAxi4_awRaw_payload_last = DataCachePlugin_mem_write_cmd_payload_last;
+  assign DataCachePlugin_mem_toAxi4_awRaw_payload_fragment_address = DataCachePlugin_mem_write_cmd_payload_fragment_address;
+  assign DataCachePlugin_mem_toAxi4_awRaw_payload_fragment_data = DataCachePlugin_mem_write_cmd_payload_fragment_data;
+  assign DataCachePlugin_mem_toAxi4_awRaw_payload_fragment_id = DataCachePlugin_mem_write_cmd_payload_fragment_id;
+  assign DataCachePlugin_mem_toAxi4_awRaw_fire = (DataCachePlugin_mem_toAxi4_awRaw_valid && DataCachePlugin_mem_toAxi4_awRaw_ready);
+  assign DataCachePlugin_mem_toAxi4_wRaw_valid = (DataCachePlugin_mem_write_cmd_valid && DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_1);
+  assign DataCachePlugin_mem_toAxi4_wRaw_payload_last = DataCachePlugin_mem_write_cmd_payload_last;
+  assign DataCachePlugin_mem_toAxi4_wRaw_payload_fragment_address = DataCachePlugin_mem_write_cmd_payload_fragment_address;
+  assign DataCachePlugin_mem_toAxi4_wRaw_payload_fragment_data = DataCachePlugin_mem_write_cmd_payload_fragment_data;
+  assign DataCachePlugin_mem_toAxi4_wRaw_payload_fragment_id = DataCachePlugin_mem_write_cmd_payload_fragment_id;
+  assign DataCachePlugin_mem_toAxi4_wRaw_fire = (DataCachePlugin_mem_toAxi4_wRaw_valid && DataCachePlugin_mem_toAxi4_wRaw_ready);
+  assign when_Stream_l439_1 = (! DataCachePlugin_mem_toAxi4_awRaw_payload_first);
   always @(*) begin
-    DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_ready = DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_ready;
-    if(when_Stream_l439) begin
-      DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_ready = 1'b1;
+    DataCachePlugin_mem_toAxi4_awFiltred_valid = DataCachePlugin_mem_toAxi4_awRaw_valid;
+    if(when_Stream_l439_1) begin
+      DataCachePlugin_mem_toAxi4_awFiltred_valid = 1'b0;
     end
   end
 
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_last = DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_last;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_fragment_address = DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_fragment_address;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_fragment_data = DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_fragment_data;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_fragment_id = DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_fragment_id;
   always @(*) begin
-    DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_ready = DataCachePlugin_mem_resizer_ret_toAxi4_aw_ready;
+    DataCachePlugin_mem_toAxi4_awRaw_ready = DataCachePlugin_mem_toAxi4_awFiltred_ready;
+    if(when_Stream_l439_1) begin
+      DataCachePlugin_mem_toAxi4_awRaw_ready = 1'b1;
+    end
+  end
+
+  assign DataCachePlugin_mem_toAxi4_awFiltred_payload_last = DataCachePlugin_mem_toAxi4_awRaw_payload_last;
+  assign DataCachePlugin_mem_toAxi4_awFiltred_payload_fragment_address = DataCachePlugin_mem_toAxi4_awRaw_payload_fragment_address;
+  assign DataCachePlugin_mem_toAxi4_awFiltred_payload_fragment_data = DataCachePlugin_mem_toAxi4_awRaw_payload_fragment_data;
+  assign DataCachePlugin_mem_toAxi4_awFiltred_payload_fragment_id = DataCachePlugin_mem_toAxi4_awRaw_payload_fragment_id;
+  always @(*) begin
+    DataCachePlugin_mem_toAxi4_awFiltred_ready = DataCachePlugin_mem_toAxi4_aw_ready;
     if(when_Stream_l369_1) begin
-      DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_ready = 1'b1;
+      DataCachePlugin_mem_toAxi4_awFiltred_ready = 1'b1;
     end
   end
 
-  assign when_Stream_l369_1 = (! DataCachePlugin_mem_resizer_ret_toAxi4_aw_valid);
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_aw_valid = DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rValid;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_aw_payload_last = DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_last;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_aw_payload_fragment_address = DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_fragment_address;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_aw_payload_fragment_data = DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_fragment_data;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_aw_payload_fragment_id = DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_fragment_id;
-  assign dBusAxi_awvalid = DataCachePlugin_mem_resizer_ret_toAxi4_aw_valid;
-  assign dBusAxi_awaddr = DataCachePlugin_mem_resizer_ret_toAxi4_aw_payload_fragment_address;
-  assign dBusAxi_awid = DataCachePlugin_mem_resizer_ret_toAxi4_aw_payload_fragment_id;
+  assign when_Stream_l369_1 = (! DataCachePlugin_mem_toAxi4_aw_valid);
+  assign DataCachePlugin_mem_toAxi4_aw_valid = DataCachePlugin_mem_toAxi4_awFiltred_rValid;
+  assign DataCachePlugin_mem_toAxi4_aw_payload_last = DataCachePlugin_mem_toAxi4_awFiltred_rData_last;
+  assign DataCachePlugin_mem_toAxi4_aw_payload_fragment_address = DataCachePlugin_mem_toAxi4_awFiltred_rData_fragment_address;
+  assign DataCachePlugin_mem_toAxi4_aw_payload_fragment_data = DataCachePlugin_mem_toAxi4_awFiltred_rData_fragment_data;
+  assign DataCachePlugin_mem_toAxi4_aw_payload_fragment_id = DataCachePlugin_mem_toAxi4_awFiltred_rData_fragment_id;
+  assign dBusAxi_awvalid = DataCachePlugin_mem_toAxi4_aw_valid;
+  assign dBusAxi_awaddr = DataCachePlugin_mem_toAxi4_aw_payload_fragment_address;
+  assign dBusAxi_awid = DataCachePlugin_mem_toAxi4_aw_payload_fragment_id;
   assign dBusAxi_awprot = 3'b010;
   assign dBusAxi_awlen = 8'h0f;
   assign dBusAxi_awsize = 3'b010;
   assign dBusAxi_awburst = 2'b01;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_aw_ready = dBusAxi_awready;
-  assign _zz_DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_ready = (! DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_valid);
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_w_valid = (DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_valid && _zz_DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_ready);
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_ready = (DataCachePlugin_mem_resizer_ret_toAxi4_w_ready && _zz_DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_ready);
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_w_payload_last = DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_last;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_w_payload_fragment_address = DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_address;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_w_payload_fragment_data = DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_data;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_w_payload_fragment_id = DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_payload_fragment_id;
-  assign dBusAxi_wvalid = DataCachePlugin_mem_resizer_ret_toAxi4_w_valid;
-  assign dBusAxi_wdata = DataCachePlugin_mem_resizer_ret_toAxi4_w_payload_fragment_data;
+  assign DataCachePlugin_mem_toAxi4_aw_ready = dBusAxi_awready;
+  assign _zz_DataCachePlugin_mem_toAxi4_wRaw_ready = (! DataCachePlugin_mem_toAxi4_awFiltred_valid);
+  assign DataCachePlugin_mem_toAxi4_w_valid = (DataCachePlugin_mem_toAxi4_wRaw_valid && _zz_DataCachePlugin_mem_toAxi4_wRaw_ready);
+  assign DataCachePlugin_mem_toAxi4_wRaw_ready = (DataCachePlugin_mem_toAxi4_w_ready && _zz_DataCachePlugin_mem_toAxi4_wRaw_ready);
+  assign DataCachePlugin_mem_toAxi4_w_payload_last = DataCachePlugin_mem_toAxi4_wRaw_payload_last;
+  assign DataCachePlugin_mem_toAxi4_w_payload_fragment_address = DataCachePlugin_mem_toAxi4_wRaw_payload_fragment_address;
+  assign DataCachePlugin_mem_toAxi4_w_payload_fragment_data = DataCachePlugin_mem_toAxi4_wRaw_payload_fragment_data;
+  assign DataCachePlugin_mem_toAxi4_w_payload_fragment_id = DataCachePlugin_mem_toAxi4_wRaw_payload_fragment_id;
+  assign dBusAxi_wvalid = DataCachePlugin_mem_toAxi4_w_valid;
+  assign dBusAxi_wdata = DataCachePlugin_mem_toAxi4_w_payload_fragment_data;
   assign dBusAxi_wstrb = 4'b1111;
-  assign dBusAxi_wlast = DataCachePlugin_mem_resizer_ret_toAxi4_w_payload_last;
-  assign DataCachePlugin_mem_resizer_ret_toAxi4_w_ready = dBusAxi_wready;
-  assign DataCachePlugin_mem_resizer_ret_write_rsp_valid = dBusAxi_bvalid;
-  assign DataCachePlugin_mem_resizer_ret_write_rsp_payload_id = dBusAxi_bid;
-  assign DataCachePlugin_mem_resizer_ret_write_rsp_payload_error = (! (dBusAxi_bresp == 2'b00));
+  assign dBusAxi_wlast = DataCachePlugin_mem_toAxi4_w_payload_last;
+  assign DataCachePlugin_mem_toAxi4_w_ready = dBusAxi_wready;
+  assign DataCachePlugin_mem_write_rsp_valid = dBusAxi_bvalid;
+  assign DataCachePlugin_mem_write_rsp_payload_id = dBusAxi_bid;
+  assign DataCachePlugin_mem_write_rsp_payload_error = (! (dBusAxi_bresp == 2'b00));
   assign dBusAxi_bready = 1'b1;
   assign PrivilegedPlugin_io_int_machine_external = plicCtrl_io_targets[0];
   assign PrivilegedPlugin_io_int_machine_timer = clintCtrl_io_timerInterrupt[0];
@@ -18233,8 +18072,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign EU0_CsrAccessPlugin_setup_onReadMovingOff = ((! EU0_CsrAccessPlugin_setup_onReadHalt) || EU0_ExecutionUnitBase_pipeline_execute_0_isFlushed);
-  assign _zz_258 = zz__zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue(1'b0);
-  always @(*) _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue = _zz_258;
+  assign _zz_259 = zz__zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue(1'b0);
+  always @(*) _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue = _zz_259;
   assign _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_1[31 : 0] = 32'h40141101;
   always @(*) begin
     _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_2 = 32'h00000000;
@@ -18713,11 +18552,11 @@ module NaxRiscvAxi4LinuxPlicClint (
     if(Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup) begin
       Lsu2Plugin_logic_sharedPip_stages_1_MMU_ACCESS_FAULT = Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_lineAccessFault;
     end else begin
-      Lsu2Plugin_logic_sharedPip_stages_1_MMU_ACCESS_FAULT = (1'b0 || (! (Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED[31] || Lsu2Plugin_logic_sharedPip_stages_1_MMU_IO)));
+      Lsu2Plugin_logic_sharedPip_stages_1_MMU_ACCESS_FAULT = (1'b0 || (! (1'b1 || Lsu2Plugin_logic_sharedPip_stages_1_MMU_IO)));
     end
   end
 
-  assign when_MmuPlugin_l356 = (! (Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED[31 : 28] != 4'b0001));
+  assign when_MmuPlugin_l356 = (! 1'b1);
   assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_BYPASS_TRANSLATION = (! Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup);
   assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_WAYS_OH = Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_oh;
   assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_WAYS_PHYSICAL_0 = {Lsu2Plugin_logic_sharedPip_stages_1_MMU_L0_ENTRIES_0_physicalAddress,Lsu2Plugin_logic_sharedPip_stages_1_ADDRESS_PRE_TRANSLATION[11 : 0]};
@@ -18920,11 +18759,11 @@ module NaxRiscvAxi4LinuxPlicClint (
     if(FetchCachePlugin_logic_translationPort_logic_ctrl_requireMmuLockup) begin
       FetchPlugin_stages_1_MMU_ACCESS_FAULT = FetchCachePlugin_logic_translationPort_logic_ctrl_lineAccessFault;
     end else begin
-      FetchPlugin_stages_1_MMU_ACCESS_FAULT = (1'b0 || (! (FetchPlugin_stages_1_MMU_TRANSLATED[31] || FetchPlugin_stages_1_MMU_IO)));
+      FetchPlugin_stages_1_MMU_ACCESS_FAULT = (1'b0 || (! (1'b1 || FetchPlugin_stages_1_MMU_IO)));
     end
   end
 
-  assign when_MmuPlugin_l356_1 = (! (FetchPlugin_stages_1_MMU_TRANSLATED[31 : 28] != 4'b0001));
+  assign when_MmuPlugin_l356_1 = (! 1'b1);
   assign FetchPlugin_stages_1_MMU_BYPASS_TRANSLATION = (! FetchCachePlugin_logic_translationPort_logic_ctrl_requireMmuLockup);
   assign FetchPlugin_stages_1_MMU_WAYS_OH = FetchCachePlugin_logic_translationPort_logic_ctrl_oh;
   assign FetchPlugin_stages_1_MMU_WAYS_PHYSICAL_0 = {FetchPlugin_stages_1_MMU_L0_ENTRIES_0_physicalAddress,FetchPlugin_stages_1_Fetch_FETCH_PC[11 : 0]};
@@ -19296,8 +19135,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_FrontendPlugin_decoded_SQ_ALLOC_0 = ((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h10000070) == 32'h00000020);
   assign _zz_FrontendPlugin_decoded_SQ_ALLOC_0_1 = ((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h08000070) == 32'h08000020);
   assign FrontendPlugin_decoded_READ_RS_1_0 = _zz_FrontendPlugin_decoded_READ_RS_1_0[0];
-  assign _zz_259 = zz_DecoderPlugin_logic_slots_0_x0AlwaysZero(1'b0);
-  always @(*) DecoderPlugin_logic_slots_0_x0AlwaysZero = _zz_259;
+  assign _zz_260 = zz_DecoderPlugin_logic_slots_0_x0AlwaysZero(1'b0);
+  always @(*) DecoderPlugin_logic_slots_0_x0AlwaysZero = _zz_260;
   assign _zz_FrontendPlugin_decoded_WRITE_RD_0 = ((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h00000048) == 32'h00000048);
   assign FrontendPlugin_decoded_WRITE_RD_0 = (_zz_FrontendPlugin_decoded_WRITE_RD_0_1[0] && (! (DecoderPlugin_logic_slots_0_rdZero && DecoderPlugin_logic_slots_0_x0AlwaysZero)));
   assign FrontendPlugin_decoded_ALU0_SEL_0 = _zz_FrontendPlugin_decoded_ALU0_SEL_0[0];
@@ -19392,8 +19231,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rdEquRs1 = (FrontendPlugin_decoded_ARCH_RD_0 == FrontendPlugin_decoded_ARCH_RS_0_0);
   assign FrontendPlugin_decoded_RAS_PUSH_0 = ((FrontendPlugin_decoded_IS_JAL_0 || FrontendPlugin_decoded_IS_JALR_0) && DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rdLink);
   assign FrontendPlugin_decoded_RAS_POP_0 = (FrontendPlugin_decoded_IS_JALR_0 && (((! DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rdLink) && DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rs1Link) || ((DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rdLink && DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rs1Link) && (! DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rdEquRs1))));
-  assign FrontendPlugin_decoded_LAST_SLICE_0 = (FrontendPlugin_decoded_PC_0[2 : 2] + 1'b0);
-  assign FrontendPlugin_decoded_CONDITIONAL_PREDICTION_0 = FrontendPlugin_decoded_Prediction_CONDITIONAL_TAKE_IT_0[FrontendPlugin_decoded_LAST_SLICE_0];
+  assign FrontendPlugin_decoded_CONDITIONAL_PREDICTION_0 = FrontendPlugin_decoded_Prediction_CONDITIONAL_TAKE_IT_0[0];
   assign DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices = (_zz_DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices + {1'b0,1'b1});
   assign FrontendPlugin_decoded_PC_INC_0 = _zz_FrontendPlugin_decoded_PC_INC_0;
   assign FrontendPlugin_decoded_PC_TARGET_PRE_RAS_0 = ($signed(_zz_FrontendPlugin_decoded_PC_TARGET_PRE_RAS_0) + $signed(FrontendPlugin_decoded_OFFSET_0));
@@ -19696,7 +19534,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign when_Connection_l74_3 = (! EU0_ExecutionUnitBase_pipeline_execute_2_valid);
   assign BranchContextPlugin_free_dispatchMem_writes_0_port_valid = ((FrontendPlugin_dispatch_isFireing && FrontendPlugin_dispatch_BRANCH_SEL_0) && FrontendPlugin_dispatch_Frontend_DISPATCH_MASK_0);
   assign BranchContextPlugin_free_dispatchMem_writes_0_port_payload_address = FrontendPlugin_dispatch_BRANCH_ID_0;
-  assign BranchContextPlugin_free_dispatchMem_writes_0_port_payload_data = {FrontendPlugin_dispatch_Prediction_IS_BRANCH_0,{{FrontendPlugin_dispatch_GSHARE_COUNTER_0_1,FrontendPlugin_dispatch_GSHARE_COUNTER_0_0},FrontendPlugin_dispatch_BRANCH_HISTORY_0}};
+  assign BranchContextPlugin_free_dispatchMem_writes_0_port_payload_data = {FrontendPlugin_dispatch_Prediction_IS_BRANCH_0,{FrontendPlugin_dispatch_GSHARE_COUNTER_0_0,FrontendPlugin_dispatch_BRANCH_HISTORY_0}};
   assign BranchContextPlugin_free_learn_valid = (BranchContextPlugin_logic_ptr_free != BranchContextPlugin_logic_ptr_commited);
   assign BranchContextPlugin_free_learn_bid = BranchContextPlugin_logic_ptr_free[1:0];
   assign _zz_BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice = BranchContextPlugin_logic_mem_finalBranch_spinal_port1;
@@ -19705,10 +19543,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign BranchContextPlugin_learn_BRANCH_FINAL_taken = _zz_BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[64];
   assign BranchContextPlugin_free_learn_raw = BranchContextPlugin_free_dispatchMem_mem_spinal_port1;
   assign BranchContextPlugin_free_learn_BRANCH_HISTORY = BranchContextPlugin_free_learn_raw[23 : 0];
-  assign _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0 = BranchContextPlugin_free_learn_raw[27 : 24];
   assign BranchContextPlugin_free_learn_GSHARE_COUNTER_0 = _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0[1 : 0];
-  assign BranchContextPlugin_free_learn_GSHARE_COUNTER_1 = _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0[3 : 2];
-  assign BranchContextPlugin_free_learn_Prediction_IS_BRANCH = BranchContextPlugin_free_learn_raw[28];
+  assign BranchContextPlugin_free_learn_Prediction_IS_BRANCH = BranchContextPlugin_free_learn_raw[26];
   assign BranchContextPlugin_setup_learnValid = BranchContextPlugin_free_learn_valid;
   assign DispatchPlugin_logic_queueStaticWakeTransposed_0 = {DispatchPlugin_logic_queue_io_contexts_7_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_6_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_5_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_4_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_3_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_2_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_1_staticWake[0],DispatchPlugin_logic_queue_io_contexts_0_staticWake[0]}}}}}}};
   assign DispatchPlugin_logic_queueStaticWakeTransposedHistory_0_0 = DispatchPlugin_logic_queueStaticWakeTransposed_0;
@@ -19957,6 +19793,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_CommitPlugin_logic_commit_active = CommitPlugin_logic_ptr_commit[3 : 0];
   assign _zz_integer_RfAllocationPlugin_logic_push_mask_0 = CommitPlugin_logic_free_port_payload_robId;
   assign integer_RfAllocationPlugin_logic_push_mask_0 = _zz_integer_RfAllocationPlugin_logic_push_mask_0_1[0];
+  assign _zz_commit_pc_0 = CommitPlugin_logic_commit_event_robId;
   assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc = CommitPlugin_logic_commit_reschedulePort_payload_robId;
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC = ALU0_ExecutionUnitBase_pipeline_fetch_0_ROB_ID;
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC = EU0_ExecutionUnitBase_pipeline_fetch_0_ROB_ID;
@@ -20160,7 +19997,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign FrontendPlugin_allocated_LQ_ALLOC_0 = FrontendPlugin_serialized_LQ_ALLOC_0;
   assign FrontendPlugin_allocated_SQ_ALLOC_0 = FrontendPlugin_serialized_SQ_ALLOC_0;
   assign FrontendPlugin_allocated_GSHARE_COUNTER_0_0 = FrontendPlugin_serialized_GSHARE_COUNTER_0_0;
-  assign FrontendPlugin_allocated_GSHARE_COUNTER_0_1 = FrontendPlugin_serialized_GSHARE_COUNTER_0_1;
   assign FrontendPlugin_allocated_ALU0_SEL_0 = FrontendPlugin_serialized_ALU0_SEL_0;
   assign FrontendPlugin_allocated_EU0_SEL_0 = FrontendPlugin_serialized_EU0_SEL_0;
   always @(*) begin
@@ -20180,7 +20016,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign FrontendPlugin_decompressed_Prediction_ALIGNED_BRANCH_PC_NEXT_0 = FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_PC_NEXT_0;
   assign FrontendPlugin_decompressed_BRANCH_HISTORY_0 = FrontendPlugin_aligned_BRANCH_HISTORY_0;
   assign FrontendPlugin_decompressed_GSHARE_COUNTER_0_0 = FrontendPlugin_aligned_GSHARE_COUNTER_0_0;
-  assign FrontendPlugin_decompressed_GSHARE_COUNTER_0_1 = FrontendPlugin_aligned_GSHARE_COUNTER_0_1;
   assign FrontendPlugin_decompressed_FETCH_ID_0 = FrontendPlugin_aligned_FETCH_ID_0;
   assign FrontendPlugin_decompressed_Frontend_FETCH_FAULT_0 = FrontendPlugin_aligned_Frontend_FETCH_FAULT_0;
   assign FrontendPlugin_decompressed_Frontend_FETCH_FAULT_PAGE_0 = FrontendPlugin_aligned_Frontend_FETCH_FAULT_PAGE_0;
@@ -20191,7 +20026,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign FrontendPlugin_decoded_Frontend_INSTRUCTION_ILLEGAL_0 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ILLEGAL_0;
   assign FrontendPlugin_decoded_Prediction_CONDITIONAL_TAKE_IT_0 = FrontendPlugin_decompressed_Prediction_CONDITIONAL_TAKE_IT_0;
   assign FrontendPlugin_decoded_GSHARE_COUNTER_0_0 = FrontendPlugin_decompressed_GSHARE_COUNTER_0_0;
-  assign FrontendPlugin_decoded_GSHARE_COUNTER_0_1 = FrontendPlugin_decompressed_GSHARE_COUNTER_0_1;
   assign FrontendPlugin_decoded_FETCH_ID_0 = FrontendPlugin_decompressed_FETCH_ID_0;
   assign FrontendPlugin_decoded_Frontend_MASK_ALIGNED_0 = FrontendPlugin_decompressed_Frontend_MASK_ALIGNED_0;
   assign FrontendPlugin_decoded_Frontend_FETCH_FAULT_0 = FrontendPlugin_decompressed_Frontend_FETCH_FAULT_0;
@@ -20223,9 +20057,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign when_PcPlugin_l84_1 = ((! PcPlugin_logic_fetchPc_output_valid) && PcPlugin_logic_fetchPc_output_ready);
   always @(*) begin
     PcPlugin_logic_fetchPc_pc = (PcPlugin_logic_fetchPc_pcReg + _zz_PcPlugin_logic_fetchPc_pc);
-    if(PcPlugin_logic_fetchPc_inc) begin
-      PcPlugin_logic_fetchPc_pc[2 : 2] = 1'b0;
-    end
     if(PcPlugin_logic_jump_pcLoad_valid) begin
       PcPlugin_logic_fetchPc_pc = PcPlugin_logic_jump_pcLoad_payload_pc;
     end
@@ -20248,8 +20079,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign FetchPlugin_stages_0_valid = PcPlugin_logic_fetchPc_output_valid;
   assign FetchPlugin_stages_0_Fetch_FETCH_PC = PcPlugin_logic_fetchPc_output_payload;
   always @(*) begin
-    FetchPlugin_stages_1_Fetch_FETCH_PC_INC = (FetchPlugin_stages_1_Fetch_FETCH_PC + 32'h00000008);
-    FetchPlugin_stages_1_Fetch_FETCH_PC_INC[2 : 0] = 3'b000;
+    FetchPlugin_stages_1_Fetch_FETCH_PC_INC = (FetchPlugin_stages_1_Fetch_FETCH_PC + 32'h00000004);
+    FetchPlugin_stages_1_Fetch_FETCH_PC_INC[1 : 0] = 2'b00;
   end
 
   assign fetchLastFire = FetchPlugin_stages_2_isFireing;
@@ -20373,14 +20204,6 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     if(FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid) begin
-      AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE = FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE_s2mBuffer;
-    end else begin
-      AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE = FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE;
-    end
-  end
-
-  always @(*) begin
-    if(FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid) begin
       AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID = FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID_s2mBuffer;
     end else begin
       AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID = FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID;
@@ -20413,14 +20236,6 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     if(FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid) begin
-      AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_SLICE = FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE_s2mBuffer;
-    end else begin
-      AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_SLICE = FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE;
-    end
-  end
-
-  always @(*) begin
-    if(FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid) begin
       AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALUE = FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE_s2mBuffer;
     end else begin
       AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALUE = FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE;
@@ -20432,14 +20247,6 @@ module NaxRiscvAxi4LinuxPlicClint (
       AlignerPlugin_setup_s2m_GSHARE_COUNTER_0 = FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_0;
     end else begin
       AlignerPlugin_setup_s2m_GSHARE_COUNTER_0 = FetchPlugin_stages_2_GSHARE_COUNTER_0;
-    end
-  end
-
-  always @(*) begin
-    if(FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid) begin
-      AlignerPlugin_setup_s2m_GSHARE_COUNTER_1 = FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_1;
-    end else begin
-      AlignerPlugin_setup_s2m_GSHARE_COUNTER_1 = FetchPlugin_stages_2_GSHARE_COUNTER_1;
     end
   end
 
@@ -20586,8 +20393,8 @@ module NaxRiscvAxi4LinuxPlicClint (
       FetchCachePlugin_logic_refill_hadError <= 1'b0;
       FetchCachePlugin_logic_refill_pushCounter <= 32'h00000000;
       FetchCachePlugin_logic_refill_cmdSent <= 1'b0;
-      FetchCachePlugin_logic_refill_wordIndex <= 3'b000;
-      AlignerPlugin_logic_buffer_mask <= 2'b00;
+      FetchCachePlugin_logic_refill_wordIndex <= 4'b0000;
+      AlignerPlugin_logic_buffer_mask <= 1'b0;
       AlignerPlugin_logic_correctionSent <= 1'b0;
       BranchContextPlugin_logic_ptr_alloc <= 3'b000;
       BranchContextPlugin_logic_ptr_commited <= 3'b000;
@@ -20647,12 +20454,12 @@ module NaxRiscvAxi4LinuxPlicClint (
       PrivilegedPlugin_logic_rescheduleUnbuffered_rValid <= 1'b0;
       EU0_DivPlugin_logic_feed_cmdSent <= 1'b0;
       AguPlugin_logic_fired <= 1'b0;
-      _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_2 <= 1'b0;
-      _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_2 <= 1'b0;
-      DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_0 <= 1'b1;
-      DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_1 <= 1'b1;
-      DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_first <= 1'b1;
-      DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rValid <= 1'b0;
+      LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0 <= 1'b1;
+      LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1 <= 1'b1;
+      DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_0 <= 1'b1;
+      DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_1 <= 1'b1;
+      DataCachePlugin_mem_toAxi4_awRaw_payload_first <= 1'b1;
+      DataCachePlugin_mem_toAxi4_awFiltred_rValid <= 1'b0;
       integer_RfTranslationPlugin_logic_init_counter <= 6'h00;
       integer_RfAllocationPlugin_logic_init_counter <= 7'h01;
       HistoryPlugin_logic_onFetch_value <= 24'h000000;
@@ -20867,7 +20674,7 @@ module NaxRiscvAxi4LinuxPlicClint (
         FetchCachePlugin_logic_refill_cmdSent <= 1'b0;
       end
       if(FetchCachePlugin_mem_rsp_valid) begin
-        FetchCachePlugin_logic_refill_wordIndex <= (FetchCachePlugin_logic_refill_wordIndex + 3'b001);
+        FetchCachePlugin_logic_refill_wordIndex <= (FetchCachePlugin_logic_refill_wordIndex + 4'b0001);
         if(FetchCachePlugin_mem_rsp_payload_error) begin
           FetchCachePlugin_logic_refill_hadError <= 1'b1;
         end
@@ -20876,10 +20683,10 @@ module NaxRiscvAxi4LinuxPlicClint (
         FetchCachePlugin_logic_refill_hadError <= 1'b0;
       end
       if(AlignerPlugin_logic_fireOutput) begin
-        AlignerPlugin_logic_buffer_mask <= AlignerPlugin_logic_slices_remains_1[1 : 0];
+        AlignerPlugin_logic_buffer_mask <= AlignerPlugin_logic_slices_remains_1[0 : 0];
       end
       if(AlignerPlugin_logic_fireInput) begin
-        AlignerPlugin_logic_buffer_mask <= ((AlignerPlugin_logic_fireOutput ? AlignerPlugin_logic_slices_remains_1[3 : 2] : AlignerPlugin_setup_s2m_MASK_FRONT) & AlignerPlugin_logic_postMask);
+        AlignerPlugin_logic_buffer_mask <= ((AlignerPlugin_logic_fireOutput ? AlignerPlugin_logic_slices_remains_1[1 : 1] : AlignerPlugin_setup_s2m_MASK_FRONT) & AlignerPlugin_logic_postMask);
       end
       if(AlignerPlugin_setup_sequenceJump_valid) begin
         AlignerPlugin_logic_correctionSent <= 1'b1;
@@ -20888,7 +20695,7 @@ module NaxRiscvAxi4LinuxPlicClint (
         AlignerPlugin_logic_correctionSent <= 1'b0;
       end
       if(FrontendPlugin_aligned_isFlushed) begin
-        AlignerPlugin_logic_buffer_mask <= 2'b00;
+        AlignerPlugin_logic_buffer_mask <= 1'b0;
       end
       if(FrontendPlugin_allocated_isFireing) begin
         BranchContextPlugin_logic_ptr_alloc <= BranchContextPlugin_logic_alloc_allocNext_1;
@@ -20944,23 +20751,31 @@ module NaxRiscvAxi4LinuxPlicClint (
       if(when_AguPlugin_l89) begin
         AguPlugin_logic_fired <= 1'b0;
       end
-      _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_2 <= _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_valid_1;
-      _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_2 <= _zz_DataCachePlugin_mem_write_resizer_cmdOutputStream_payload_fragment_1;
-      if(DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_fire) begin
-        DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_0 <= 1'b0;
+      if(LsuPlugin_peripheralBus_toAxiLite4_a_fire) begin
+        LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0 <= 1'b0;
       end
-      if(DataCachePlugin_mem_resizer_ret_toAxi4_wRaw_fire) begin
-        DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_1 <= 1'b0;
+      if(LsuPlugin_peripheralBus_toAxiLite4_wRaw_fire) begin
+        LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1 <= 1'b0;
       end
-      if(DataCachePlugin_mem_resizer_ret_write_cmd_ready) begin
-        DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_0 <= 1'b1;
-        DataCachePlugin_mem_resizer_ret_write_cmd_fork2_logic_linkEnable_1 <= 1'b1;
+      if(LsuPlugin_peripheralBus_cmd_ready) begin
+        LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_0 <= 1'b1;
+        LsuPlugin_peripheralBus_cmd_fork2_logic_linkEnable_1 <= 1'b1;
       end
-      if(DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_fire) begin
-        DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_first <= DataCachePlugin_mem_resizer_ret_toAxi4_awRaw_payload_last;
+      if(DataCachePlugin_mem_toAxi4_awRaw_fire) begin
+        DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_0 <= 1'b0;
       end
-      if(DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_ready) begin
-        DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rValid <= DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_valid;
+      if(DataCachePlugin_mem_toAxi4_wRaw_fire) begin
+        DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_1 <= 1'b0;
+      end
+      if(DataCachePlugin_mem_write_cmd_ready) begin
+        DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_0 <= 1'b1;
+        DataCachePlugin_mem_write_cmd_fork2_logic_linkEnable_1 <= 1'b1;
+      end
+      if(DataCachePlugin_mem_toAxi4_awRaw_fire) begin
+        DataCachePlugin_mem_toAxi4_awRaw_payload_first <= DataCachePlugin_mem_toAxi4_awRaw_payload_last;
+      end
+      if(DataCachePlugin_mem_toAxi4_awFiltred_ready) begin
+        DataCachePlugin_mem_toAxi4_awFiltred_rValid <= DataCachePlugin_mem_toAxi4_awFiltred_valid;
       end
       if(integer_RfTranslationPlugin_logic_init_busy) begin
         integer_RfTranslationPlugin_logic_init_counter <= (integer_RfTranslationPlugin_logic_init_counter + 6'h01);
@@ -21851,14 +21666,11 @@ module NaxRiscvAxi4LinuxPlicClint (
       AlignerPlugin_logic_buffer_fault <= AlignerPlugin_setup_s2m_Fetch_WORD_FAULT;
       AlignerPlugin_logic_buffer_fault_page <= AlignerPlugin_setup_s2m_Fetch_WORD_FAULT_PAGE;
       AlignerPlugin_logic_buffer_branchValid <= (AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID && (! _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0));
-      AlignerPlugin_logic_buffer_branchSlice <= AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE;
       AlignerPlugin_logic_buffer_branchPcNext <= AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_PC_NEXT;
       AlignerPlugin_logic_buffer_wordContexts_0 <= AlignerPlugin_setup_s2m_BRANCH_HISTORY;
       AlignerPlugin_logic_buffer_wordContexts_1 <= AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALID;
-      AlignerPlugin_logic_buffer_wordContexts_2 <= AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_SLICE;
       AlignerPlugin_logic_buffer_wordContexts_3 <= AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALUE;
       AlignerPlugin_logic_buffer_wordContexts_4_0 <= AlignerPlugin_setup_s2m_GSHARE_COUNTER_0;
-      AlignerPlugin_logic_buffer_wordContexts_4_1 <= AlignerPlugin_setup_s2m_GSHARE_COUNTER_1;
       AlignerPlugin_logic_buffer_firstWordContexts_0 <= AlignerPlugin_setup_s2m_FETCH_ID;
     end
     CommitPlugin_logic_ptr_robLineMaskRsp <= CommitPlugin_setup_robLineMask_mask;
@@ -21878,14 +21690,14 @@ module NaxRiscvAxi4LinuxPlicClint (
       PrivilegedPlugin_logic_rescheduleUnbuffered_rData_tval <= PrivilegedPlugin_logic_rescheduleUnbuffered_payload_tval;
       PrivilegedPlugin_logic_rescheduleUnbuffered_rData_fromCommit <= PrivilegedPlugin_logic_rescheduleUnbuffered_payload_fromCommit;
     end
-    if(DataCachePlugin_mem_read_resizer_ret_rsp_translated_fire) begin
-      _zz_DataCachePlugin_mem_read_resizer_rspOutputStream_payload <= DataCachePlugin_mem_read_resizer_ret_rsp_translated_payload;
+    if(LsuPlugin_peripheralBus_cmd_valid) begin
+      LsuPlugin_peripheralBus_toAxiLite4_writeSel <= LsuPlugin_peripheralBus_cmd_payload_write;
     end
-    if(DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_ready) begin
-      DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_last <= DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_last;
-      DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_fragment_address <= DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_fragment_address;
-      DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_fragment_data <= DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_fragment_data;
-      DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_rData_fragment_id <= DataCachePlugin_mem_resizer_ret_toAxi4_awFiltred_payload_fragment_id;
+    if(DataCachePlugin_mem_toAxi4_awFiltred_ready) begin
+      DataCachePlugin_mem_toAxi4_awFiltred_rData_last <= DataCachePlugin_mem_toAxi4_awFiltred_payload_last;
+      DataCachePlugin_mem_toAxi4_awFiltred_rData_fragment_address <= DataCachePlugin_mem_toAxi4_awFiltred_payload_fragment_address;
+      DataCachePlugin_mem_toAxi4_awFiltred_rData_fragment_data <= DataCachePlugin_mem_toAxi4_awFiltred_payload_fragment_data;
+      DataCachePlugin_mem_toAxi4_awFiltred_rData_fragment_id <= DataCachePlugin_mem_toAxi4_awFiltred_payload_fragment_id;
     end
     if(Lsu2Plugin_logic_lq_regs_0_allocation) begin
       Lsu2Plugin_logic_lq_regs_0_sqChecked <= 1'b0;
@@ -22790,7 +22602,6 @@ module NaxRiscvAxi4LinuxPlicClint (
       FrontendPlugin_dispatch_SQ_ALLOC_0 <= FrontendPlugin_allocated_SQ_ALLOC_0;
       FrontendPlugin_dispatch_Prediction_IS_BRANCH_0 <= FrontendPlugin_allocated_Prediction_IS_BRANCH_0;
       FrontendPlugin_dispatch_GSHARE_COUNTER_0_0 <= FrontendPlugin_allocated_GSHARE_COUNTER_0_0;
-      FrontendPlugin_dispatch_GSHARE_COUNTER_0_1 <= FrontendPlugin_allocated_GSHARE_COUNTER_0_1;
       FrontendPlugin_dispatch_DispatchPlugin_FENCE_OLDER_0 <= FrontendPlugin_allocated_DispatchPlugin_FENCE_OLDER_0;
       FrontendPlugin_dispatch_DispatchPlugin_FENCE_YOUNGER_0 <= FrontendPlugin_allocated_DispatchPlugin_FENCE_YOUNGER_0;
       FrontendPlugin_dispatch_ALU0_SEL_0 <= FrontendPlugin_allocated_ALU0_SEL_0;
@@ -22828,7 +22639,6 @@ module NaxRiscvAxi4LinuxPlicClint (
       FrontendPlugin_serialized_Prediction_ALIGNED_BRANCH_VALID_0 <= FrontendPlugin_decoded_Prediction_ALIGNED_BRANCH_VALID_0;
       FrontendPlugin_serialized_BRANCH_HISTORY_0 <= FrontendPlugin_decoded_BRANCH_HISTORY_0;
       FrontendPlugin_serialized_GSHARE_COUNTER_0_0 <= FrontendPlugin_decoded_GSHARE_COUNTER_0_0;
-      FrontendPlugin_serialized_GSHARE_COUNTER_0_1 <= FrontendPlugin_decoded_GSHARE_COUNTER_0_1;
     end
     if(FetchPlugin_stages_0_ready_output) begin
       FetchPlugin_stages_1_FetchCachePlugin_logic_WAYS_TAGS_0_loaded <= FetchPlugin_stages_0_FetchCachePlugin_logic_WAYS_TAGS_0_loaded;
@@ -22840,7 +22650,6 @@ module NaxRiscvAxi4LinuxPlicClint (
       FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_valid <= FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_valid;
       FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_address <= FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_address;
       FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_0 <= FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_0;
-      FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_1 <= FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_1;
     end
     if(FetchPlugin_stages_1_ready_output) begin
       FetchPlugin_stages_2_FETCH_ID <= FetchPlugin_stages_1_FETCH_ID;
@@ -22853,12 +22662,9 @@ module NaxRiscvAxi4LinuxPlicClint (
       FetchPlugin_stages_2_FetchCachePlugin_logic_WAYS_HIT <= FetchPlugin_stages_1_FetchCachePlugin_logic_WAYS_HIT;
       FetchPlugin_stages_2_AlignerPlugin_MASK_FRONT <= FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT;
       FetchPlugin_stages_2_GSHARE_COUNTER_0 <= FetchPlugin_stages_1_GSHARE_COUNTER_0;
-      FetchPlugin_stages_2_GSHARE_COUNTER_1 <= FetchPlugin_stages_1_GSHARE_COUNTER_1;
       FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID <= FetchPlugin_stages_1_Prediction_WORD_BRANCH_VALID;
-      FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE <= FetchPlugin_stages_1_Prediction_WORD_BRANCH_SLICE;
       FetchPlugin_stages_2_Prediction_WORD_BRANCH_PC_NEXT <= FetchPlugin_stages_1_Prediction_WORD_BRANCH_PC_NEXT;
       FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALID <= FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALID;
-      FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE <= FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_SLICE;
       FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE <= FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALUE;
       FetchPlugin_stages_2_MMU_IO <= FetchPlugin_stages_1_MMU_IO;
       FetchPlugin_stages_2_MMU_TRANSLATED <= FetchPlugin_stages_1_MMU_TRANSLATED;
@@ -22888,9 +22694,6 @@ module NaxRiscvAxi4LinuxPlicClint (
       FetchPlugin_stages_2_FETCH_ID_s2mBuffer <= FetchPlugin_stages_2_FETCH_ID;
     end
     if(FetchPlugin_stages_2_ready_output) begin
-      FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE_s2mBuffer <= FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE;
-    end
-    if(FetchPlugin_stages_2_ready_output) begin
       FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID_s2mBuffer <= FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID;
     end
     if(FetchPlugin_stages_2_ready_output) begin
@@ -22903,14 +22706,10 @@ module NaxRiscvAxi4LinuxPlicClint (
       FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALID_s2mBuffer <= FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALID;
     end
     if(FetchPlugin_stages_2_ready_output) begin
-      FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE_s2mBuffer <= FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE;
-    end
-    if(FetchPlugin_stages_2_ready_output) begin
       FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE_s2mBuffer <= FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE;
     end
     if(FetchPlugin_stages_2_ready_output) begin
       FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_0 <= FetchPlugin_stages_2_GSHARE_COUNTER_0;
-      FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_1 <= FetchPlugin_stages_2_GSHARE_COUNTER_1;
     end
     if(FetchPlugin_stages_2_ready_output) begin
       FetchPlugin_stages_2_Fetch_FETCH_PC_INC_s2mBuffer <= FetchPlugin_stages_2_Fetch_FETCH_PC_INC;
@@ -27334,13 +27133,13 @@ module DataCache (
   input  wire          io_mem_read_rsp_valid,
   output wire          io_mem_read_rsp_ready,
   input  wire [0:0]    io_mem_read_rsp_payload_id,
-  input  wire [63:0]   io_mem_read_rsp_payload_data,
+  input  wire [31:0]   io_mem_read_rsp_payload_data,
   input  wire          io_mem_read_rsp_payload_error,
   output wire          io_mem_write_cmd_valid,
   input  wire          io_mem_write_cmd_ready,
   output wire          io_mem_write_cmd_payload_last,
   output wire [31:0]   io_mem_write_cmd_payload_fragment_address,
-  output wire [63:0]   io_mem_write_cmd_payload_fragment_data,
+  output wire [31:0]   io_mem_write_cmd_payload_fragment_data,
   output wire [0:0]    io_mem_write_cmd_payload_fragment_id,
   input  wire          io_mem_write_rsp_valid,
   input  wire          io_mem_write_rsp_payload_error,
@@ -27354,12 +27153,12 @@ module DataCache (
   input  wire          reset
 );
 
-  reg        [63:0]   banks_0_mem_spinal_port1;
+  reg        [31:0]   banks_0_mem_spinal_port1;
   wire       [25:0]   ways_0_mem_spinal_port1;
   wire       [25:0]   ways_0_mem_spinal_port2;
   wire       [0:0]    status_mem_spinal_port1;
   wire       [0:0]    status_mem_spinal_port2;
-  reg        [63:0]   writeback_victimBuffer_spinal_port1;
+  reg        [31:0]   writeback_victimBuffer_spinal_port1;
   wire       [25:0]   _zz_ways_0_mem_port;
   wire                _zz_ways_0_mem_port_1;
   wire       [0:0]    _zz_status_mem_port;
@@ -27372,15 +27171,14 @@ module DataCache (
   wire       [1:0]    _zz_writeback_free_1;
   wire       [1:0]    _zz_writeback_free_2;
   reg        [31:0]   _zz_writeback_read_address;
-  wire       [2:0]    _zz_writeback_read_wordIndex;
+  wire       [3:0]    _zz_writeback_read_wordIndex;
   wire       [0:0]    _zz_writeback_read_wordIndex_1;
-  wire       [3:0]    _zz_writeback_victimBuffer_port;
+  wire       [4:0]    _zz_writeback_victimBuffer_port;
   reg        [31:0]   _zz_writeback_write_bufferRead_payload_address;
-  wire       [2:0]    _zz_writeback_write_wordIndex;
+  wire       [3:0]    _zz_writeback_write_wordIndex;
   wire       [0:0]    _zz_writeback_write_wordIndex_1;
-  reg        [31:0]   _zz_load_pipeline_stages_1_BANKS_MUXES_0;
-  wire       [0:0]    _zz_load_pipeline_stages_1_BANKS_MUXES_0_1;
   wire       [0:0]    _zz_when;
+  wire       [0:0]    _zz_when_1;
   wire                store_pipeline_stages_0_isThrown;
   wire                store_pipeline_stages_1_isThrown;
   wire                store_pipeline_stages_2_isThrown;
@@ -27475,7 +27273,7 @@ module DataCache (
   wire       [31:0]   load_pipeline_stages_1_BANKS_MUXES_0;
   reg        [0:0]    load_pipeline_stages_1_BANK_BUSY;
   wire       [0:0]    load_pipeline_stages_1_BANK_BUSY_REMAPPED;
-  wire       [63:0]   load_pipeline_stages_1_BANKS_WORDS_0;
+  wire       [31:0]   load_pipeline_stages_1_BANKS_WORDS_0;
   wire       [0:0]    load_pipeline_stages_0_BANK_BUSY_overloaded;
   wire                load_pipeline_stages_0_ready;
   wire       [0:0]    load_pipeline_stages_0_BANK_BUSY;
@@ -27493,13 +27291,13 @@ module DataCache (
   reg                 _zz_1;
   reg                 _zz_2;
   reg                 banks_0_write_valid;
-  reg        [4:0]    banks_0_write_payload_address;
-  reg        [63:0]   banks_0_write_payload_data;
-  reg        [7:0]    banks_0_write_payload_mask;
+  reg        [5:0]    banks_0_write_payload_address;
+  reg        [31:0]   banks_0_write_payload_data;
+  reg        [3:0]    banks_0_write_payload_mask;
   reg                 banks_0_read_usedByWriteBack;
   reg                 banks_0_read_cmd_valid;
-  reg        [4:0]    banks_0_read_cmd_payload;
-  (* keep , syn_keep *) wire       [63:0]   banks_0_read_rsp /* synthesis syn_keep = 1 */ ;
+  reg        [5:0]    banks_0_read_cmd_payload;
+  (* keep , syn_keep *) wire       [31:0]   banks_0_read_rsp /* synthesis syn_keep = 1 */ ;
   reg        [0:0]    waysWrite_mask;
   reg        [1:0]    waysWrite_address;
   reg                 waysWrite_tag_loaded;
@@ -27600,7 +27398,7 @@ module DataCache (
   wire                when_DataCache_l998;
   wire                when_DataCache_l998_1;
   wire       [31:0]   refill_read_rspAddress;
-  (* keep , syn_keep *) reg        [2:0]    refill_read_wordIndex /* synthesis syn_keep = 1 */ ;
+  (* keep , syn_keep *) reg        [3:0]    refill_read_wordIndex /* synthesis syn_keep = 1 */ ;
   wire                refill_read_rspWithData;
   reg        [0:0]    refill_read_bankWriteNotif;
   reg                 refill_read_hadError;
@@ -27645,18 +27443,18 @@ module DataCache (
   reg        [1:0]    writeback_read_arbiter_lock;
   wire                when_DataCache_l911_1;
   wire       [31:0]   writeback_read_address;
-  (* keep , syn_keep *) reg        [2:0]    writeback_read_wordIndex /* synthesis syn_keep = 1 */ ;
+  (* keep , syn_keep *) reg        [3:0]    writeback_read_wordIndex /* synthesis syn_keep = 1 */ ;
   wire                writeback_read_slotRead_valid;
   wire       [0:0]    writeback_read_slotRead_payload_id;
   wire                writeback_read_slotRead_payload_last;
-  wire       [2:0]    writeback_read_slotRead_payload_wordIndex;
+  wire       [3:0]    writeback_read_slotRead_payload_wordIndex;
   wire                when_DataCache_l1175;
   wire                when_DataCache_l1185;
   reg                 writeback_read_slotReadLast_valid;
   reg        [0:0]    writeback_read_slotReadLast_payload_id;
   reg                 writeback_read_slotReadLast_payload_last;
-  reg        [2:0]    writeback_read_slotReadLast_payload_wordIndex;
-  wire       [63:0]   writeback_read_readedData;
+  reg        [3:0]    writeback_read_slotReadLast_payload_wordIndex;
+  wire       [31:0]   writeback_read_readedData;
   wire                writeback_write_arbiter_slotsWithId_0_0;
   wire                writeback_write_arbiter_slotsWithId_1_0;
   wire       [1:0]    writeback_write_arbiter_hits;
@@ -27666,7 +27464,7 @@ module DataCache (
   wire       [0:0]    writeback_write_arbiter_sel;
   reg        [1:0]    writeback_write_arbiter_lock;
   wire                when_DataCache_l911_2;
-  (* keep , syn_keep *) reg        [2:0]    writeback_write_wordIndex /* synthesis syn_keep = 1 */ ;
+  (* keep , syn_keep *) reg        [3:0]    writeback_write_wordIndex /* synthesis syn_keep = 1 */ ;
   wire                writeback_write_last;
   wire                writeback_write_bufferRead_valid;
   reg                 writeback_write_bufferRead_ready;
@@ -27685,8 +27483,8 @@ module DataCache (
   reg        [31:0]   writeback_write_bufferRead_rData_address;
   reg                 writeback_write_bufferRead_rData_last;
   wire                when_Stream_l369;
-  wire       [3:0]    _zz_writeback_write_word;
-  wire       [63:0]   writeback_write_word;
+  wire       [4:0]    _zz_writeback_write_word;
+  wire       [31:0]   writeback_write_word;
   wire                load_pipeline_stages_0_valid;
   reg                 _zz_load_pipeline_stages_1_valid;
   reg                 load_pipeline_stages_1_valid;
@@ -27764,29 +27562,20 @@ module DataCache (
   wire                when_DataCache_l1733;
   wire                when_DataCache_l1751;
   wire                when_DataCache_l1775;
-  wire       [1:0]    _zz_16;
   wire                when_DataCache_l1805;
   wire                when_Pipeline_l272_2;
   wire                when_Pipeline_l272_3;
-  reg [7:0] banks_0_mem_symbol0 [0:31];
-  reg [7:0] banks_0_mem_symbol1 [0:31];
-  reg [7:0] banks_0_mem_symbol2 [0:31];
-  reg [7:0] banks_0_mem_symbol3 [0:31];
-  reg [7:0] banks_0_mem_symbol4 [0:31];
-  reg [7:0] banks_0_mem_symbol5 [0:31];
-  reg [7:0] banks_0_mem_symbol6 [0:31];
-  reg [7:0] banks_0_mem_symbol7 [0:31];
+  reg [7:0] banks_0_mem_symbol0 [0:63];
+  reg [7:0] banks_0_mem_symbol1 [0:63];
+  reg [7:0] banks_0_mem_symbol2 [0:63];
+  reg [7:0] banks_0_mem_symbol3 [0:63];
   reg [7:0] _zz_banks_0_memsymbol_read;
   reg [7:0] _zz_banks_0_memsymbol_read_1;
   reg [7:0] _zz_banks_0_memsymbol_read_2;
   reg [7:0] _zz_banks_0_memsymbol_read_3;
-  reg [7:0] _zz_banks_0_memsymbol_read_4;
-  reg [7:0] _zz_banks_0_memsymbol_read_5;
-  reg [7:0] _zz_banks_0_memsymbol_read_6;
-  reg [7:0] _zz_banks_0_memsymbol_read_7;
   (* ram_style = "distributed" *) reg [25:0] ways_0_mem [0:3];
   (* ram_style = "distributed" *) reg [0:0] status_mem [0:3];
-  reg [63:0] writeback_victimBuffer [0:15];
+  reg [31:0] writeback_victimBuffer [0:31];
 
   assign _zz_status_loadRead_rsp_0_dirty = status_mem_spinal_port1[0 : 0];
   assign _zz_status_storeRead_rsp_0_dirty = status_mem_spinal_port2[0 : 0];
@@ -27795,17 +27584,17 @@ module DataCache (
   assign _zz_writeback_free_1 = (_zz_writeback_free & (~ _zz_writeback_free_2));
   assign _zz_writeback_free_2 = (_zz_writeback_free - 2'b01);
   assign _zz_writeback_read_wordIndex_1 = writeback_read_slotRead_valid;
-  assign _zz_writeback_read_wordIndex = {2'd0, _zz_writeback_read_wordIndex_1};
+  assign _zz_writeback_read_wordIndex = {3'd0, _zz_writeback_read_wordIndex_1};
   assign _zz_writeback_write_wordIndex_1 = (writeback_write_bufferRead_fire && 1'b1);
-  assign _zz_writeback_write_wordIndex = {2'd0, _zz_writeback_write_wordIndex_1};
+  assign _zz_writeback_write_wordIndex = {3'd0, _zz_writeback_write_wordIndex_1};
   assign _zz_when = 1'b1;
+  assign _zz_when_1 = 1'b1;
   assign _zz_ways_0_mem_port = {waysWrite_tag_fault,{waysWrite_tag_address,waysWrite_tag_loaded}};
   assign _zz_ways_0_mem_port_1 = waysWrite_mask[0];
   assign _zz_status_mem_port = status_write_payload_data_0_dirty;
   assign _zz_writeback_victimBuffer_port = {writeback_read_slotReadLast_payload_id,writeback_read_slotReadLast_payload_wordIndex};
-  assign _zz_load_pipeline_stages_1_BANKS_MUXES_0_1 = load_pipeline_stages_1_ADDRESS_PRE_TRANSLATION[2 : 2];
   always @(*) begin
-    banks_0_mem_spinal_port1 = {_zz_banks_0_memsymbol_read_7, _zz_banks_0_memsymbol_read_6, _zz_banks_0_memsymbol_read_5, _zz_banks_0_memsymbol_read_4, _zz_banks_0_memsymbol_read_3, _zz_banks_0_memsymbol_read_2, _zz_banks_0_memsymbol_read_1, _zz_banks_0_memsymbol_read};
+    banks_0_mem_spinal_port1 = {_zz_banks_0_memsymbol_read_3, _zz_banks_0_memsymbol_read_2, _zz_banks_0_memsymbol_read_1, _zz_banks_0_memsymbol_read};
   end
   always @(posedge clk) begin
     if(banks_0_write_payload_mask[0] && banks_0_write_valid) begin
@@ -27820,18 +27609,6 @@ module DataCache (
     if(banks_0_write_payload_mask[3] && banks_0_write_valid) begin
       banks_0_mem_symbol3[banks_0_write_payload_address] <= banks_0_write_payload_data[31 : 24];
     end
-    if(banks_0_write_payload_mask[4] && banks_0_write_valid) begin
-      banks_0_mem_symbol4[banks_0_write_payload_address] <= banks_0_write_payload_data[39 : 32];
-    end
-    if(banks_0_write_payload_mask[5] && banks_0_write_valid) begin
-      banks_0_mem_symbol5[banks_0_write_payload_address] <= banks_0_write_payload_data[47 : 40];
-    end
-    if(banks_0_write_payload_mask[6] && banks_0_write_valid) begin
-      banks_0_mem_symbol6[banks_0_write_payload_address] <= banks_0_write_payload_data[55 : 48];
-    end
-    if(banks_0_write_payload_mask[7] && banks_0_write_valid) begin
-      banks_0_mem_symbol7[banks_0_write_payload_address] <= banks_0_write_payload_data[63 : 56];
-    end
   end
 
   always @(posedge clk) begin
@@ -27840,10 +27617,6 @@ module DataCache (
       _zz_banks_0_memsymbol_read_1 <= banks_0_mem_symbol1[banks_0_read_cmd_payload];
       _zz_banks_0_memsymbol_read_2 <= banks_0_mem_symbol2[banks_0_read_cmd_payload];
       _zz_banks_0_memsymbol_read_3 <= banks_0_mem_symbol3[banks_0_read_cmd_payload];
-      _zz_banks_0_memsymbol_read_4 <= banks_0_mem_symbol4[banks_0_read_cmd_payload];
-      _zz_banks_0_memsymbol_read_5 <= banks_0_mem_symbol5[banks_0_read_cmd_payload];
-      _zz_banks_0_memsymbol_read_6 <= banks_0_mem_symbol6[banks_0_read_cmd_payload];
-      _zz_banks_0_memsymbol_read_7 <= banks_0_mem_symbol7[banks_0_read_cmd_payload];
     end
   end
 
@@ -27904,13 +27677,6 @@ module DataCache (
   end
 
   always @(*) begin
-    case(_zz_load_pipeline_stages_1_BANKS_MUXES_0_1)
-      1'b0 : _zz_load_pipeline_stages_1_BANKS_MUXES_0 = load_pipeline_stages_1_BANKS_WORDS_0[31 : 0];
-      default : _zz_load_pipeline_stages_1_BANKS_MUXES_0 = load_pipeline_stages_1_BANKS_WORDS_0[63 : 32];
-    endcase
-  end
-
-  always @(*) begin
     _zz_1 = 1'b0;
     if(writeback_read_slotReadLast_valid) begin
       _zz_1 = 1'b1;
@@ -27943,12 +27709,12 @@ module DataCache (
   end
 
   always @(*) begin
-    banks_0_read_cmd_payload = 5'bxxxxx;
+    banks_0_read_cmd_payload = 6'bxxxxxx;
     if(when_DataCache_l1185) begin
       banks_0_read_cmd_payload = {writeback_read_address[7 : 6],writeback_read_wordIndex};
     end
     if(when_DataCache_l1338) begin
-      banks_0_read_cmd_payload = load_pipeline_stages_0_ADDRESS_PRE_TRANSLATION[7 : 3];
+      banks_0_read_cmd_payload = load_pipeline_stages_0_ADDRESS_PRE_TRANSLATION[7 : 2];
     end
   end
 
@@ -28229,7 +27995,7 @@ module DataCache (
     banks_0_write_payload_address = {refill_read_rspAddress[7 : 6],refill_read_wordIndex};
     if(store_ctrl_writeCache) begin
       if(when_DataCache_l1775) begin
-        banks_0_write_payload_address = store_pipeline_stages_2_ADDRESS_POST_TRANSLATION[7 : 3];
+        banks_0_write_payload_address = store_pipeline_stages_2_ADDRESS_POST_TRANSLATION[7 : 2];
       end
     end
   end
@@ -28239,21 +28005,17 @@ module DataCache (
     if(store_ctrl_writeCache) begin
       if(when_DataCache_l1775) begin
         banks_0_write_payload_data[31 : 0] = store_pipeline_stages_2_CPU_WORD;
-        banks_0_write_payload_data[63 : 32] = store_pipeline_stages_2_CPU_WORD;
       end
     end
   end
 
   always @(*) begin
-    banks_0_write_payload_mask = 8'hff;
+    banks_0_write_payload_mask = 4'b1111;
     if(store_ctrl_writeCache) begin
       if(when_DataCache_l1775) begin
-        banks_0_write_payload_mask = 8'h00;
-        if(_zz_16[0]) begin
+        banks_0_write_payload_mask = 4'b0000;
+        if(_zz_when_1[0]) begin
           banks_0_write_payload_mask[3 : 0] = store_pipeline_stages_2_CPU_MASK;
-        end
-        if(_zz_16[1]) begin
-          banks_0_write_payload_mask[7 : 4] = store_pipeline_stages_2_CPU_MASK;
         end
       end
     end
@@ -28289,7 +28051,7 @@ module DataCache (
   end
 
   assign io_mem_read_rsp_ready = 1'b1;
-  assign when_DataCache_l1037 = ((refill_read_wordIndex == 3'b111) || (! refill_read_rspWithData));
+  assign when_DataCache_l1037 = ((refill_read_wordIndex == 4'b1111) || (! refill_read_rspWithData));
   always @(*) begin
     writeback_slots_0_fire = 1'b0;
     if(io_mem_write_rsp_valid) begin
@@ -28367,7 +28129,7 @@ module DataCache (
   assign writeback_read_slotRead_valid = writeback_read_arbiter_hit;
   assign writeback_read_slotRead_payload_id = writeback_read_arbiter_sel;
   assign writeback_read_slotRead_payload_wordIndex = writeback_read_wordIndex;
-  assign writeback_read_slotRead_payload_last = (writeback_read_wordIndex == 3'b111);
+  assign writeback_read_slotRead_payload_last = (writeback_read_wordIndex == 4'b1111);
   assign when_DataCache_l1175 = (writeback_read_slotRead_valid && writeback_read_slotRead_payload_last);
   assign when_DataCache_l1185 = (writeback_read_slotRead_valid && 1'b1);
   assign writeback_read_readedData = banks_0_read_rsp;
@@ -28385,7 +28147,7 @@ module DataCache (
   assign _zz_writeback_write_arbiter_sel = writeback_write_arbiter_oh[1];
   assign writeback_write_arbiter_sel = _zz_writeback_write_arbiter_sel;
   assign when_DataCache_l911_2 = (|writeback_write_arbiter_lock);
-  assign writeback_write_last = (writeback_write_wordIndex == 3'b111);
+  assign writeback_write_last = (writeback_write_wordIndex == 4'b1111);
   assign writeback_write_bufferRead_valid = writeback_write_arbiter_hit;
   assign writeback_write_bufferRead_payload_id = writeback_write_arbiter_sel;
   assign writeback_write_bufferRead_payload_last = writeback_write_last;
@@ -28431,7 +28193,7 @@ module DataCache (
   assign load_pipeline_stages_0_BANK_BUSY_overloaded[0] = (load_pipeline_stages_0_BANK_BUSY[0] || (banks_0_write_valid && load_pipeline_stages_0_REDO_ON_DATA_HAZARD));
   assign load_pipeline_stages_1_BANKS_WORDS_0 = banks_0_read_rsp;
   assign load_pipeline_stages_1_BANK_BUSY_REMAPPED[0] = load_pipeline_stages_1_BANK_BUSY[0];
-  assign load_pipeline_stages_1_BANKS_MUXES_0 = _zz_load_pipeline_stages_1_BANKS_MUXES_0;
+  assign load_pipeline_stages_1_BANKS_MUXES_0 = load_pipeline_stages_1_BANKS_WORDS_0[31 : 0];
   assign load_pipeline_stages_2_CPU_WORD = (load_pipeline_stages_2_WAYS_HITS[0] ? load_pipeline_stages_2_BANKS_MUXES_0 : 32'h00000000);
   assign load_pipeline_stages_1_ADDRESS_POST_TRANSLATION = io_load_translated_physical;
   assign load_pipeline_stages_1_ABORD = io_load_translated_abord;
@@ -28698,7 +28460,6 @@ module DataCache (
   assign when_DataCache_l1733 = (store_ctrl_startRefill || store_ctrl_startFlush);
   assign when_DataCache_l1751 = (store_ctrl_startRefill || store_ctrl_startUpgrade);
   assign when_DataCache_l1775 = store_pipeline_stages_2_WAYS_HITS[0];
-  assign _zz_16 = ({1'd0,1'b1} <<< store_pipeline_stages_2_ADDRESS_POST_TRANSLATION[2 : 2]);
   assign when_DataCache_l1805 = ((((store_pipeline_stages_2_valid && store_pipeline_stages_2_REDO) && store_pipeline_stages_2_GENERATION_OK) && (! store_pipeline_stages_2_PREFETCH)) && (! store_pipeline_stages_2_PROBE));
   assign io_store_rsp_valid = (store_pipeline_stages_2_valid && (! store_pipeline_stages_2_PROBE));
   assign io_store_rsp_payload_generationKo = (! store_pipeline_stages_2_GENERATION_OK);
@@ -28937,15 +28698,15 @@ module DataCache (
       refill_slots_1_valid <= 1'b0;
       refill_pushCounter <= 32'h00000000;
       refill_read_arbiter_lock <= 2'b00;
-      refill_read_wordIndex <= 3'b000;
+      refill_read_wordIndex <= 4'b0000;
       refill_read_hadError <= 1'b0;
       writeback_slots_0_valid <= 1'b0;
       writeback_slots_1_valid <= 1'b0;
       writeback_read_arbiter_lock <= 2'b00;
-      writeback_read_wordIndex <= 3'b000;
+      writeback_read_wordIndex <= 4'b0000;
       writeback_read_slotReadLast_valid <= 1'b0;
       writeback_write_arbiter_lock <= 2'b00;
-      writeback_write_wordIndex <= 3'b000;
+      writeback_write_wordIndex <= 4'b0000;
       writeback_write_bufferRead_rValid <= 1'b0;
       load_pipeline_stages_1_valid <= 1'b0;
       load_pipeline_stages_2_valid <= 1'b0;
@@ -28988,7 +28749,7 @@ module DataCache (
       end
       if(io_mem_read_rsp_valid) begin
         if(refill_read_rspWithData) begin
-          refill_read_wordIndex <= (refill_read_wordIndex + 3'b001);
+          refill_read_wordIndex <= (refill_read_wordIndex + 4'b0001);
         end
         if(when_DataCache_l1037) begin
           refill_read_hadError <= 1'b0;

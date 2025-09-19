@@ -71,6 +71,8 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
       regFileFakeRatio = regFileFakeRatio,
       //      withCoherency = true,
       ioRange = null, // Setting to null will cause ioRange and ioSize to be input ports
+      memRange = _ => True, // By default CPU only allows memory addresses above 0x80000000. This change allows it to access entire address space as memory.
+      fetchRange = _ => True, // By default CPU disallows fetching instructions from ioRange. This change allows it to access entire address space to fetch instructions.
     )
 
     l.foreach{
@@ -80,8 +82,8 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
 
     ramBlocks match {
       case "inferred" => l.foreach {
-        case p: FetchCachePlugin => p.wayCount = 1; p.cacheSize = 256; p.memDataWidth = 64
-        case p: DataCachePlugin => p.wayCount = 1; p.cacheSize = 256; p.memDataWidth = 64
+        case p: FetchCachePlugin => p.wayCount = 1; p.cacheSize = 256; p.fetchDataWidth = 32; p.memDataWidth = 32
+        case p: DataCachePlugin => p.wayCount = 1; p.cacheSize = 256; p.memDataWidth = 32
         case p: BtbPlugin => p.entries = 8
         case p: GSharePlugin => p.memBytes = 32
         case p: Lsu2Plugin => p.hitPedictionEntries = 64
@@ -120,7 +122,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
         // Convert IBus to Axi4
         case plugin: FetchCachePlugin => {
           val native = plugin.mem.setAsDirectionLess //Unset IO properties of mem bus
-          val axi = master(native.resizer(32).toAxi4())
+          val axi = master(native.toAxi4())
               .setName("iBusAxi")
               .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the ibus (used by QSysify)
           Axi4SpecRenamer(axi)
@@ -128,10 +130,18 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
         // Convert DBus to Axi4
         case plugin: DataCachePlugin => {
           val native = plugin.mem.setAsDirectionLess //Unset IO properties of mem bus
-          val axi = master(native.resizer(32).toAxi4())
+          val axi = master(native.toAxi4())
               .setName("dBusAxi")
               .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the dbus (used by QSysify)
           Axi4SpecRenamer(axi)
+        }
+        // Convert PBus to Axi4
+        case plugin: Lsu2Plugin => {
+          val native = plugin.peripheralBus.setAsDirectionLess //Unset IO properties of peripheral bus
+          val axi = master(native.toAxiLite4())
+              .setName("pBus")
+              .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the dbus (used by QSysify)
+          AxiLite4SpecRenamer(axi)
         }
         // Connect interrupt signals to PLIC and CLINT
         case plugin: PrivilegedPlugin => {
@@ -148,6 +158,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
     cpu
   }
 
-  spinalConfig.generateVerilog(if(withIoFf) Rtl.ffIo(gen) else gen)
+  // Generate with simulation in mind (initialize memories).
+  spinalConfig.includeSimulation.generateVerilog(if(withIoFf) Rtl.ffIo(gen) else gen)
 //  spinalConfig.generateVerilog(new StreamFifo(UInt(4 bits), 256).setDefinitionName("nax"))
 }
