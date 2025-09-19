@@ -489,7 +489,7 @@ lint_off -file "*/NaxRiscvAxi4LinuxPlicClint.v"
             )
             # symlink binaries in fpga directory as well
             os.symlink(
-                f"{build_dir}/hardware/simulation/{file}",
+                f"../simulation/{file}",
                 f"{build_dir}/hardware/fpga/{file}",
             )
 
