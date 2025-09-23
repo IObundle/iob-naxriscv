@@ -438,17 +438,17 @@ def setup(py_params_dict):
    assign ibus_axi_bready_o = 1'b0;
 
    // Unused AXI signals
-   assign ibus_axi_arid_o = 'b0;
-   assign ibus_axi_arlock_o = 'b0;
-   assign ibus_axi_arcache_o = 'b0;
-   assign ibus_axi_arqos_o = 'b0;
+   assign ibus_axi_arid_o = {AXI_ID_W{1'b0}};
+   assign ibus_axi_arlock_o = 1'b0;
+   assign ibus_axi_arcache_o = 4'b0;
+   assign ibus_axi_arqos_o = 4'b0;
    // ibus_axi_rid_i // Unused input
-   assign dbus_int_axi_awlock = 'b0;
-   assign dbus_int_axi_awcache = 'b0;
-   assign dbus_int_axi_awqos = 'b0;
-   assign dbus_int_axi_arlock = 'b0;
-   assign dbus_int_axi_arcache = 'b0;
-   assign dbus_int_axi_arqos = 'b0;
+   assign dbus_int_axi_awlock = 1'b0;
+   assign dbus_int_axi_awcache = 4'b0;
+   assign dbus_int_axi_awqos = 4'b0;
+   assign dbus_int_axi_arlock = 1'b0;
+   assign dbus_int_axi_arcache = 4'b0;
+   assign dbus_int_axi_arqos = 4'b0;
 
    generate
       if (AXI_LEN_W < 8) begin : gen_if_less_than_8
