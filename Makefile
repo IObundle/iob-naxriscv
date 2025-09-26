@@ -20,12 +20,14 @@ naxriscv:
 	cp $(NAX_HARDWARE_DIR)/naxriscv_core/NaxRiscvAxi4LinuxPlicClint.scala $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/platform/asic/
 	cp $(NAX_HARDWARE_DIR)/naxriscv_core/PcPlugin.scala $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/fetch/
 	cp $(NAX_HARDWARE_DIR)/naxriscv_core/MmuPlugin.scala $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/misc/
+	cp $(NAX_HARDWARE_DIR)/naxriscv_core/LsuPlugin.scala $(NAX_SUBMODULES_DIR)/NaxRiscv/src/main/scala/naxriscv/lsu/
 	# (Re-)try to apply these patches: https://github.com/SpinalHDL/NaxRiscv/issues/140#issuecomment-2725576402
 	-make -C submodules/NaxRiscv install-core
 	# Run sbt to build CPU and copy generated verilog to this repo
 	cd submodules/NaxRiscv && \
 	sbt -java-home $(JDK_HOME) "runMain naxriscv.platform.asic.$(CPU)" && \
-	cp $(CPU).v $(NAXRISCV_SRC_DIR)/$(CPU).v
+	cp $(CPU).v $(NAXRISCV_SRC_DIR)/$(CPU).v && \
+	cp $(CPU).v_*.bin $(NAX_HARDWARE_DIR)/init_mems
 
 #
 # Clean
