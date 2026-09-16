@@ -25,7 +25,7 @@ def setup(py_params_dict):
 
     attributes_dict = {
         "name": py_params_dict["name"],
-        "version": "0.1",
+        "version": "0.1.1",
         "generate_hw": True,
         "confs": [
             {
@@ -105,32 +105,20 @@ def setup(py_params_dict):
                 },
             },
             {
-                "name": "clint_cbus_s",
-                "descr": "CLINT CSRs bus",
-                "signals": {
-                    "type": "iob",
-                    "prefix": "clint_",
-                    "ADDR_W": 16,
-                },
-            },
-            {
-                "name": "plic_cbus_s",
-                "descr": "PLIC CSRs bus",
-                "signals": {
-                    "type": "iob",
-                    "prefix": "plic_",
-                    "ADDR_W": 22,
-                },
-            },
-            {
-                "name": "plic_interrupts_i",
-                "descr": "PLIC interrupts",
+                "name": "interrupt_i",
+                "descr": "Standard RISC‑V interrupt pending bits",
                 "signals": [
-                    {
-                        "name": "plic_interrupts_i",
-                        "descr": "PLIC interrupts",
-                        "width": "32",
-                    },
+                    {"name": "msip_i", "descr": "Machine software interrupt.", "width": "1"},
+                    {"name": "mtip_i", "descr": "Machine timer interrupt.", "width": "1"},
+                    {"name": "meip_i", "descr": "Machine external interrupt.", "width": "1"},
+                    {"name": "seip_i", "descr": "Supervisor external interrupt.", "width": "1"},
+                ],
+            },
+            {
+                "name": "timebase_i",
+                "descr": "Timebase interface",
+                "signals": [
+                    {"name": "mtime_i", "descr": "Input from external 64-bit counter for time CSRs", "width": "64"},
                 ],
             },
         ],
@@ -179,26 +167,6 @@ def setup(py_params_dict):
                 },
             },
             {
-                "name": "clint_cbus_axil",
-                "descr": "CLINT CSRs bus",
-                "signals": {
-                    "type": "axil",
-                    "prefix": "clint_",
-                    "ADDR_W": 16,
-                    "DATA_W": "AXI_DATA_W",
-                },
-            },
-            {
-                "name": "plic_cbus_axil",
-                "descr": "PLIC CSRs bus",
-                "signals": {
-                    "type": "axil",
-                    "prefix": "plic_",
-                    "ADDR_W": 22,
-                    "DATA_W": "AXI_DATA_W",
-                },
-            },
-            {
                 "name": "unused_signals",
                 "signals": [
                     {"name": "dbus_araddr_ignore_bit", "width": "1"},
@@ -207,32 +175,6 @@ def setup(py_params_dict):
             },
         ],
         "subblocks": [
-            {
-                "core_name": "iob_iob2axil",
-                "instance_name": "clint_iob2axil",
-                "instance_description": "Convert IOb to AXI lite for CLINT",
-                "parameters": {
-                    "AXIL_ADDR_W": 16,
-                    "AXIL_DATA_W": "AXI_DATA_W",
-                },
-                "connect": {
-                    "iob_s": "clint_cbus_s",
-                    "axil_m": "clint_cbus_axil",
-                },
-            },
-            {
-                "core_name": "iob_iob2axil",
-                "instance_name": "plic_iob2axil",
-                "instance_description": "Convert IOb to AXI lite for PLIC",
-                "parameters": {
-                    "AXIL_ADDR_W": 22,
-                    "AXIL_DATA_W": "AXI_DATA_W",
-                },
-                "connect": {
-                    "iob_s": "plic_cbus_s",
-                    "axil_m": "plic_cbus_axil",
-                },
-            },
             {
                 "core_name": "iob_axil2axi",
                 "instance_name": "pbus_axil2axi",
@@ -285,49 +227,15 @@ def setup(py_params_dict):
    wire [7:0] dbus_int_axi_awlen_int;
 
 
-   // Instantiation of NaxRiscv, Plic, and Clint
+   // Instantiation of NaxRiscv core
    NaxRiscvAxi4LinuxPlicClint CPU (
-      // CLINT
-      .clint_awvalid(clint_axil_awvalid),
-      .clint_awready(clint_axil_awready),
-      .clint_awaddr(clint_axil_awaddr),
-      .clint_awprot(3'd0),
-      .clint_wvalid(clint_axil_wvalid),
-      .clint_wready(clint_axil_wready),
-      .clint_wdata(clint_axil_wdata),
-      .clint_wstrb(clint_axil_wstrb),
-      .clint_bvalid(clint_axil_bvalid),
-      .clint_bready(clint_axil_bready),
-      .clint_bresp(clint_axil_bresp),
-      .clint_arvalid(clint_axil_arvalid),
-      .clint_arready(clint_axil_arready),
-      .clint_araddr(clint_axil_araddr),
-      .clint_arprot(3'd0),
-      .clint_rvalid(clint_axil_rvalid),
-      .clint_rready(clint_axil_rready),
-      .clint_rdata(clint_axil_rdata),
-      .clint_rresp(clint_axil_rresp),
-      // PLIC
-      .plic_awvalid(plic_axil_awvalid),
-      .plic_awready(plic_axil_awready),
-      .plic_awaddr(plic_axil_awaddr),
-      .plic_awprot(3'd0),
-      .plic_wvalid(plic_axil_wvalid),
-      .plic_wready(plic_axil_wready),
-      .plic_wdata(plic_axil_wdata),
-      .plic_wstrb(plic_axil_wstrb),
-      .plic_bvalid(plic_axil_bvalid),
-      .plic_bready(plic_axil_bready),
-      .plic_bresp(plic_axil_bresp),
-      .plic_arvalid(plic_axil_arvalid),
-      .plic_arready(plic_axil_arready),
-      .plic_araddr(plic_axil_araddr),
-      .plic_arprot(3'd0),
-      .plic_rvalid(plic_axil_rvalid),
-      .plic_rready(plic_axil_rready),
-      .plic_rdata(plic_axil_rdata),
-      .plic_rresp(plic_axil_rresp),
-      .plicInterrupts(plic_interrupts_i),
+      // Interrupt sources
+      .PrivilegedPlugin_io_int_machine_software(msip_i),
+      .PrivilegedPlugin_io_int_machine_timer(mtip_i),
+      .PrivilegedPlugin_io_int_machine_external(meip_i),
+      .PrivilegedPlugin_io_int_supervisor_external(seip_i),
+      // Timbase input
+      .PrivilegedPlugin_io_rdtime(mtime_i),
 """
                 + f"""
       // Configuration ports

@@ -16,8 +16,6 @@ import spinal.core._
 import spinal.lib._
 import spinal.lib.eda.bench.Rtl
 
-import spinal.lib.misc.AxiLite4Clint
-import spinal.lib.misc.plic.AxiLite4Plic
 import spinal.lib.bus.amba4.axi.{Axi4ReadOnly, Axi4SpecRenamer}
 import spinal.lib.bus.amba4.axilite.AxiLite4SpecRenamer
 import naxriscv.misc.PrivilegedPlugin
@@ -57,7 +55,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
       decodeCount = 1, // Number of instructions decoded simultaneously per cycle
       debugTriggers = 4, // Number of debug trigger hardware units for breakpoints/watchpoints
       withDedicatedLoadAgu = false, // Disable dedicated Load Address Generation Unit separate from ALU
-      withRvc = false, // Disable RISC-V Compressed Instruction (RVC) extension support (extension C)
+      withRvc = true, // Enable RISC-V Compressed Instruction (RVC) extension support (extension C)
       withLoadStore = withLsu, // Enable Load/Store Unit plugin (memory access handling) (extension A)
       withMmu = withLsu, // Enable Memory Management Unit for virtual memory (depends on LSU)
       withPerfCounters = false, // Disable performance counters hardware // Disabled because throws errors with AXI4 dbus for some reason
@@ -146,21 +144,7 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
   if(blackBoxCombRam) spinalConfig.memBlackBoxers += new CombRamBlackboxer()
 
   def gen = {
-    val cpu = new NaxRiscv(plugins){
-        val clintCtrl = new AxiLite4Clint(1, bufferTime = false)
-        val plicCtrl = new AxiLite4Plic(
-          sourceCount = 31,
-          targetCount = 2
-        )
-
-        val clint = clintCtrl.io.bus.toIo()
-        val plic = plicCtrl.io.bus.toIo()
-        val plicInterrupts = in Bits(32 bits)
-        plicCtrl.io.sources := plicInterrupts >> 1
-
-        AxiLite4SpecRenamer(clint)
-        AxiLite4SpecRenamer(plic)
-    }
+    val cpu = new NaxRiscv(plugins)
     cpu.setDefinitionName("NaxRiscvAxi4LinuxPlicClint")
     // CPU modifications to be an Avalon one
     cpu.rework {
@@ -188,15 +172,6 @@ object NaxRiscvAxi4LinuxPlicClint extends App{
               .setName("pBus")
               .addTag(ClockDomainTag(ClockDomain.current)) //Specify a clock domain to the dbus (used by QSysify)
           AxiLite4SpecRenamer(axi)
-        }
-        // Connect interrupt signals to PLIC and CLINT
-        case plugin: PrivilegedPlugin => {
-          // Interrupt connections based on NaxRiscvBmbGenerator.scala and CsrPlugin of VexRiscvAxi4LinuxPlicClint.scala 
-          plugin.io.int.machine.external setAsDirectionLess() := cpu.plicCtrl.io.targets(0)       // external interrupts from PLIC
-          plugin.io.int.machine.timer  setAsDirectionLess() := cpu.clintCtrl.io.timerInterrupt(0)  // timer interrupts from CLINT
-          plugin.io.int.machine.software  setAsDirectionLess() := cpu.clintCtrl.io.softwareInterrupt(0) // software interrupts from CLINT
-          if (plugin.p.withSupervisor) plugin.io.int.supervisor.external  setAsDirectionLess() := cpu.plicCtrl.io.targets(1) // supervisor external interrupts from PLIC
-          plugin.io.rdtime  setAsDirectionLess() := cpu.clintCtrl.io.time // time register from CLINT
         }
         case _ =>
       }

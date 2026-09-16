@@ -1,6 +1,6 @@
-// Generator : SpinalHDL dev    git head : 6b321406cee399fddb7b5231ad722d8811ffdb94
+// Generator : SpinalHDL dev    git head : c362657003fa178350d6955055867e9ab363c44a
 // Component : NaxRiscvAxi4LinuxPlicClint
-// Git hash  : fb12adc9d4dcd7c3d92bc31903d7cd66c77f30aa
+// Git hash  : 9f452d50560d02fb391bc8039f5453c54e0911af
 
 `timescale 1ns/1ps
 
@@ -8,45 +8,11 @@ module NaxRiscvAxi4LinuxPlicClint (
   input  wire [31:0]   ioStartAddr,
   input  wire [31:0]   ioSize,
   input  wire [31:0]   externalResetVector,
-  input  wire          clint_awvalid,
-  output wire          clint_awready,
-  input  wire [15:0]   clint_awaddr,
-  input  wire [2:0]    clint_awprot,
-  input  wire          clint_wvalid,
-  output wire          clint_wready,
-  input  wire [31:0]   clint_wdata,
-  input  wire [3:0]    clint_wstrb,
-  output wire          clint_bvalid,
-  input  wire          clint_bready,
-  output wire [1:0]    clint_bresp,
-  input  wire          clint_arvalid,
-  output wire          clint_arready,
-  input  wire [15:0]   clint_araddr,
-  input  wire [2:0]    clint_arprot,
-  output wire          clint_rvalid,
-  input  wire          clint_rready,
-  output wire [31:0]   clint_rdata,
-  output wire [1:0]    clint_rresp,
-  input  wire          plic_awvalid,
-  output wire          plic_awready,
-  input  wire [21:0]   plic_awaddr,
-  input  wire [2:0]    plic_awprot,
-  input  wire          plic_wvalid,
-  output wire          plic_wready,
-  input  wire [31:0]   plic_wdata,
-  input  wire [3:0]    plic_wstrb,
-  output wire          plic_bvalid,
-  input  wire          plic_bready,
-  output wire [1:0]    plic_bresp,
-  input  wire          plic_arvalid,
-  output wire          plic_arready,
-  input  wire [21:0]   plic_araddr,
-  input  wire [2:0]    plic_arprot,
-  output wire          plic_rvalid,
-  input  wire          plic_rready,
-  output wire [31:0]   plic_rdata,
-  output wire [1:0]    plic_rresp,
-  input  wire [31:0]   plicInterrupts,
+  input  wire          PrivilegedPlugin_io_int_machine_timer /* verilator public */ ,
+  input  wire          PrivilegedPlugin_io_int_machine_software /* verilator public */ ,
+  input  wire          PrivilegedPlugin_io_int_machine_external /* verilator public */ ,
+  input  wire          PrivilegedPlugin_io_int_supervisor_external /* verilator public */ ,
+  input  wire [63:0]   PrivilegedPlugin_io_rdtime,
   output wire          iBusAxi_arvalid,
   input  wire          iBusAxi_arready,
   output wire [31:0]   iBusAxi_araddr,
@@ -180,7 +146,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   localparam MmuPlugin_logic_refill_enumDef_RSP_0 = 3'd5;
   localparam MmuPlugin_logic_refill_enumDef_RSP_1 = 3'd6;
 
-  wire       [30:0]   plicCtrl_io_sources;
   reg                 integer_RfTranslationPlugin_logic_impl_io_rollback;
   wire                integer_RfTranslationPlugin_logic_impl_io_writes_0_valid;
   reg                 integer_RfTranslationPlugin_logic_impl_io_commits_0_valid;
@@ -227,8 +192,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [32:0]   BranchContextPlugin_logic_mem_earlyBranch_spinal_port1;
   wire       [64:0]   BranchContextPlugin_logic_mem_finalBranch_spinal_port1;
   wire       [31:0]   DecoderPredictionPlugin_logic_ras_mem_stack_spinal_port0;
-  reg        [48:0]   BtbPlugin_logic_mem_spinal_port1;
-  reg        [1:0]    GSharePlugin_logic_mem_counter_spinal_port1;
+  reg        [49:0]   BtbPlugin_logic_mem_spinal_port1;
+  reg        [3:0]    GSharePlugin_logic_mem_counter_spinal_port1;
   wire       [31:0]   Lsu2Plugin_logic_lq_mem_addressPre_spinal_port1;
   wire       [31:0]   Lsu2Plugin_logic_lq_mem_addressPre_spinal_port2;
   wire       [31:0]   Lsu2Plugin_logic_lq_mem_addressPost_spinal_port0;
@@ -298,7 +263,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [24:0]   Lsu2Plugin_setup_translationStorage_logic_sl_1_ways_0_spinal_port1;
   wire       [24:0]   Lsu2Plugin_setup_translationStorage_logic_sl_1_ways_1_spinal_port1;
   wire       [31:0]   CsrRamPlugin_logic_mem_spinal_port1;
-  wire       [26:0]   BranchContextPlugin_free_dispatchMem_mem_spinal_port1;
+  wire       [28:0]   BranchContextPlugin_free_dispatchMem_mem_spinal_port1;
   wire       [0:0]    RobPlugin_logic_completionMem_target_spinal_port1;
   wire       [0:0]    RobPlugin_logic_completionMem_hits_0_spinal_port0;
   wire       [0:0]    RobPlugin_logic_completionMem_hits_0_spinal_port1;
@@ -318,6 +283,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   RobPlugin_logic_storage_PC_banks_0_spinal_port2;
   wire       [31:0]   RobPlugin_logic_storage_PC_banks_0_spinal_port3;
   wire       [31:0]   RobPlugin_logic_storage_PC_banks_0_spinal_port4;
+  wire       [0:0]    RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_spinal_port1;
+  wire       [0:0]    RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_spinal_port2;
   wire       [0:0]    RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port1;
   wire       [0:0]    RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port2;
   wire       [0:0]    RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port3;
@@ -346,26 +313,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [1:0]    RobPlugin_logic_storage_BRANCH_ID_banks_0_spinal_port1;
   wire       [3:0]    RobPlugin_logic_storage_LSU_ID_banks_0_spinal_port1;
   wire       [0:0]    RobPlugin_logic_storage_ROB_MSB_banks_0_spinal_port1;
-  wire                clintCtrl_io_bus_aw_ready;
-  wire                clintCtrl_io_bus_w_ready;
-  wire                clintCtrl_io_bus_b_valid;
-  wire       [1:0]    clintCtrl_io_bus_b_payload_resp;
-  wire                clintCtrl_io_bus_ar_ready;
-  wire                clintCtrl_io_bus_r_valid;
-  wire       [31:0]   clintCtrl_io_bus_r_payload_data;
-  wire       [1:0]    clintCtrl_io_bus_r_payload_resp;
-  wire       [0:0]    clintCtrl_io_timerInterrupt;
-  wire       [0:0]    clintCtrl_io_softwareInterrupt;
-  wire       [63:0]   clintCtrl_io_time;
-  wire                plicCtrl_io_bus_aw_ready;
-  wire                plicCtrl_io_bus_w_ready;
-  wire                plicCtrl_io_bus_b_valid;
-  wire       [1:0]    plicCtrl_io_bus_b_payload_resp;
-  wire                plicCtrl_io_bus_ar_ready;
-  wire                plicCtrl_io_bus_r_valid;
-  wire       [31:0]   plicCtrl_io_bus_r_payload_data;
-  wire       [1:0]    plicCtrl_io_bus_r_payload_resp;
-  wire       [1:0]    plicCtrl_io_targets;
   wire                integer_RfTranslationPlugin_logic_impl_io_reads_0_rsp_valid;
   wire       [5:0]    integer_RfTranslationPlugin_logic_impl_io_reads_0_rsp_payload;
   wire                integer_RfTranslationPlugin_logic_impl_io_reads_1_rsp_valid;
@@ -480,10 +427,30 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [25:0]   _zz_FetchCachePlugin_logic_ways_0_mem_port;
   wire                _zz_FetchCachePlugin_logic_ways_0_mem_port_1;
   wire       [23:0]   _zz_FetchCachePlugin_logic_read_onWays_0_hits_bypassHits;
+  reg        [1:0]    _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT;
+  wire       [0:0]    _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT_1;
+  reg        [1:0]    _zz_AlignerPlugin_setup_s2m_MASK_BACK;
   wire       [0:0]    _zz_AlignerPlugin_logic_extractors_0_usable;
+  wire       [0:0]    _zz_AlignerPlugin_logic_extractors_0_rvc;
   reg        [31:0]   _zz_AlignerPlugin_logic_extractors_0_pcWord;
   wire       [0:0]    _zz_AlignerPlugin_logic_extractors_0_pcWord_1;
   wire       [29:0]   _zz_FrontendPlugin_aligned_PC_0;
+  wire       [4:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_23;
+  wire       [0:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_24;
+  wire                _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_25;
+  wire       [31:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_26;
+  wire       [11:0]   _zz__zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_22;
+  wire       [5:0]    _zz__zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_22_1;
+  reg        [31:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_27;
+  wire       [1:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_28;
+  reg        [2:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_29;
+  wire       [2:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_30;
+  wire       [6:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_31;
+  wire       [4:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_32;
+  wire                _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_33;
+  wire       [4:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_34;
+  wire       [11:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_35;
+  wire       [11:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_36;
   wire       [32:0]   _zz_BranchContextPlugin_logic_mem_earlyBranch_port;
   wire       [3:0]    _zz_DecoderPredictionPlugin_logic_ras_ptr_push;
   wire       [3:0]    _zz_DecoderPredictionPlugin_logic_ras_ptr_push_1;
@@ -496,13 +463,15 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [3:0]    _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_3;
   wire       [0:0]    _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_4;
   wire       [31:0]   _zz_DecoderPredictionPlugin_logic_ras_mem_stack_port;
-  wire       [48:0]   _zz_BtbPlugin_logic_mem_port;
+  wire       [49:0]   _zz_BtbPlugin_logic_mem_port;
   wire       [29:0]   _zz_BtbPlugin_logic_onLearn_port_payload_address;
+  wire       [30:0]   _zz_BtbPlugin_logic_onLearn_port_payload_data_slice;
   wire       [29:0]   _zz_BtbPlugin_logic_readCmd_entryAddress;
-  wire       [1:0]    _zz_GSharePlugin_logic_mem_counter_port;
-  wire       [6:0]    _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1;
+  reg                 _zz_BtbPlugin_logic_applyIt_prediction;
+  wire       [3:0]    _zz_GSharePlugin_logic_mem_counter_port;
+  wire       [5:0]    _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1;
   wire       [23:0]   _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_2;
-  wire       [6:0]    _zz_GSharePlugin_logic_onLearn_hash_1;
+  wire       [5:0]    _zz_GSharePlugin_logic_onLearn_hash_1;
   wire       [23:0]   _zz_GSharePlugin_logic_onLearn_hash_2;
   wire       [4:0]    _zz_CommitPlugin_logic_ptr_allocNext;
   wire       [0:0]    _zz_CommitPlugin_logic_ptr_allocNext_1;
@@ -549,6 +518,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   _zz_CommitDebugFilterPlugin_logic_filters_2_value_3;
   wire       [31:0]   _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_1;
   wire       [31:0]   _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_2;
+  wire       [0:0]    _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices_1;
+  wire       [0:0]    _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices_2;
   wire       [11:0]   _zz__zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_SRC2;
   wire       [31:0]   _zz_ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_ADD_SUB;
   wire       [31:0]   _zz_ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_ADD_SUB_1;
@@ -612,10 +583,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [11:0]   _zz_EU0_BranchPlugin_logic_process_target_b_1;
   wire       [12:0]   _zz_EU0_BranchPlugin_logic_process_target_b_2;
   wire       [31:0]   _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_TRUE;
-  wire       [1:0]    _zz_EU0_BranchPlugin_logic_process_slices;
-  wire       [0:0]    _zz_EU0_BranchPlugin_logic_process_slices_1;
   wire       [31:0]   _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE;
-  wire       [3:0]    _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1;
+  wire       [2:0]    _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1;
   wire       [2:0]    _zz_BranchContextPlugin_logic_onCommit_commitedNext;
   reg        [0:0]    _zz_BranchContextPlugin_logic_onCommit_commitedNext_1;
   wire       [0:0]    _zz_BranchContextPlugin_logic_onCommit_commitedNext_2;
@@ -940,11 +909,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [0:0]    _zz_FrontendPlugin_decoded_IS_ANY_0;
   wire       [12:0]   _zz__zz_FrontendPlugin_decoded_OFFSET_0;
   wire       [20:0]   _zz__zz_FrontendPlugin_decoded_OFFSET_0_1;
-  wire       [1:0]    _zz_DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices;
-  wire       [0:0]    _zz_DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices_1;
   wire       [31:0]   _zz_FrontendPlugin_decoded_PC_INC_0;
   wire       [31:0]   _zz_FrontendPlugin_decoded_PC_INC_0_1;
-  wire       [3:0]    _zz_FrontendPlugin_decoded_PC_INC_0_2;
+  wire       [2:0]    _zz_FrontendPlugin_decoded_PC_INC_0_2;
   wire       [31:0]   _zz_FrontendPlugin_decoded_PC_TARGET_PRE_RAS_0;
   wire       [31:0]   _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP_1;
   wire       [31:0]   _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP_2;
@@ -986,6 +953,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [0:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_2;
   wire       [31:0]   _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_1;
   wire       [31:0]   _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_2;
+  wire       [0:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT_1;
+  wire       [0:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT_2;
   wire       [1:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_1;
   wire       [1:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_2;
   wire       [3:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_LSU_ID_1;
@@ -1050,7 +1019,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [0:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_ZERO_2;
   wire       [0:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED_1;
   wire       [0:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED_2;
-  wire       [1:0]    _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0;
   wire       [3:0]    _zz_DispatchPlugin_logic_ptr_next;
   wire       [7:0]    _zz_DispatchPlugin_logic_push_slots_0_events_0;
   wire       [2:0]    _zz_DispatchPlugin_logic_push_slots_0_events_0_1;
@@ -1078,6 +1046,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [0:0]    _zz_integer_RfAllocationPlugin_logic_push_mask_0_2;
   wire       [31:0]   _zz_RobPlugin_logic_storage_PC_banks_0_port;
   wire                _zz_RobPlugin_logic_storage_PC_banks_0_port_1;
+  wire       [0:0]    _zz_RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_port;
+  wire                _zz_RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_port_1;
   wire       [0:0]    _zz_RobPlugin_logic_storage_WRITE_RD_banks_0_port;
   wire                _zz_RobPlugin_logic_storage_WRITE_RD_banks_0_port_1;
   wire       [0:0]    _zz_integer_RfTranslationPlugin_logic_onCommit_writeRd_0_1;
@@ -1144,11 +1114,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   _zz_PrivilegedPlugin_setup_ramWrite_data_1;
   wire       [31:0]   _zz_PrivilegedPlugin_logic_readed;
   wire       [31:0]   _zz_PrivilegedPlugin_logic_readed_1;
-  wire       [3:0]    _zz_PrivilegedPlugin_logic_readed_2;
-  wire       [3:0]    _zz_PrivilegedPlugin_logic_readed_3;
+  wire       [2:0]    _zz_PrivilegedPlugin_logic_readed_2;
+  wire       [2:0]    _zz_PrivilegedPlugin_logic_readed_3;
   wire       [1:0]    _zz_PrivilegedPlugin_logic_readed_4;
-  wire       [1:0]    _zz_PrivilegedPlugin_logic_readed_5;
-  wire       [0:0]    _zz_PrivilegedPlugin_logic_readed_6;
   wire                FetchPlugin_stages_2_isFlushingRoot;
   wire                FetchPlugin_stages_1_isFlushingRoot;
   wire                FetchPlugin_stages_0_isFlushed;
@@ -1157,11 +1125,14 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FetchPlugin_stages_2_isFlushed;
   reg        [31:0]   FetchPlugin_stages_2_Fetch_FETCH_PC_INC;
   reg        [1:0]    FetchPlugin_stages_2_GSHARE_COUNTER_0;
+  reg        [1:0]    FetchPlugin_stages_2_GSHARE_COUNTER_1;
   reg                 FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE;
+  reg        [0:0]    FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE;
   reg                 FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALID;
   reg        [31:0]   FetchPlugin_stages_2_Prediction_WORD_BRANCH_PC_NEXT;
-  reg        [0:0]    FetchPlugin_stages_2_AlignerPlugin_MASK_FRONT;
+  reg        [1:0]    FetchPlugin_stages_2_AlignerPlugin_MASK_FRONT;
   reg                 FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID;
+  reg        [0:0]    FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE;
   reg        [23:0]   FetchPlugin_stages_1_BRANCH_HISTORY;
   reg        [11:0]   FetchPlugin_stages_2_FETCH_ID;
   reg        [31:0]   FetchPlugin_stages_1_Fetch_FETCH_PC_INC;
@@ -1179,17 +1150,21 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FrontendPlugin_allocated_DispatchPlugin_FENCE_YOUNGER_0;
   wire                FrontendPlugin_allocated_DispatchPlugin_FENCE_OLDER_0;
   wire       [1:0]    FrontendPlugin_allocated_GSHARE_COUNTER_0_0;
+  wire       [1:0]    FrontendPlugin_allocated_GSHARE_COUNTER_0_1;
   reg        [1:0]    FrontendPlugin_serialized_GSHARE_COUNTER_0_0;
+  reg        [1:0]    FrontendPlugin_serialized_GSHARE_COUNTER_0_1;
   wire       [1:0]    FrontendPlugin_decoded_GSHARE_COUNTER_0_0;
+  wire       [1:0]    FrontendPlugin_decoded_GSHARE_COUNTER_0_1;
   wire                FrontendPlugin_allocated_Prediction_IS_BRANCH_0;
   wire                FrontendPlugin_allocated_SQ_ALLOC_0;
   reg                 FrontendPlugin_serialized_SQ_ALLOC_0;
   wire                FrontendPlugin_allocated_LQ_ALLOC_0;
   reg                 FrontendPlugin_serialized_LQ_ALLOC_0;
   reg        [11:0]   FrontendPlugin_serialized_OP_ID;
+  reg        [0:0]    FrontendPlugin_serialized_Fetch_INSTRUCTION_SLICE_COUNT_0;
   reg        [23:0]   FrontendPlugin_serialized_BRANCH_HISTORY_0;
   wire       [23:0]   FrontendPlugin_decoded_BRANCH_HISTORY_0;
-  wire       [23:0]   FrontendPlugin_decompressed_BRANCH_HISTORY_0;
+  reg        [23:0]   FrontendPlugin_decompressed_BRANCH_HISTORY_0;
   reg                 FrontendPlugin_serialized_READ_RS_1_0;
   reg        [4:0]    FrontendPlugin_serialized_ARCH_RS_1_0;
   reg                 FrontendPlugin_serialized_READ_RS_0_0;
@@ -1199,13 +1174,15 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 FrontendPlugin_serialized_WRITE_RD_0;
   reg        [11:0]   FrontendPlugin_serialized_FETCH_ID_0;
   wire                FrontendPlugin_decoded_Prediction_ALIGNED_BRANCH_VALID_0;
-  wire                FrontendPlugin_decompressed_Prediction_ALIGNED_BRANCH_VALID_0;
-  wire       [31:0]   FrontendPlugin_decompressed_Prediction_ALIGNED_BRANCH_PC_NEXT_0;
-  wire       [31:0]   FrontendPlugin_decompressed_PC_0;
-  wire                FrontendPlugin_decompressed_Frontend_FETCH_FAULT_PAGE_0;
-  wire                FrontendPlugin_decompressed_Frontend_FETCH_FAULT_0;
-  wire                FrontendPlugin_decompressed_Frontend_MASK_ALIGNED_0;
-  wire       [11:0]   FrontendPlugin_decompressed_FETCH_ID_0;
+  reg                 FrontendPlugin_decompressed_Prediction_ALIGNED_BRANCH_VALID_0;
+  reg        [31:0]   FrontendPlugin_decompressed_Prediction_ALIGNED_BRANCH_PC_NEXT_0;
+  reg        [0:0]    FrontendPlugin_decompressed_Fetch_INSTRUCTION_SLICE_COUNT_0;
+  reg        [31:0]   FrontendPlugin_decompressed_PC_0;
+  reg        [0:0]    FrontendPlugin_decompressed_Frontend_FETCH_FAULT_SLICE_0;
+  reg                 FrontendPlugin_decompressed_Frontend_FETCH_FAULT_PAGE_0;
+  reg                 FrontendPlugin_decompressed_Frontend_FETCH_FAULT_0;
+  reg                 FrontendPlugin_decompressed_Frontend_MASK_ALIGNED_0;
+  reg        [11:0]   FrontendPlugin_decompressed_FETCH_ID_0;
   reg                 FrontendPlugin_dispatch_RfDependencyPlugin_setup_SKIP_1_0;
   reg                 FrontendPlugin_dispatch_RfDependencyPlugin_setup_waits_1_ENABLE_UNSKIPED_0;
   reg                 FrontendPlugin_dispatch_READ_RS_1_0;
@@ -1288,6 +1265,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 FrontendPlugin_dispatch_DispatchPlugin_FENCE_YOUNGER_0;
   reg                 FrontendPlugin_dispatch_DispatchPlugin_FENCE_OLDER_0;
   reg        [1:0]    FrontendPlugin_dispatch_GSHARE_COUNTER_0_0;
+  reg        [1:0]    FrontendPlugin_dispatch_GSHARE_COUNTER_0_1;
   reg        [23:0]   FrontendPlugin_dispatch_BRANCH_HISTORY_0;
   reg        [1:0]    FrontendPlugin_dispatch_BRANCH_ID_0;
   reg                 FrontendPlugin_dispatch_BRANCH_SEL_0;
@@ -1349,6 +1327,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg        [3:0]    EU0_ExecutionUnitBase_pipeline_fetch_1_ROB_ID;
   reg                 EU0_ExecutionUnitBase_pipeline_fetch_1_AguPlugin_SEL;
   reg        [1:0]    EU0_ExecutionUnitBase_pipeline_fetch_1_BRANCH_ID;
+  reg        [0:0]    EU0_ExecutionUnitBase_pipeline_fetch_1_Fetch_INSTRUCTION_SLICE_COUNT;
   reg        [31:0]   EU0_ExecutionUnitBase_pipeline_fetch_1_PC;
   reg        [31:0]   EU0_ExecutionUnitBase_pipeline_fetch_1_Frontend_MICRO_OP;
   reg        [1:0]    EU0_ExecutionUnitBase_pipeline_fetch_1_BranchPlugin_BRANCH_CTRL;
@@ -1399,6 +1378,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [0:0]    EU0_ExecutionUnitBase_pipeline_fetch_0_ROB_MSB;
   wire       [3:0]    EU0_ExecutionUnitBase_pipeline_fetch_0_LSU_ID;
   wire       [1:0]    EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID;
+  wire       [0:0]    EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT;
   wire       [31:0]   EU0_ExecutionUnitBase_pipeline_fetch_0_PC;
   wire                EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD;
   wire                EU0_ExecutionUnitBase_pipeline_fetch_0_READ_RS_1;
@@ -1482,8 +1462,10 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FrontendPlugin_decoded_BAD_RET_PC_0;
   wire       [31:0]   FrontendPlugin_decoded_PC_TARGET_PRE_RAS_0;
   wire       [31:0]   FrontendPlugin_decoded_PC_INC_0;
-  wire       [0:0]    FrontendPlugin_decoded_Prediction_CONDITIONAL_TAKE_IT_0;
+  wire       [1:0]    FrontendPlugin_decoded_Prediction_CONDITIONAL_TAKE_IT_0;
   wire                FrontendPlugin_decoded_CONDITIONAL_PREDICTION_0;
+  wire       [0:0]    FrontendPlugin_decoded_Fetch_INSTRUCTION_SLICE_COUNT_0;
+  wire       [0:0]    FrontendPlugin_decoded_LAST_SLICE_0;
   wire                FrontendPlugin_decoded_RAS_POP_0;
   wire                FrontendPlugin_decoded_RAS_PUSH_0;
   wire       [31:0]   FrontendPlugin_decoded_OFFSET_0;
@@ -1495,6 +1477,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [11:0]   FrontendPlugin_allocated_OP_ID /* verilator public */ ;
   reg        [11:0]   FrontendPlugin_decoded_OP_ID /* verilator public */ ;
   wire       [3:0]    FrontendPlugin_allocated_DecoderPredictionPlugin_RAS_PUSH_PTR_0;
+  wire       [0:0]    FrontendPlugin_allocated_Fetch_INSTRUCTION_SLICE_COUNT_0;
   wire       [31:0]   FrontendPlugin_allocated_Frontend_MICRO_OP_0;
   wire                FrontendPlugin_serialized_RfDependencyPlugin_setup_SKIP_1_0;
   wire                FrontendPlugin_serialized_RfDependencyPlugin_setup_SKIP_0_0;
@@ -1504,6 +1487,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FrontendPlugin_serialized_DispatchPlugin_FENCE_OLDER_0;
   wire       [31:0]   FrontendPlugin_decoded_Frontend_INSTRUCTION_ALIGNED_0;
   wire       [31:0]   FrontendPlugin_decoded_PC_0 /* verilator public */ ;
+  wire       [0:0]    FrontendPlugin_decoded_Frontend_FETCH_FAULT_SLICE_0;
   wire                FrontendPlugin_decoded_Frontend_FETCH_FAULT_PAGE_0;
   wire                FrontendPlugin_decoded_isFlushed;
   wire       [4:0]    FrontendPlugin_decoded_ARCH_RS_1_0;
@@ -1769,11 +1753,11 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                Lsu2Plugin_logic_sharedPip_stages_0_MmuPlugin_logic_ALLOW_REFILL_overloaded;
   wire                Lsu2Plugin_logic_sharedPip_stages_0_MmuPlugin_logic_ALLOW_REFILL;
   reg        [31:0]   EU0_ExecutionUnitBase_pipeline_execute_1_PC_TRUE;
+  reg        [0:0]    EU0_ExecutionUnitBase_pipeline_execute_1_Fetch_INSTRUCTION_SLICE_COUNT;
   reg        [31:0]   EU0_ExecutionUnitBase_pipeline_execute_1_PC;
   reg        [1:0]    EU0_ExecutionUnitBase_pipeline_execute_1_BRANCH_ID;
   reg                 _zz_8;
   reg                 EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_SEL;
-  wire                EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_MISSALIGNED;
   reg        [1:0]    EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_BRANCH_CTRL;
   reg        [31:0]   EU0_ExecutionUnitBase_pipeline_execute_1_PC_TARGET;
   reg        [3:0]    EU0_ExecutionUnitBase_pipeline_execute_1_ROB_ID;
@@ -2058,6 +2042,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   EU0_ExecutionUnitBase_pipeline_execute_0_BRANCH_EARLY_pc;
   wire       [31:0]   EU0_ExecutionUnitBase_pipeline_execute_0_PC_TARGET;
   (* keep , syn_keep *) wire       [31:0]   EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE /* synthesis syn_keep = 1 */ ;
+  wire       [0:0]    EU0_ExecutionUnitBase_pipeline_execute_0_Fetch_INSTRUCTION_SLICE_COUNT;
   (* keep , syn_keep *) reg        [31:0]   EU0_ExecutionUnitBase_pipeline_execute_0_PC_TRUE /* synthesis syn_keep = 1 */ ;
   wire       [31:0]   EU0_ExecutionUnitBase_pipeline_execute_0_PC;
   wire       [31:0]   EU0_ExecutionUnitBase_pipeline_execute_0_Frontend_MICRO_OP;
@@ -2143,25 +2128,32 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   FrontendPlugin_allocated_PC_0;
   reg                 CommitPlugin_logic_commit_continue_1;
   wire       [0:0]    FrontendPlugin_allocated_ROB_MSB_0;
-  wire       [1:0]    FrontendPlugin_decompressed_GSHARE_COUNTER_0_0;
-  wire       [0:0]    FrontendPlugin_decompressed_Prediction_CONDITIONAL_TAKE_IT_0;
-  reg        [6:0]    FetchPlugin_stages_1_GSharePlugin_logic_HASH;
+  reg        [1:0]    FrontendPlugin_decompressed_GSHARE_COUNTER_0_0;
+  reg        [1:0]    FrontendPlugin_decompressed_GSHARE_COUNTER_0_1;
+  wire       [1:0]    FrontendPlugin_decompressed_Prediction_CONDITIONAL_TAKE_IT_0;
+  reg        [5:0]    FetchPlugin_stages_1_GSharePlugin_logic_HASH;
   reg                 FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_valid;
-  reg        [6:0]    FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_address;
+  reg        [5:0]    FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_address;
   reg        [1:0]    FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_0;
+  reg        [1:0]    FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_1;
   wire                FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_valid;
-  wire       [6:0]    FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_address;
+  wire       [5:0]    FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_address;
   wire       [1:0]    FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_0;
+  wire       [1:0]    FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_1;
   wire       [23:0]   FetchPlugin_stages_0_BRANCH_HISTORY;
-  wire       [6:0]    FetchPlugin_stages_0_GSharePlugin_logic_HASH;
+  wire       [5:0]    FetchPlugin_stages_0_GSharePlugin_logic_HASH;
   reg                 _zz_26;
   wire                FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALUE;
+  wire       [0:0]    FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_SLICE;
   wire                FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALID;
   wire       [31:0]   FetchPlugin_stages_1_Prediction_WORD_BRANCH_PC_NEXT;
+  wire       [0:0]    FetchPlugin_stages_1_Prediction_WORD_BRANCH_SLICE;
   wire                FetchPlugin_stages_1_Prediction_WORD_BRANCH_VALID;
   (* keep , syn_keep *) reg        [1:0]    FetchPlugin_stages_1_GSHARE_COUNTER_0 /* synthesis syn_keep = 1 */ ;
+  (* keep , syn_keep *) reg        [1:0]    FetchPlugin_stages_1_GSHARE_COUNTER_1 /* synthesis syn_keep = 1 */ ;
   wire                FetchPlugin_stages_1_BtbPlugin_logic_HIT;
   (* keep , syn_keep *) wire       [15:0]   FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash /* synthesis syn_keep = 1 */ ;
+  (* keep , syn_keep *) wire       [0:0]    FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice /* synthesis syn_keep = 1 */ ;
   (* keep , syn_keep *) wire       [31:0]   FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_pcTarget /* synthesis syn_keep = 1 */ ;
   (* keep , syn_keep *) wire                FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_isBranch /* synthesis syn_keep = 1 */ ;
   reg                 _zz_27;
@@ -2177,8 +2169,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FrontendPlugin_allocated_WRITE_RD_0;
   wire                FrontendPlugin_allocated_Frontend_DISPATCH_MASK_0;
   wire                FrontendPlugin_decompressed_Frontend_INSTRUCTION_ILLEGAL_0;
-  wire       [31:0]   FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0;
   wire       [31:0]   FrontendPlugin_decompressed_Frontend_INSTRUCTION_DECOMPRESSED_0;
+  reg        [31:0]   FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0;
   wire                FrontendPlugin_aligned_isFlushed;
   reg        [31:0]   AlignerPlugin_setup_s2m_Fetch_FETCH_PC_INC;
   wire                AlignerPlugin_setup_s2m_isFlushed;
@@ -2186,15 +2178,20 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FrontendPlugin_aligned_ready;
   reg                 AlignerPlugin_setup_s2m_Fetch_WORD_FAULT_PAGE;
   reg                 AlignerPlugin_setup_s2m_Fetch_WORD_FAULT;
+  reg        [0:0]    FrontendPlugin_aligned_Frontend_FETCH_FAULT_SLICE_0;
   reg                 FrontendPlugin_aligned_Frontend_FETCH_FAULT_PAGE_0;
   reg                 FrontendPlugin_aligned_Frontend_FETCH_FAULT_0;
   reg        [11:0]   AlignerPlugin_setup_s2m_FETCH_ID;
   reg        [11:0]   FrontendPlugin_aligned_FETCH_ID_0;
   reg        [31:0]   AlignerPlugin_setup_s2m_Fetch_FETCH_PC;
   reg        [1:0]    AlignerPlugin_setup_s2m_GSHARE_COUNTER_0;
+  reg        [1:0]    AlignerPlugin_setup_s2m_GSHARE_COUNTER_1;
   reg        [1:0]    FrontendPlugin_aligned_GSHARE_COUNTER_0_0;
+  reg        [1:0]    FrontendPlugin_aligned_GSHARE_COUNTER_0_1;
   reg                 AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALUE;
   reg                 FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_VALUE_0;
+  reg        [0:0]    AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_SLICE;
+  reg        [0:0]    FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_SLICE_0;
   reg                 AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALID;
   reg                 FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_VALID_0;
   reg        [23:0]   AlignerPlugin_setup_s2m_BRANCH_HISTORY;
@@ -2203,16 +2200,18 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg        [31:0]   FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_PC_NEXT_0;
   reg                 FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0;
   wire       [31:0]   FrontendPlugin_aligned_PC_0;
+  wire       [0:0]    FrontendPlugin_aligned_Fetch_INSTRUCTION_SLICE_COUNT_0;
   wire                FrontendPlugin_aligned_Frontend_MASK_ALIGNED_0;
   wire       [31:0]   FrontendPlugin_aligned_Frontend_INSTRUCTION_ALIGNED_0;
-  reg        [1:0]    AlignerPlugin_logic_slices_remains_1;
-  reg        [1:0]    AlignerPlugin_logic_slices_carry_1;
-  reg        [1:0]    AlignerPlugin_logic_slices_used_1;
-  reg        [0:0]    AlignerPlugin_setup_s2m_MASK_FRONT;
+  reg        [3:0]    AlignerPlugin_logic_slices_remains_1;
+  reg        [3:0]    AlignerPlugin_logic_slices_carry_1;
+  reg        [3:0]    AlignerPlugin_logic_slices_used_1;
+  reg        [1:0]    AlignerPlugin_setup_s2m_MASK_FRONT;
   reg        [31:0]   AlignerPlugin_setup_s2m_Fetch_WORD;
   reg                 AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID;
-  reg        [0:0]    AlignerPlugin_setup_s2m_MASK_BACK;
-  wire       [0:0]    FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT;
+  reg        [0:0]    AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE;
+  reg        [1:0]    AlignerPlugin_setup_s2m_MASK_BACK;
+  wire       [1:0]    FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT;
   wire                AlignerPlugin_setup_s2m_isFlushingRoot;
   reg        [23:0]   FetchPlugin_stages_2_BRANCH_HISTORY;
   reg                 FetchPlugin_stages_2_MMU_IO;
@@ -2308,7 +2307,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   AlignerPlugin_setup_sequenceJump_payload_pc;
   wire                AlignerPlugin_setup_singleFetch;
   wire                FrontendPlugin_aligned_valid;
-  wire                FrontendPlugin_decompressed_valid;
+  reg                 FrontendPlugin_decompressed_valid;
   wire                FrontendPlugin_decoded_valid;
   reg                 _zz_FrontendPlugin_serialized_valid;
   reg                 FrontendPlugin_serialized_valid;
@@ -2412,11 +2411,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [3:0]    CommitPlugin_setup_robLineMask_line;
   reg        [0:0]    CommitPlugin_setup_robLineMask_mask;
   wire                CommitPlugin_setup_isRobEmpty;
-  wire                PrivilegedPlugin_io_int_machine_timer /* verilator public */ ;
-  wire                PrivilegedPlugin_io_int_machine_software /* verilator public */ ;
-  wire                PrivilegedPlugin_io_int_machine_external /* verilator public */ ;
-  wire                PrivilegedPlugin_io_int_supervisor_external /* verilator public */ ;
-  wire       [63:0]   PrivilegedPlugin_io_rdtime;
   reg                 PrivilegedPlugin_setup_jump_valid;
   reg        [31:0]   PrivilegedPlugin_setup_jump_payload_pc;
   reg        [1:0]    PrivilegedPlugin_setup_privilege;
@@ -2443,10 +2437,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [31:0]   EU0_BranchPlugin_setup_intFormatPort_payload;
   wire                EU0_BranchPlugin_setup_reschedule_valid;
   wire       [3:0]    EU0_BranchPlugin_setup_reschedule_payload_robId;
-  wire                EU0_BranchPlugin_setup_reschedule_payload_trap;
   wire       [31:0]   EU0_BranchPlugin_setup_reschedule_payload_pcTarget;
-  wire       [3:0]    EU0_BranchPlugin_setup_reschedule_payload_cause;
-  wire       [31:0]   EU0_BranchPlugin_setup_reschedule_payload_tval;
   wire                EU0_BranchPlugin_setup_reschedule_payload_skipCommit;
   wire       [7:0]    EU0_BranchPlugin_setup_reschedule_payload_reason;
   wire                AguPlugin_setup_port_valid /* verilator public */ ;
@@ -2584,47 +2575,84 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                AlignerPlugin_logic_isInputValid;
   wire                when_AlignerPlugin_l98;
   reg        [31:0]   AlignerPlugin_logic_buffer_data;
-  reg        [0:0]    AlignerPlugin_logic_buffer_mask;
+  reg        [1:0]    AlignerPlugin_logic_buffer_mask;
   reg        [31:0]   AlignerPlugin_logic_buffer_pc;
   reg                 AlignerPlugin_logic_buffer_fault;
   reg                 AlignerPlugin_logic_buffer_fault_page;
   reg                 AlignerPlugin_logic_buffer_branchValid;
+  reg        [0:0]    AlignerPlugin_logic_buffer_branchSlice;
   reg        [31:0]   AlignerPlugin_logic_buffer_branchPcNext;
   reg        [23:0]   AlignerPlugin_logic_buffer_wordContexts_0;
   reg                 AlignerPlugin_logic_buffer_wordContexts_1;
+  reg        [0:0]    AlignerPlugin_logic_buffer_wordContexts_2;
   reg                 AlignerPlugin_logic_buffer_wordContexts_3;
   reg        [1:0]    AlignerPlugin_logic_buffer_wordContexts_4_0;
+  reg        [1:0]    AlignerPlugin_logic_buffer_wordContexts_4_1;
   reg        [11:0]   AlignerPlugin_logic_buffer_firstWordContexts_0;
   wire       [63:0]   _zz_AlignerPlugin_logic_slices_data_0;
-  wire       [31:0]   AlignerPlugin_logic_slices_data_0;
-  wire       [31:0]   AlignerPlugin_logic_slices_data_1;
-  wire       [1:0]    AlignerPlugin_logic_slices_carry;
-  wire       [1:0]    AlignerPlugin_logic_slices_remains;
-  wire       [1:0]    AlignerPlugin_logic_slices_used;
-  wire       [1:0]    AlignerPlugin_logic_decoders_0_usage;
+  wire       [15:0]   AlignerPlugin_logic_slices_data_0;
+  wire       [15:0]   AlignerPlugin_logic_slices_data_1;
+  wire       [15:0]   AlignerPlugin_logic_slices_data_2;
+  wire       [15:0]   AlignerPlugin_logic_slices_data_3;
+  wire       [3:0]    AlignerPlugin_logic_slices_carry;
+  wire       [3:0]    AlignerPlugin_logic_slices_remains;
+  wire       [3:0]    AlignerPlugin_logic_slices_used;
+  wire                AlignerPlugin_logic_decoders_0_rvc;
+  wire       [3:0]    AlignerPlugin_logic_decoders_0_usage;
   wire                AlignerPlugin_logic_decoders_0_notEnoughData;
   wire                AlignerPlugin_logic_decoders_0_pastPrediction;
   wire                AlignerPlugin_logic_decoders_0_usable;
-  wire       [1:0]    AlignerPlugin_logic_decoders_1_usage;
+  wire                AlignerPlugin_logic_decoders_1_rvc;
+  wire       [3:0]    AlignerPlugin_logic_decoders_1_usage;
   wire                AlignerPlugin_logic_decoders_1_notEnoughData;
   wire                AlignerPlugin_logic_decoders_1_pastPrediction;
   wire                AlignerPlugin_logic_decoders_1_usable;
+  wire                AlignerPlugin_logic_decoders_2_rvc;
+  wire       [3:0]    AlignerPlugin_logic_decoders_2_usage;
+  wire                AlignerPlugin_logic_decoders_2_notEnoughData;
+  reg                 AlignerPlugin_logic_decoders_2_pastPrediction;
+  wire                AlignerPlugin_logic_decoders_2_usable;
+  wire                AlignerPlugin_logic_decoders_3_rvc;
+  wire       [3:0]    AlignerPlugin_logic_decoders_3_usage;
+  wire                AlignerPlugin_logic_decoders_3_notEnoughData;
+  reg                 AlignerPlugin_logic_decoders_3_pastPrediction;
+  wire                AlignerPlugin_logic_decoders_3_usable;
   wire                _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0;
-  wire       [1:0]    _zz_AlignerPlugin_logic_extractors_0_maskOh;
+  wire       [3:0]    _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_1;
+  wire                _zz_when_AlignerPlugin_l168;
+  reg        [3:0]    _zz_when_AlignerPlugin_l168_1;
+  wire                _zz_when_AlignerPlugin_l168_2;
+  wire                _zz_when_AlignerPlugin_l168_3;
+  wire                _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_2;
+  wire                when_AlignerPlugin_l168;
+  wire       [3:0]    _zz_AlignerPlugin_logic_extractors_0_maskOh;
   wire                _zz_AlignerPlugin_logic_extractors_0_maskOh_1;
-  reg        [1:0]    _zz_AlignerPlugin_logic_extractors_0_maskOh_2;
-  wire       [1:0]    AlignerPlugin_logic_extractors_0_maskOh;
+  wire                _zz_AlignerPlugin_logic_extractors_0_maskOh_2;
+  wire                _zz_AlignerPlugin_logic_extractors_0_maskOh_3;
+  reg        [3:0]    _zz_AlignerPlugin_logic_extractors_0_maskOh_4;
+  wire       [3:0]    AlignerPlugin_logic_extractors_0_maskOh;
   wire                _zz_AlignerPlugin_logic_extractors_0_usage;
   wire                _zz_AlignerPlugin_logic_extractors_0_usage_1;
-  wire       [1:0]    AlignerPlugin_logic_extractors_0_usage;
+  wire                _zz_AlignerPlugin_logic_extractors_0_usage_2;
+  wire                _zz_AlignerPlugin_logic_extractors_0_usage_3;
+  wire       [3:0]    AlignerPlugin_logic_extractors_0_usage;
   wire                AlignerPlugin_logic_extractors_0_usable;
-  wire       [31:0]   AlignerPlugin_logic_extractors_0_slice0;
+  wire                AlignerPlugin_logic_extractors_0_rvc;
+  wire       [15:0]   AlignerPlugin_logic_extractors_0_slice0;
+  wire       [2:0]    _zz_AlignerPlugin_logic_extractors_0_slice1;
+  wire       [15:0]   AlignerPlugin_logic_extractors_0_slice1;
+  wire       [31:0]   AlignerPlugin_logic_extractors_0_instruction;
   wire                AlignerPlugin_logic_extractors_0_valid;
+  wire       [0:0]    AlignerPlugin_logic_extractors_0_sliceLast;
   wire                AlignerPlugin_logic_extractors_0_bufferPredictionLast;
   wire                AlignerPlugin_logic_extractors_0_inputPredictionLast;
-  wire                AlignerPlugin_logic_extractors_0_lastWord;
-  wire                _zz_AlignerPlugin_logic_extractors_0_sliceOffset;
-  wire       [0:0]    AlignerPlugin_logic_extractors_0_sliceOffset;
+  reg                 AlignerPlugin_logic_extractors_0_lastWord;
+  wire                when_AlignerPlugin_l204;
+  wire       [3:0]    _zz_AlignerPlugin_logic_extractors_0_sliceOffset;
+  wire                _zz_AlignerPlugin_logic_extractors_0_sliceOffset_1;
+  wire                _zz_AlignerPlugin_logic_extractors_0_sliceOffset_2;
+  wire                _zz_AlignerPlugin_logic_extractors_0_sliceOffset_3;
+  wire       [1:0]    AlignerPlugin_logic_extractors_0_sliceOffset;
   wire                AlignerPlugin_logic_extractors_0_firstWord;
   wire       [31:0]   AlignerPlugin_logic_extractors_0_pcWord;
   wire                when_AlignerPlugin_l230;
@@ -2632,11 +2660,42 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FrontendPlugin_aligned_isFireing;
   wire                AlignerPlugin_logic_fireOutput;
   wire                AlignerPlugin_logic_fireInput;
-  wire       [0:0]    AlignerPlugin_logic_postMask;
+  wire       [1:0]    AlignerPlugin_logic_postMask;
   reg                 AlignerPlugin_logic_correctionSent;
   wire                when_AlignerPlugin_l264;
   wire                _zz_FetchPlugin_stages_1_isFlushingRoot;
   wire                AlignerPlugin_setup_s2m_haltRequest_AlignerPlugin_l270;
+  wire                DecompressorPlugin_logic_ways_0_enabled_isRvc;
+  reg        [31:0]   DecompressorPlugin_logic_ways_0_enabled_decompressor_inst;
+  reg                 DecompressorPlugin_logic_ways_0_enabled_decompressor_illegal;
+  wire       [4:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst;
+  wire       [4:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_1;
+  wire       [11:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_2;
+  wire       [11:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_3;
+  wire                _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_4;
+  reg        [11:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5;
+  wire                _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6;
+  reg        [9:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7;
+  wire       [20:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_8;
+  wire                _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+  reg        [14:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10;
+  wire                _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_11;
+  reg        [2:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_12;
+  wire                _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13;
+  reg        [9:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14;
+  wire       [20:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_15;
+  wire                _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_16;
+  reg        [4:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_17;
+  wire       [12:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_18;
+  wire       [4:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_19;
+  wire       [4:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_20;
+  wire       [4:0]    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_21;
+  wire       [4:0]    switch_DecompressorPlugin_l105;
+  wire                when_DecompressorPlugin_l109;
+  wire                when_DecompressorPlugin_l130;
+  wire       [31:0]   _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_22;
+  wire                when_DecompressorPlugin_l180;
+  wire                when_DecompressorPlugin_l193;
   wire                integer_RfAllocationPlugin_logic_pop_blocked;
   wire                FrontendPlugin_allocated_haltRequest_RfAllocationPlugin_l55;
   wire                when_RfAllocationPlugin_l63;
@@ -2666,11 +2725,12 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                BtbPlugin_logic_onLearn_port_valid;
   wire       [2:0]    BtbPlugin_logic_onLearn_port_payload_address;
   wire       [15:0]   BtbPlugin_logic_onLearn_port_payload_data_hash;
+  wire       [0:0]    BtbPlugin_logic_onLearn_port_payload_data_slice;
   wire       [31:0]   BtbPlugin_logic_onLearn_port_payload_data_pcTarget;
   wire                BtbPlugin_logic_onLearn_port_payload_data_isBranch;
   wire                BranchContextPlugin_free_learn_Prediction_IS_BRANCH;
   wire       [2:0]    BtbPlugin_logic_readCmd_entryAddress;
-  wire       [48:0]   _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash;
+  wire       [49:0]   _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash;
   wire                BtbPlugin_logic_hitCalc_postPcPrediction;
   wire                BtbPlugin_logic_applyIt_prediction;
   wire                BtbPlugin_logic_applyIt_needIt;
@@ -2678,18 +2738,23 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                when_BtbPlugin_l109;
   wire                BtbPlugin_logic_applyIt_doIt;
   wire                GSharePlugin_logic_mem_write_valid;
-  wire       [6:0]    GSharePlugin_logic_mem_write_payload_address;
+  wire       [5:0]    GSharePlugin_logic_mem_write_payload_address;
   wire       [1:0]    GSharePlugin_logic_mem_write_payload_data_0;
-  wire       [6:0]    _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH;
+  wire       [1:0]    GSharePlugin_logic_mem_write_payload_data_1;
+  wire       [5:0]    _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH;
+  wire       [3:0]    _zz_FetchPlugin_stages_1_GSHARE_COUNTER_0;
   wire                when_GSharePlugin_l98;
   wire       [23:0]   BranchContextPlugin_free_learn_BRANCH_HISTORY;
-  wire       [6:0]    _zz_GSharePlugin_logic_onLearn_hash;
-  wire       [6:0]    GSharePlugin_logic_onLearn_hash;
+  wire       [5:0]    _zz_GSharePlugin_logic_onLearn_hash;
+  wire       [5:0]    GSharePlugin_logic_onLearn_hash;
   wire       [1:0]    BranchContextPlugin_free_learn_GSHARE_COUNTER_0;
+  wire       [1:0]    BranchContextPlugin_free_learn_GSHARE_COUNTER_1;
   wire       [1:0]    GSharePlugin_logic_onLearn_updated_0;
+  wire       [1:0]    GSharePlugin_logic_onLearn_updated_1;
   wire       [1:0]    GSharePlugin_logic_onLearn_incrValue;
   reg                 GSharePlugin_logic_onLearn_overflow;
   wire                when_GSharePlugin_l123;
+  wire                when_GSharePlugin_l123_1;
   wire                LsuPlugin_peripheralBus_cmd_valid /* verilator public */ ;
   reg                 LsuPlugin_peripheralBus_cmd_ready /* verilator public */ ;
   wire                LsuPlugin_peripheralBus_cmd_payload_write /* verilator public */ ;
@@ -2878,28 +2943,31 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 PrivilegedPlugin_logic_supervisor_sie_seie;
   reg                 PrivilegedPlugin_logic_supervisor_sie_stie;
   reg                 PrivilegedPlugin_logic_supervisor_sie_ssie;
-  wire                _zz_when_PrivilegedPlugin_l644;
-  wire                _zz_when_PrivilegedPlugin_l644_1;
-  wire                _zz_when_PrivilegedPlugin_l644_2;
+  wire                _zz_when_PrivilegedPlugin_l653;
+  wire                _zz_when_PrivilegedPlugin_l653_1;
+  wire                _zz_when_PrivilegedPlugin_l653_2;
   reg                 PrivilegedPlugin_logic_rescheduleUnbuffered_valid;
   reg                 PrivilegedPlugin_logic_rescheduleUnbuffered_ready;
   reg        [3:0]    PrivilegedPlugin_logic_rescheduleUnbuffered_payload_cause;
   reg        [31:0]   PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc;
   reg        [31:0]   PrivilegedPlugin_logic_rescheduleUnbuffered_payload_tval;
+  wire       [0:0]    PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices;
   wire                PrivilegedPlugin_logic_rescheduleUnbuffered_payload_fromCommit;
   wire                PrivilegedPlugin_logic_reschedule_valid;
   reg                 PrivilegedPlugin_logic_reschedule_ready;
   wire       [3:0]    PrivilegedPlugin_logic_reschedule_payload_cause;
   wire       [31:0]   PrivilegedPlugin_logic_reschedule_payload_epc;
   wire       [31:0]   PrivilegedPlugin_logic_reschedule_payload_tval;
+  wire       [0:0]    PrivilegedPlugin_logic_reschedule_payload_slices;
   wire                PrivilegedPlugin_logic_reschedule_payload_fromCommit;
   reg                 PrivilegedPlugin_logic_rescheduleUnbuffered_rValid;
   reg        [3:0]    PrivilegedPlugin_logic_rescheduleUnbuffered_rData_cause;
   reg        [31:0]   PrivilegedPlugin_logic_rescheduleUnbuffered_rData_epc;
   reg        [31:0]   PrivilegedPlugin_logic_rescheduleUnbuffered_rData_tval;
+  reg        [0:0]    PrivilegedPlugin_logic_rescheduleUnbuffered_rData_slices;
   reg                 PrivilegedPlugin_logic_rescheduleUnbuffered_rData_fromCommit;
   wire                when_Stream_l369;
-  wire                when_PrivilegedPlugin_l592;
+  wire                when_PrivilegedPlugin_l601;
   wire                PrivilegedPlugin_logic_targetMachine;
   reg        [31:0]   PrivilegedPlugin_logic_readed;
   wire                ALU0_ExecutionUnitBase_pipeline_execute_0_valid;
@@ -4199,36 +4267,36 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 PrivilegedPlugin_logic_interrupt_valid;
   reg        [3:0]    PrivilegedPlugin_logic_interrupt_code;
   reg        [1:0]    PrivilegedPlugin_logic_interrupt_targetPrivilege;
-  wire                when_PrivilegedPlugin_l638;
-  wire                when_PrivilegedPlugin_l638_1;
-  wire                when_PrivilegedPlugin_l644;
-  wire                when_PrivilegedPlugin_l644_1;
-  wire                when_PrivilegedPlugin_l644_2;
-  wire                when_PrivilegedPlugin_l644_3;
-  wire                when_PrivilegedPlugin_l644_4;
-  wire                when_PrivilegedPlugin_l644_5;
-  wire                when_PrivilegedPlugin_l644_6;
-  wire                when_PrivilegedPlugin_l644_7;
-  wire                when_PrivilegedPlugin_l644_8;
+  wire                when_PrivilegedPlugin_l647;
+  wire                when_PrivilegedPlugin_l647_1;
+  wire                when_PrivilegedPlugin_l653;
+  wire                when_PrivilegedPlugin_l653_1;
+  wire                when_PrivilegedPlugin_l653_2;
+  wire                when_PrivilegedPlugin_l653_3;
+  wire                when_PrivilegedPlugin_l653_4;
+  wire                when_PrivilegedPlugin_l653_5;
+  wire                when_PrivilegedPlugin_l653_6;
+  wire                when_PrivilegedPlugin_l653_7;
+  wire                when_PrivilegedPlugin_l653_8;
   reg                 PrivilegedPlugin_logic_decoderInterrupt_raised;
   reg                 PrivilegedPlugin_logic_decoderInterrupt_pendingInterrupt;
   reg        [2:0]    PrivilegedPlugin_logic_decoderInterrupt_counter;
   wire                PrivilegedPlugin_logic_decoderInterrupt_doIt;
-  wire                when_PrivilegedPlugin_l675;
-  wire                when_PrivilegedPlugin_l679;
+  wire                when_PrivilegedPlugin_l686;
+  wire                when_PrivilegedPlugin_l690;
   wire                PrivilegedPlugin_logic_decoderInterrupt_buffer_sample;
   reg        [3:0]    PrivilegedPlugin_logic_decoderInterrupt_buffer_code;
   reg        [1:0]    PrivilegedPlugin_logic_decoderInterrupt_buffer_targetPrivilege;
   reg        [1:0]    PrivilegedPlugin_logic_exception_exceptionTargetPrivilegeUncapped;
   reg        [3:0]    PrivilegedPlugin_logic_exception_code;
-  wire                when_PrivilegedPlugin_l696;
-  wire                when_PrivilegedPlugin_l709;
-  wire                when_PrivilegedPlugin_l709_1;
-  wire                when_PrivilegedPlugin_l709_2;
-  wire                when_PrivilegedPlugin_l709_3;
-  wire                when_PrivilegedPlugin_l709_4;
-  wire                when_PrivilegedPlugin_l709_5;
-  wire                when_PrivilegedPlugin_l709_6;
+  wire                when_PrivilegedPlugin_l707;
+  wire                when_PrivilegedPlugin_l720;
+  wire                when_PrivilegedPlugin_l720_1;
+  wire                when_PrivilegedPlugin_l720_2;
+  wire                when_PrivilegedPlugin_l720_3;
+  wire                when_PrivilegedPlugin_l720_4;
+  wire                when_PrivilegedPlugin_l720_5;
+  wire                when_PrivilegedPlugin_l720_6;
   wire       [1:0]    PrivilegedPlugin_logic_exception_targetPrivilege;
   wire                PrivilegedPlugin_logic_fsm_wantExit;
   reg                 PrivilegedPlugin_logic_fsm_wantStart;
@@ -4239,7 +4307,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg        [1:0]    PrivilegedPlugin_logic_fsm_trap_targetPrivilege;
   wire       [1:0]    PrivilegedPlugin_logic_fsm_xret_sourcePrivilege;
   reg        [1:0]    PrivilegedPlugin_logic_fsm_xret_targetPrivilege;
-  wire                FetchPlugin_stages_0_haltRequest_PrivilegedPlugin_l975;
+  wire                FetchPlugin_stages_0_haltRequest_PrivilegedPlugin_l986;
   wire                trap_fire /* verilator public */ ;
   wire       [3:0]    trap_code /* verilator public */ ;
   wire                trap_interrupt /* verilator public */ ;
@@ -4317,13 +4385,16 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesDo;
   reg                 EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesFireDo;
   wire                when_CsrAccessPlugin_l327;
+  wire                when_CsrAccessPlugin_l327_1;
   wire                when_CsrAccessPlugin_l328;
   wire                when_CsrAccessPlugin_l328_1;
+  wire       [1:0]    switch_PrivilegedPlugin_l443;
   wire                when_CsrAccessPlugin_l328_2;
   wire                when_CsrAccessPlugin_l328_3;
   wire                when_CsrAccessPlugin_l328_4;
   wire                when_CsrAccessPlugin_l328_5;
-  wire                when_CsrAccessPlugin_l327_1;
+  wire                when_CsrAccessPlugin_l327_2;
+  wire                when_CsrAccessPlugin_l327_3;
   wire                when_CsrAccessPlugin_l328_6;
   wire                when_CsrAccessPlugin_l328_7;
   wire                when_CsrAccessPlugin_l328_8;
@@ -4353,21 +4424,21 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                EU0_ExecutionUnitBase_pipeline_execute_2_isFireing;
   wire       [1:0]    EnvCallPlugin_logic_xretPriv;
   reg                 EnvCallPlugin_logic_trap;
-  wire                when_EnvCallPlugin_l99;
   wire                when_EnvCallPlugin_l100;
-  wire                when_EnvCallPlugin_l108;
-  wire                when_EnvCallPlugin_l112;
+  wire                when_EnvCallPlugin_l101;
+  wire                when_EnvCallPlugin_l109;
   wire                when_EnvCallPlugin_l113;
+  wire                when_EnvCallPlugin_l114;
   wire                EnvCallPlugin_logic_flushes_wantExit;
   reg                 EnvCallPlugin_logic_flushes_wantStart;
   wire                EnvCallPlugin_logic_flushes_wantKill;
-  wire                FetchPlugin_stages_0_haltRequest_EnvCallPlugin_l138;
+  wire                FetchPlugin_stages_0_haltRequest_EnvCallPlugin_l140;
   reg                 EnvCallPlugin_logic_flushes_vmaInv;
   reg                 EnvCallPlugin_logic_flushes_fetchInv;
   reg                 EnvCallPlugin_logic_flushes_flushData;
   reg        [2:0]    EnvCallPlugin_logic_flushes_stateReg;
   reg        [2:0]    EnvCallPlugin_logic_flushes_stateNext;
-  wire                when_EnvCallPlugin_l148;
+  wire                when_EnvCallPlugin_l150;
   wire                when_MmuPlugin_l356;
   reg                 FetchCachePlugin_logic_translationPort_logic_allowRefillBypass_0_reg;
   wire                when_MmuPlugin_l278_2;
@@ -4503,6 +4574,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 DecoderPlugin_logic_exception_fetchFaultReg_0;
   wire                when_DecoderPlugin_l304;
   reg                 DecoderPlugin_logic_exception_fetchFaultPageReg_0;
+  wire                when_DecoderPlugin_l305;
+  reg        [0:0]    DecoderPlugin_logic_exception_fetchFaultSliceReg_0;
   wire                when_DecoderPlugin_l306;
   reg                 DecoderPlugin_logic_exception_debugEnterReg_0;
   wire                when_DecoderPlugin_l307;
@@ -4514,6 +4587,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                DecoderPlugin_logic_exception_compressedFault;
   wire                DecoderPlugin_logic_exception_fetchFault;
   wire                DecoderPlugin_logic_exception_fetchFaultPage;
+  wire       [0:0]    DecoderPlugin_logic_exception_fetchFaultSlice;
   wire                DecoderPlugin_logic_exception_debugEnter;
   wire       [31:0]   DecoderPlugin_logic_exception_pc;
   wire                DecoderPlugin_logic_exception_pipelineEmpty;
@@ -4614,11 +4688,12 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                when_Connection_l74_3;
   wire                BranchContextPlugin_free_dispatchMem_writes_0_port_valid;
   wire       [1:0]    BranchContextPlugin_free_dispatchMem_writes_0_port_payload_address;
-  wire       [26:0]   BranchContextPlugin_free_dispatchMem_writes_0_port_payload_data;
+  wire       [28:0]   BranchContextPlugin_free_dispatchMem_writes_0_port_payload_data;
   wire                BranchContextPlugin_free_learn_valid;
   wire       [1:0]    BranchContextPlugin_free_learn_bid;
   wire       [64:0]   _zz_BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice;
-  wire       [26:0]   BranchContextPlugin_free_learn_raw;
+  wire       [28:0]   BranchContextPlugin_free_learn_raw;
+  wire       [3:0]    _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0;
   wire       [7:0]    DispatchPlugin_logic_queueStaticWakeTransposed_0;
   wire       [7:0]    DispatchPlugin_logic_queueStaticWakeTransposedHistory_0_0;
   reg        [3:0]    DispatchPlugin_logic_ptr_next;
@@ -4761,6 +4836,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire       [3:0]    _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc;
   wire       [3:0]    _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC;
   wire       [3:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC;
+  wire       [3:0]    _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices;
+  wire       [3:0]    _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT;
   wire       [3:0]    _zz_integer_RfTranslationPlugin_logic_onCommit_writeRd_0;
   wire       [3:0]    _zz_integer_RfAllocationPlugin_logic_push_writeRd_0;
   wire       [3:0]    _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD;
@@ -4811,15 +4888,16 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                FrontendPlugin_serialized_ready_output;
   wire                when_Connection_l66;
   reg                 FrontendPlugin_decoded_ready_output;
-  wire                _zz_FrontendPlugin_decompressed_isFlushed;
+  wire                when_Connection_l66_1;
   wire                FrontendPlugin_decompressed_ready_output;
   wire                FrontendPlugin_decompressed_ready;
-  wire                FrontendPlugin_aligned_ready_output;
+  reg                 FrontendPlugin_aligned_ready_output;
   wire                when_Pipeline_l278_6;
   wire                when_Pipeline_l278_7;
   wire                when_Pipeline_l278_8;
   wire                when_Connection_l74_5;
   wire                when_Connection_l74_6;
+  wire                when_Connection_l74_7;
   reg        [6:0]    PcPlugin_logic_init_counter;
   wire                PcPlugin_logic_init_booted;
   wire                PcPlugin_logic_fetchPc_output_valid;
@@ -4841,14 +4919,14 @@ module NaxRiscvAxi4LinuxPlicClint (
   wire                fetchLastFire /* verilator public */ ;
   wire       [11:0]   fetchLastId /* verilator public */ ;
   wire                FetchPlugin_stages_2_ready_output;
-  wire                when_Connection_l66_1;
+  wire                when_Connection_l66_2;
   reg                 FetchPlugin_stages_1_ready_output;
   wire                when_Connection_l54;
   reg                 FetchPlugin_stages_0_ready_output;
   wire                when_Pipeline_l278_9;
   wire                when_Pipeline_l278_10;
-  wire                when_Connection_l74_7;
   wire                when_Connection_l74_8;
+  wire                when_Connection_l74_9;
   reg                 FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid;
   reg        [31:0]   FetchPlugin_stages_2_Fetch_WORD_s2mBuffer;
   reg        [31:0]   FetchPlugin_stages_2_Fetch_FETCH_PC_s2mBuffer;
@@ -4856,22 +4934,25 @@ module NaxRiscvAxi4LinuxPlicClint (
   reg                 FetchPlugin_stages_2_Fetch_WORD_FAULT_PAGE_s2mBuffer;
   reg        [23:0]   FetchPlugin_stages_2_BRANCH_HISTORY_s2mBuffer;
   reg        [11:0]   FetchPlugin_stages_2_FETCH_ID_s2mBuffer;
+  reg        [0:0]    FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE_s2mBuffer;
   reg                 FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID_s2mBuffer;
-  reg        [0:0]    FetchPlugin_stages_2_AlignerPlugin_MASK_FRONT_s2mBuffer;
+  reg        [1:0]    FetchPlugin_stages_2_AlignerPlugin_MASK_FRONT_s2mBuffer;
   reg        [31:0]   FetchPlugin_stages_2_Prediction_WORD_BRANCH_PC_NEXT_s2mBuffer;
   reg                 FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALID_s2mBuffer;
+  reg        [0:0]    FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE_s2mBuffer;
   reg                 FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE_s2mBuffer;
   reg        [1:0]    FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_0;
+  reg        [1:0]    FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_1;
   reg        [31:0]   FetchPlugin_stages_2_Fetch_FETCH_PC_INC_s2mBuffer;
   reg        [3:0]    PrivilegedPlugin_logic_fsm_stateReg;
   reg        [3:0]    PrivilegedPlugin_logic_fsm_stateNext;
-  wire                when_PrivilegedPlugin_l773;
+  wire                when_PrivilegedPlugin_l784;
   reg        [2:0]    _zz_PrivilegedPlugin_setup_ramWrite_address;
   reg        [2:0]    _zz_PrivilegedPlugin_setup_ramWrite_address_1;
   reg        [2:0]    _zz_PrivilegedPlugin_setup_ramRead_address;
   reg        [2:0]    _zz_PrivilegedPlugin_setup_ramRead_address_1;
-  wire                when_PrivilegedPlugin_l959;
-  wire       [1:0]    switch_PrivilegedPlugin_l960;
+  wire                when_PrivilegedPlugin_l970;
+  wire       [1:0]    switch_PrivilegedPlugin_l971;
   wire                when_StateMachine_l253_2;
   `ifndef SYNTHESIS
   reg [31:0] EU0_ExecutionUnitBase_pipeline_fetch_1_BranchPlugin_BRANCH_CTRL_string;
@@ -4912,8 +4993,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   (* ram_style = "distributed" *) reg [32:0] BranchContextPlugin_logic_mem_earlyBranch [0:3];
   (* ram_style = "distributed" *) reg [64:0] BranchContextPlugin_logic_mem_finalBranch [0:3];
   (* ram_style = "distributed" *) reg [31:0] DecoderPredictionPlugin_logic_ras_mem_stack [0:15];
-  reg [48:0] BtbPlugin_logic_mem [0:7];
-  reg [1:0] GSharePlugin_logic_mem_counter [0:127];
+  reg [49:0] BtbPlugin_logic_mem [0:7];
+  reg [3:0] GSharePlugin_logic_mem_counter [0:63];
   (* ram_style = "distributed" *) reg [31:0] Lsu2Plugin_logic_lq_mem_addressPre [0:7];
   (* ram_style = "distributed" *) reg [31:0] Lsu2Plugin_logic_lq_mem_addressPost [0:7];
   (* ram_style = "distributed" *) reg [1:0] Lsu2Plugin_logic_lq_mem_size [0:7];
@@ -4963,7 +5044,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   (* ram_style = "distributed" *) reg [24:0] Lsu2Plugin_setup_translationStorage_logic_sl_1_ways_0 [0:3];
   (* ram_style = "distributed" *) reg [24:0] Lsu2Plugin_setup_translationStorage_logic_sl_1_ways_1 [0:3];
   (* ram_style = "distributed" *) reg [31:0] CsrRamPlugin_logic_mem [0:7];
-  (* ram_style = "distributed" *) reg [26:0] BranchContextPlugin_free_dispatchMem_mem [0:3];
+  (* ram_style = "distributed" *) reg [28:0] BranchContextPlugin_free_dispatchMem_mem [0:3];
   (* ram_style = "distributed" *) reg [0:0] RobPlugin_logic_completionMem_target [0:15];
   (* ram_style = "distributed" *) reg [0:0] RobPlugin_logic_completionMem_hits_0 [0:15];
   (* ram_style = "distributed" *) reg [0:0] RobPlugin_logic_completionMem_hits_1 [0:15];
@@ -4971,6 +5052,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   (* ram_style = "distributed" *) reg [0:0] RobPlugin_logic_completionMem_hits_3 [0:15];
   (* ram_style = "distributed" *) reg [0:0] RobPlugin_logic_storage_Frontend_DISPATCH_MASK_banks_0 [0:15];
   (* ram_style = "distributed" *) reg [31:0] RobPlugin_logic_storage_PC_banks_0 [0:15];
+  (* ram_style = "distributed" *) reg [0:0] RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0 [0:15];
   (* ram_style = "distributed" *) reg [0:0] RobPlugin_logic_storage_WRITE_RD_banks_0 [0:15];
   (* ram_style = "distributed" *) reg [5:0] RobPlugin_logic_storage_PHYS_RD_banks_0 [0:15];
   (* ram_style = "distributed" *) reg [4:0] RobPlugin_logic_storage_ARCH_RD_banks_0 [0:15];
@@ -4996,21 +5078,27 @@ module NaxRiscvAxi4LinuxPlicClint (
       zz__zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue[2 : 0] = 3'b101;
     end
   endfunction
-  wire [31:0] _zz_259;
+  wire [31:0] _zz_262;
   function  zz_DecoderPlugin_logic_slots_0_x0AlwaysZero(input dummy);
     begin
       zz_DecoderPlugin_logic_slots_0_x0AlwaysZero = 1'bx;
       zz_DecoderPlugin_logic_slots_0_x0AlwaysZero = 1'b1;
     end
   endfunction
-  wire  _zz_260;
+  wire  _zz_263;
 
   assign _zz__zz_FetchPlugin_stages_1_MMU_IO = (ioStartAddr + ioSize);
   assign _zz_FetchPlugin_stages_1_FETCH_ID_1 = FetchPlugin_stages_1_isFireing;
   assign _zz_FetchPlugin_stages_1_FETCH_ID = {11'd0, _zz_FetchPlugin_stages_1_FETCH_ID_1};
   assign _zz_FetchCachePlugin_logic_read_onWays_0_hits_bypassHits = (FetchPlugin_stages_1_Fetch_FETCH_PC >>> 4'd8);
-  assign _zz_AlignerPlugin_logic_extractors_0_usable = ((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_decoders_0_usable : 1'b0) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_decoders_1_usable : 1'b0));
+  assign _zz_AlignerPlugin_logic_extractors_0_usable = (((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_decoders_0_usable : 1'b0) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_decoders_1_usable : 1'b0)) | ((_zz_AlignerPlugin_logic_extractors_0_usage_2 ? AlignerPlugin_logic_decoders_2_usable : 1'b0) | (_zz_AlignerPlugin_logic_extractors_0_usage_3 ? AlignerPlugin_logic_decoders_3_usable : 1'b0)));
+  assign _zz_AlignerPlugin_logic_extractors_0_rvc = (((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_decoders_0_rvc : 1'b0) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_decoders_1_rvc : 1'b0)) | ((_zz_AlignerPlugin_logic_extractors_0_usage_2 ? AlignerPlugin_logic_decoders_2_rvc : 1'b0) | (_zz_AlignerPlugin_logic_extractors_0_usage_3 ? AlignerPlugin_logic_decoders_3_rvc : 1'b0)));
   assign _zz_FrontendPlugin_aligned_PC_0 = (AlignerPlugin_logic_extractors_0_pcWord >>> 2'd2);
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_26 = {{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 2]},12'h000};
+  assign _zz__zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_22_1 = {FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12],FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 2]};
+  assign _zz__zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_22 = {6'd0, _zz__zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_22_1};
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_35 = {{{4'b0000,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[8 : 7]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12 : 9]},2'b00};
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_36 = {{{4'b0000,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[8 : 7]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12 : 9]},2'b00};
   assign _zz_DecoderPredictionPlugin_logic_ras_ptr_push = (DecoderPredictionPlugin_logic_ras_ptr_push + _zz_DecoderPredictionPlugin_logic_ras_ptr_push_1);
   assign _zz_DecoderPredictionPlugin_logic_ras_ptr_push_2 = DecoderPredictionPlugin_logic_ras_ptr_pushIt;
   assign _zz_DecoderPredictionPlugin_logic_ras_ptr_push_1 = {3'd0, _zz_DecoderPredictionPlugin_logic_ras_ptr_push_2};
@@ -5022,11 +5110,12 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_4 = DecoderPredictionPlugin_logic_ras_ptr_popIt;
   assign _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_3 = {3'd0, _zz_DecoderPredictionPlugin_logic_ras_ptr_pop_4};
   assign _zz_BtbPlugin_logic_onLearn_port_payload_address = (BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice >>> 2'd2);
+  assign _zz_BtbPlugin_logic_onLearn_port_payload_data_slice = (BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice >>> 1'd1);
   assign _zz_BtbPlugin_logic_readCmd_entryAddress = (FetchPlugin_stages_0_Fetch_FETCH_PC >>> 2'd2);
   assign _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_2 = FetchPlugin_stages_0_BRANCH_HISTORY;
-  assign _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1 = _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_2[6:0];
+  assign _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1 = _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_2[5:0];
   assign _zz_GSharePlugin_logic_onLearn_hash_2 = BranchContextPlugin_free_learn_BRANCH_HISTORY;
-  assign _zz_GSharePlugin_logic_onLearn_hash_1 = _zz_GSharePlugin_logic_onLearn_hash_2[6:0];
+  assign _zz_GSharePlugin_logic_onLearn_hash_1 = _zz_GSharePlugin_logic_onLearn_hash_2[5:0];
   assign _zz_CommitPlugin_logic_ptr_allocNext_1 = (FrontendPlugin_allocated_isFireing ? 1'b1 : 1'b0);
   assign _zz_CommitPlugin_logic_ptr_allocNext = {4'd0, _zz_CommitPlugin_logic_ptr_allocNext_1};
   assign _zz_CommitPlugin_logic_reschedule_commit_rowHit = CommitPlugin_logic_ptr_commitRow[3:0];
@@ -5036,8 +5125,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_CommitPlugin_logic_reschedule_portsLogic_perPort_2_age = CommitPlugin_logic_ptr_free[3:0];
   assign _zz_CommitPlugin_logic_reschedule_portsLogic_perPort_3_age = CommitPlugin_logic_ptr_free[3:0];
   assign _zz_CommitPlugin_logic_reschedule_portsLogic_perPort_4_age = CommitPlugin_logic_ptr_free[3:0];
-  assign _zz_CommitPlugin_logic_reschedule_trap_5 = ((((_zz_CommitPlugin_logic_reschedule_trap ? Lsu2Plugin_setup_sharedTrap_payload_trap : 1'b0) | (_zz_CommitPlugin_logic_reschedule_trap_1 ? 1'b1 : 1'b0)) | ((_zz_CommitPlugin_logic_reschedule_trap_2 ? EU0_BranchPlugin_setup_reschedule_payload_trap : 1'b0) | (_zz_CommitPlugin_logic_reschedule_trap_3 ? 1'b1 : 1'b0))) | (_zz_CommitPlugin_logic_reschedule_trap_4 ? 1'b1 : 1'b0));
-  assign _zz_CommitPlugin_logic_reschedule_skipCommit = ((((CommitPlugin_logic_reschedule_portsLogic_hits[0] ? Lsu2Plugin_setup_sharedTrap_payload_skipCommit : 1'b0) | (CommitPlugin_logic_reschedule_portsLogic_hits[1] ? Lsu2Plugin_setup_specialTrap_payload_skipCommit : 1'b0)) | ((CommitPlugin_logic_reschedule_portsLogic_hits[2] ? EU0_BranchPlugin_setup_reschedule_payload_skipCommit : 1'b0) | (CommitPlugin_logic_reschedule_portsLogic_hits[3] ? EnvCallPlugin_setup_reschedule_payload_skipCommit : 1'b0))) | (CommitPlugin_logic_reschedule_portsLogic_hits[4] ? EU0_CsrAccessPlugin_setup_trap_payload_skipCommit : 1'b0));
+  assign _zz_CommitPlugin_logic_reschedule_trap_5 = ((((_zz_CommitPlugin_logic_reschedule_trap ? Lsu2Plugin_setup_sharedTrap_payload_trap : 1'b0) | (_zz_CommitPlugin_logic_reschedule_trap_1 ? 1'b1 : 1'b0)) | ((_zz_CommitPlugin_logic_reschedule_trap_2 ? 1'b0 : 1'b0) | (_zz_CommitPlugin_logic_reschedule_trap_3 ? 1'b1 : 1'b0))) | (_zz_CommitPlugin_logic_reschedule_trap_4 ? 1'b1 : 1'b0));
+  assign _zz_CommitPlugin_logic_reschedule_skipCommit = (((CommitPlugin_logic_reschedule_portsLogic_hits[0] ? Lsu2Plugin_setup_sharedTrap_payload_skipCommit : 1'b0) | (CommitPlugin_logic_reschedule_portsLogic_hits[1] ? Lsu2Plugin_setup_specialTrap_payload_skipCommit : 1'b0)) | ((CommitPlugin_logic_reschedule_portsLogic_hits[3] ? EnvCallPlugin_setup_reschedule_payload_skipCommit : 1'b0) | (CommitPlugin_logic_reschedule_portsLogic_hits[4] ? EU0_CsrAccessPlugin_setup_trap_payload_skipCommit : 1'b0)));
   assign _zz_CommitPlugin_logic_commit_active_1 = _zz_CommitPlugin_logic_commit_active_2[0 : 0];
   assign _zz_CommitPlugin_logic_commit_active_2 = RobPlugin_logic_storage_Frontend_DISPATCH_MASK_banks_0_spinal_port1[0];
   assign _zz_CommitPlugin_logic_commit_head = (CommitPlugin_logic_ptr_commit + 5'h00);
@@ -5058,6 +5147,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_CommitDebugFilterPlugin_logic_filters_2_value_3 = {15'd0, CommitDebugFilterPlugin_logic_commits};
   assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_1 = _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_2[31 : 0];
   assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port2[31 : 0];
+  assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices_1 = _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices_2[0 : 0];
+  assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices_2 = RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_spinal_port1[0 : 0];
   assign _zz__zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_SRC2 = ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP[31 : 20];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_ADD_SUB = ($signed(ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_SRC1) + $signed(ALU0_SrcPlugin_logic_addsub_rs2Patched));
   assign _zz_ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_ADD_SUB_1 = _zz_ALU0_ExecutionUnitBase_pipeline_execute_0_SrcStageables_ADD_SUB_2;
@@ -5109,10 +5200,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_EU0_BranchPlugin_logic_process_target_b_1 = EU0_ExecutionUnitBase_pipeline_execute_0_Frontend_MICRO_OP[31 : 20];
   assign _zz_EU0_BranchPlugin_logic_process_target_b_2 = {{{{EU0_ExecutionUnitBase_pipeline_execute_0_Frontend_MICRO_OP[31],EU0_ExecutionUnitBase_pipeline_execute_0_Frontend_MICRO_OP[7]},EU0_ExecutionUnitBase_pipeline_execute_0_Frontend_MICRO_OP[30 : 25]},EU0_ExecutionUnitBase_pipeline_execute_0_Frontend_MICRO_OP[11 : 8]},1'b0};
   assign _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_TRUE = ($signed(EU0_BranchPlugin_logic_process_target_a) + $signed(EU0_BranchPlugin_logic_process_target_b));
-  assign _zz_EU0_BranchPlugin_logic_process_slices_1 = 1'b0;
-  assign _zz_EU0_BranchPlugin_logic_process_slices = {1'd0, _zz_EU0_BranchPlugin_logic_process_slices_1};
-  assign _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1 = ({2'd0,EU0_BranchPlugin_logic_process_slices} <<< 2'd2);
-  assign _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE = {28'd0, _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1};
+  assign _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1 = ({1'd0,EU0_BranchPlugin_logic_process_slices} <<< 1'd1);
+  assign _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE = {29'd0, _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE_1};
   assign _zz_BranchContextPlugin_logic_onCommit_commitedNext = {2'd0, _zz_BranchContextPlugin_logic_onCommit_commitedNext_1};
   assign _zz_HistoryPlugin_logic_onCommit_valueNext_1 = {HistoryPlugin_logic_onCommit_valueNext,HistoryPlugin_logic_onCommit_isTaken_0};
   assign _zz_HistoryPlugin_logic_update_pushes_0_stateNext_1 = {HistoryPlugin_logic_update_pushes_0_stateNext,BtbPlugin_setup_historyPush_taken[0]};
@@ -5201,7 +5290,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_Lsu2Plugin_logic_special_atomic_alu_addSub_6 = {{30{_zz_Lsu2Plugin_logic_special_atomic_alu_addSub_7[1]}}, _zz_Lsu2Plugin_logic_special_atomic_alu_addSub_7};
   assign _zz_EU0_BranchPlugin_setup_intFormatPort_payload = EU0_ExecutionUnitBase_pipeline_execute_2_PC_FALSE;
   assign _zz_EU0_BranchPlugin_setup_reschedule_payload_reason = ((EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_BRANCH_CTRL == BranchPlugin_BranchCtrlEnum_B) ? 5'h10 : 5'h11);
-  assign _zz_EU0_BranchPlugin_logic_branch_finalBranch_payload_data_pcOnLastSlice_1 = 2'b00;
+  assign _zz_EU0_BranchPlugin_logic_branch_finalBranch_payload_data_pcOnLastSlice_1 = ({1'd0,EU0_ExecutionUnitBase_pipeline_execute_1_Fetch_INSTRUCTION_SLICE_COUNT} <<< 1'd1);
   assign _zz_EU0_BranchPlugin_logic_branch_finalBranch_payload_data_pcOnLastSlice = {30'd0, _zz_EU0_BranchPlugin_logic_branch_finalBranch_payload_data_pcOnLastSlice_1};
   assign _zz_FetchCachePlugin_setup_translationStorage_logic_sl_0_allocId_valueNext_1 = FetchCachePlugin_setup_translationStorage_logic_sl_0_allocId_willIncrement;
   assign _zz_FetchCachePlugin_setup_translationStorage_logic_sl_0_allocId_valueNext = {1'd0, _zz_FetchCachePlugin_setup_translationStorage_logic_sl_0_allocId_valueNext_1};
@@ -5244,7 +5333,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_DecoderPlugin_logic_exception_fetchFaultPage = (DecoderPlugin_logic_exception_exceptionReg_0 ? DecoderPlugin_logic_exception_fetchFaultPageReg_0 : 1'b0);
   assign _zz_DecoderPlugin_logic_exception_debugEnter = (DecoderPlugin_logic_exception_exceptionReg_0 ? DecoderPlugin_logic_exception_debugEnterReg_0 : 1'b0);
   assign _zz_DecoderPlugin_setup_exceptionPort_payload_tval = (DecoderPlugin_logic_exception_pc + _zz_DecoderPlugin_setup_exceptionPort_payload_tval_1);
-  assign _zz_DecoderPlugin_setup_exceptionPort_payload_tval_2 = 2'b00;
+  assign _zz_DecoderPlugin_setup_exceptionPort_payload_tval_2 = ({1'd0,DecoderPlugin_logic_exception_fetchFaultSlice} <<< 1'd1);
   assign _zz_DecoderPlugin_setup_exceptionPort_payload_tval_1 = {30'd0, _zz_DecoderPlugin_setup_exceptionPort_payload_tval_2};
   assign _zz_FrontendPlugin_serialized_DispatchPlugin_FENCE_OLDER_0 = _zz_FrontendPlugin_serialized_DispatchPlugin_FENCE_OLDER_0_1[0];
   assign _zz_FrontendPlugin_serialized_DispatchPlugin_FENCE_OLDER_0_1 = (|{_zz_FrontendPlugin_serialized_DispatchPlugin_SPARSE_ROB_LINE_0_3,{_zz_FrontendPlugin_serialized_DispatchPlugin_SPARSE_ROB_LINE_0_2,{_zz_FrontendPlugin_serialized_DispatchPlugin_SPARSE_ROB_LINE_0_1,{_zz_FrontendPlugin_serialized_DispatchPlugin_SPARSE_ROB_LINE_0,((FrontendPlugin_serialized_Frontend_MICRO_OP_0 & 32'h10002048) == 32'h10002008)}}}});
@@ -5264,11 +5353,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_FrontendPlugin_decoded_IS_ANY_0 = (|((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h00000050) == 32'h00000040));
   assign _zz__zz_FrontendPlugin_decoded_OFFSET_0 = {{{{FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0[31],FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0[7]},FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0[30 : 25]},FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0[11 : 8]},1'b0};
   assign _zz__zz_FrontendPlugin_decoded_OFFSET_0_1 = {{{{FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0[31],FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0[19 : 12]},FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0[20]},FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0[30 : 21]},1'b0};
-  assign _zz_DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices_1 = 1'b0;
-  assign _zz_DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices = {1'd0, _zz_DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices_1};
   assign _zz_FrontendPlugin_decoded_PC_INC_0 = (FrontendPlugin_decoded_PC_0 + _zz_FrontendPlugin_decoded_PC_INC_0_1);
-  assign _zz_FrontendPlugin_decoded_PC_INC_0_2 = ({2'd0,DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices} <<< 2'd2);
-  assign _zz_FrontendPlugin_decoded_PC_INC_0_1 = {28'd0, _zz_FrontendPlugin_decoded_PC_INC_0_2};
+  assign _zz_FrontendPlugin_decoded_PC_INC_0_2 = ({1'd0,DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices} <<< 1'd1);
+  assign _zz_FrontendPlugin_decoded_PC_INC_0_1 = {29'd0, _zz_FrontendPlugin_decoded_PC_INC_0_2};
   assign _zz_FrontendPlugin_decoded_PC_TARGET_PRE_RAS_0 = FrontendPlugin_decoded_PC_0;
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP_1 = _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP_2[31 : 0];
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_Frontend_MICRO_OP_2 = RobPlugin_logic_storage_Frontend_MICRO_OP_banks_0_spinal_port1[31 : 0];
@@ -5310,6 +5397,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_2 = RobPlugin_logic_storage_WRITE_RD_banks_0_spinal_port4[0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_2[31 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_2 = RobPlugin_logic_storage_PC_banks_0_spinal_port4[31 : 0];
+  assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT_2[0 : 0];
+  assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT_2 = RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_spinal_port2[0 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_2[1 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_2 = RobPlugin_logic_storage_BRANCH_ID_banks_0_spinal_port1[1 : 0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_LSU_ID_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_LSU_ID_2[3 : 0];
@@ -5374,7 +5463,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_ZERO_2 = (|_zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_ZERO);
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED_2[0];
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED_2 = (|_zz_EU0_ExecutionUnitBase_pipeline_fetch_0_SrcStageables_UNSIGNED);
-  assign _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0 = BranchContextPlugin_free_learn_raw[25 : 24];
   assign _zz_DispatchPlugin_logic_ptr_next = (CommitPlugin_logic_commit_reschedulePort_payload_robIdNext - 4'b1000);
   assign _zz_DispatchPlugin_logic_push_slots_0_events_0 = (8'h01 <<< _zz_DispatchPlugin_logic_push_slots_0_events_0_1);
   assign _zz_DispatchPlugin_logic_push_slots_0_events_0_2 = (FrontendPlugin_dispatch_RfDependencyPlugin_setup_waits_0_ID_0 - DispatchPlugin_logic_ptr_next);
@@ -5423,19 +5511,17 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_PrivilegedPlugin_setup_ramWrite_data = PrivilegedPlugin_logic_reschedule_payload_epc;
   assign _zz_PrivilegedPlugin_setup_ramWrite_data_1 = PrivilegedPlugin_logic_reschedule_payload_tval;
   assign _zz_PrivilegedPlugin_logic_readed = (PrivilegedPlugin_logic_reschedule_payload_epc + _zz_PrivilegedPlugin_logic_readed_1);
-  assign _zz_PrivilegedPlugin_logic_readed_2 = ((PrivilegedPlugin_logic_reschedule_payload_cause != 4'b1010) ? _zz_PrivilegedPlugin_logic_readed_3 : 4'b0000);
-  assign _zz_PrivilegedPlugin_logic_readed_1 = {28'd0, _zz_PrivilegedPlugin_logic_readed_2};
-  assign _zz_PrivilegedPlugin_logic_readed_3 = ({2'd0,_zz_PrivilegedPlugin_logic_readed_4} <<< 2'd2);
-  assign _zz_PrivilegedPlugin_logic_readed_4 = (_zz_PrivilegedPlugin_logic_readed_5 + {1'b0,1'b1});
-  assign _zz_PrivilegedPlugin_logic_readed_6 = 1'b0;
-  assign _zz_PrivilegedPlugin_logic_readed_5 = {1'd0, _zz_PrivilegedPlugin_logic_readed_6};
+  assign _zz_PrivilegedPlugin_logic_readed_2 = ((PrivilegedPlugin_logic_reschedule_payload_cause != 4'b1010) ? _zz_PrivilegedPlugin_logic_readed_3 : 3'b000);
+  assign _zz_PrivilegedPlugin_logic_readed_1 = {29'd0, _zz_PrivilegedPlugin_logic_readed_2};
+  assign _zz_PrivilegedPlugin_logic_readed_3 = ({1'd0,_zz_PrivilegedPlugin_logic_readed_4} <<< 1'd1);
+  assign _zz_PrivilegedPlugin_logic_readed_4 = ({1'b0,PrivilegedPlugin_logic_reschedule_payload_slices} + {1'b0,1'b1});
   assign _zz_FetchCachePlugin_logic_ways_0_mem_port = {FetchCachePlugin_logic_waysWrite_tag_address,{FetchCachePlugin_logic_waysWrite_tag_error,FetchCachePlugin_logic_waysWrite_tag_loaded}};
   assign _zz_FetchCachePlugin_logic_ways_0_mem_port_1 = FetchCachePlugin_logic_waysWrite_mask[0];
   assign _zz_BranchContextPlugin_logic_mem_earlyBranch_port = {FrontendPlugin_allocated_BRANCH_EARLY_0_pc,FrontendPlugin_allocated_BRANCH_EARLY_0_taken};
   assign _zz_BranchContextPlugin_logic_mem_finalBranch_port = {EU0_BranchPlugin_logic_branch_finalBranch_payload_data_taken,{EU0_BranchPlugin_logic_branch_finalBranch_payload_data_pcTarget,EU0_BranchPlugin_logic_branch_finalBranch_payload_data_pcOnLastSlice}};
   assign _zz_DecoderPredictionPlugin_logic_ras_mem_stack_port = DecoderPredictionPlugin_logic_ras_write_payload_data;
-  assign _zz_BtbPlugin_logic_mem_port = {BtbPlugin_logic_onLearn_port_payload_data_isBranch,{BtbPlugin_logic_onLearn_port_payload_data_pcTarget,BtbPlugin_logic_onLearn_port_payload_data_hash}};
-  assign _zz_GSharePlugin_logic_mem_counter_port = GSharePlugin_logic_mem_write_payload_data_0;
+  assign _zz_BtbPlugin_logic_mem_port = {BtbPlugin_logic_onLearn_port_payload_data_isBranch,{BtbPlugin_logic_onLearn_port_payload_data_pcTarget,{BtbPlugin_logic_onLearn_port_payload_data_slice,BtbPlugin_logic_onLearn_port_payload_data_hash}}};
+  assign _zz_GSharePlugin_logic_mem_counter_port = {GSharePlugin_logic_mem_write_payload_data_1,GSharePlugin_logic_mem_write_payload_data_0};
   assign _zz_Lsu2Plugin_logic_lq_mem_addressPre_port_1 = AguPlugin_setup_port_payload_address;
   assign _zz_Lsu2Plugin_logic_lq_mem_addressPost_port = Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED;
   assign _zz_Lsu2Plugin_logic_lq_mem_size_port_1 = AguPlugin_setup_port_payload_size;
@@ -5507,6 +5593,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_RobPlugin_logic_storage_Frontend_DISPATCH_MASK_banks_0_port_1 = (FrontendPlugin_allocated_isFireing && 1'b1);
   assign _zz_RobPlugin_logic_storage_PC_banks_0_port = FrontendPlugin_allocated_PC_0;
   assign _zz_RobPlugin_logic_storage_PC_banks_0_port_1 = (FrontendPlugin_allocated_isFireing && 1'b1);
+  assign _zz_RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_port = FrontendPlugin_allocated_Fetch_INSTRUCTION_SLICE_COUNT_0;
+  assign _zz_RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_port_1 = (FrontendPlugin_allocated_isFireing && 1'b1);
   assign _zz_RobPlugin_logic_storage_WRITE_RD_banks_0_port = FrontendPlugin_allocated_WRITE_RD_0;
   assign _zz_RobPlugin_logic_storage_WRITE_RD_banks_0_port_1 = (FrontendPlugin_allocated_isFireing && 1'b1);
   assign _zz_RobPlugin_logic_storage_PHYS_RD_banks_0_port = FrontendPlugin_allocated_PHYS_RD_0;
@@ -5543,7 +5631,10 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_RobPlugin_logic_storage_LSU_ID_banks_0_port_1 = (FrontendPlugin_dispatch_isFireing && 1'b1);
   assign _zz_RobPlugin_logic_storage_ROB_MSB_banks_0_port = FrontendPlugin_allocated_ROB_MSB_0;
   assign _zz_RobPlugin_logic_storage_ROB_MSB_banks_0_port_1 = (FrontendPlugin_allocated_isFireing && 1'b1);
+  assign _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT_1 = FetchPlugin_stages_1_Fetch_FETCH_PC[1 : 1];
   assign _zz_AlignerPlugin_logic_extractors_0_pcWord_1 = AlignerPlugin_logic_extractors_0_firstWord;
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_28 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 10];
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_30 = {FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12],FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 5]};
   assign _zz_CommitDebugFilterPlugin_logic_commits_1 = CommitPlugin_logic_commit_event_mask[0];
   assign _zz_BranchContextPlugin_logic_onCommit_commitedNext_2 = BranchContextPlugin_logic_onCommit_isBranchCommit_0;
   assign _zz_Lsu2Plugin_logic_lq_onCommit_lqCommitCount_1 = Lsu2Plugin_logic_lq_onCommit_lqCommits_0;
@@ -5551,6 +5642,13 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_Lsu2Plugin_logic_allocation_stores_requestsCount_1 = Lsu2Plugin_logic_allocation_stores_requests_0;
   assign _zz_Lsu2Plugin_logic_sharedPip_cacheRsp_rspShifted_1 = Lsu2Plugin_logic_sharedPip_cacheRsp_rspAddress[1 : 0];
   assign _zz_Lsu2Plugin_logic_sharedPip_cacheRsp_rspShifted_3 = Lsu2Plugin_logic_sharedPip_cacheRsp_rspAddress[1 : 1];
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_23 = {_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_12,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[4 : 3]};
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_24 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[5];
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_25 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[2];
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_31 = 7'h00;
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_32 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 2];
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_33 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12];
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_34 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7];
   assign _zz_CommitPlugin_logic_reschedule_portsLogic_hits = (! Lsu2Plugin_setup_specialTrap_valid);
   assign _zz_CommitPlugin_logic_reschedule_portsLogic_hits_1 = (CommitPlugin_logic_reschedule_portsLogic_perPort_0_age <= CommitPlugin_logic_reschedule_portsLogic_perPort_1_age);
   assign _zz_CommitPlugin_logic_reschedule_portsLogic_hits_2 = (! CommitPlugin_logic_reschedule_valid);
@@ -6221,6 +6319,14 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign RobPlugin_logic_storage_PC_banks_0_spinal_port3 = RobPlugin_logic_storage_PC_banks_0[_zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC];
   assign RobPlugin_logic_storage_PC_banks_0_spinal_port4 = RobPlugin_logic_storage_PC_banks_0[_zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC];
   always @(posedge clk) begin
+    if(_zz_RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_port_1) begin
+      RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0[FrontendPlugin_allocated_ROB_ID] <= _zz_RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_port;
+    end
+  end
+
+  assign RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_spinal_port1 = RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0[_zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices];
+  assign RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0_spinal_port2 = RobPlugin_logic_storage_Fetch_INSTRUCTION_SLICE_COUNT_banks_0[_zz_EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT];
+  always @(posedge clk) begin
     if(_zz_RobPlugin_logic_storage_WRITE_RD_banks_0_port_1) begin
       RobPlugin_logic_storage_WRITE_RD_banks_0[FrontendPlugin_allocated_ROB_ID] <= _zz_RobPlugin_logic_storage_WRITE_RD_banks_0_port;
     end
@@ -6362,57 +6468,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign RobPlugin_logic_storage_ROB_MSB_banks_0_spinal_port1 = RobPlugin_logic_storage_ROB_MSB_banks_0[_zz_EU0_ExecutionUnitBase_pipeline_fetch_0_ROB_MSB];
-  AxiLite4Clint clintCtrl (
-    .io_bus_aw_valid        (clint_awvalid                        ), //i
-    .io_bus_aw_ready        (clintCtrl_io_bus_aw_ready            ), //o
-    .io_bus_aw_payload_addr (clint_awaddr[15:0]                   ), //i
-    .io_bus_aw_payload_prot (clint_awprot[2:0]                    ), //i
-    .io_bus_w_valid         (clint_wvalid                         ), //i
-    .io_bus_w_ready         (clintCtrl_io_bus_w_ready             ), //o
-    .io_bus_w_payload_data  (clint_wdata[31:0]                    ), //i
-    .io_bus_w_payload_strb  (clint_wstrb[3:0]                     ), //i
-    .io_bus_b_valid         (clintCtrl_io_bus_b_valid             ), //o
-    .io_bus_b_ready         (clint_bready                         ), //i
-    .io_bus_b_payload_resp  (clintCtrl_io_bus_b_payload_resp[1:0] ), //o
-    .io_bus_ar_valid        (clint_arvalid                        ), //i
-    .io_bus_ar_ready        (clintCtrl_io_bus_ar_ready            ), //o
-    .io_bus_ar_payload_addr (clint_araddr[15:0]                   ), //i
-    .io_bus_ar_payload_prot (clint_arprot[2:0]                    ), //i
-    .io_bus_r_valid         (clintCtrl_io_bus_r_valid             ), //o
-    .io_bus_r_ready         (clint_rready                         ), //i
-    .io_bus_r_payload_data  (clintCtrl_io_bus_r_payload_data[31:0]), //o
-    .io_bus_r_payload_resp  (clintCtrl_io_bus_r_payload_resp[1:0] ), //o
-    .io_timerInterrupt      (clintCtrl_io_timerInterrupt          ), //o
-    .io_softwareInterrupt   (clintCtrl_io_softwareInterrupt       ), //o
-    .io_time                (clintCtrl_io_time[63:0]              ), //o
-    .clk                    (clk                                  ), //i
-    .reset                  (reset                                )  //i
-  );
-  AxiLite4Plic plicCtrl (
-    .io_bus_aw_valid        (plic_awvalid                        ), //i
-    .io_bus_aw_ready        (plicCtrl_io_bus_aw_ready            ), //o
-    .io_bus_aw_payload_addr (plic_awaddr[21:0]                   ), //i
-    .io_bus_aw_payload_prot (plic_awprot[2:0]                    ), //i
-    .io_bus_w_valid         (plic_wvalid                         ), //i
-    .io_bus_w_ready         (plicCtrl_io_bus_w_ready             ), //o
-    .io_bus_w_payload_data  (plic_wdata[31:0]                    ), //i
-    .io_bus_w_payload_strb  (plic_wstrb[3:0]                     ), //i
-    .io_bus_b_valid         (plicCtrl_io_bus_b_valid             ), //o
-    .io_bus_b_ready         (plic_bready                         ), //i
-    .io_bus_b_payload_resp  (plicCtrl_io_bus_b_payload_resp[1:0] ), //o
-    .io_bus_ar_valid        (plic_arvalid                        ), //i
-    .io_bus_ar_ready        (plicCtrl_io_bus_ar_ready            ), //o
-    .io_bus_ar_payload_addr (plic_araddr[21:0]                   ), //i
-    .io_bus_ar_payload_prot (plic_arprot[2:0]                    ), //i
-    .io_bus_r_valid         (plicCtrl_io_bus_r_valid             ), //o
-    .io_bus_r_ready         (plic_rready                         ), //i
-    .io_bus_r_payload_data  (plicCtrl_io_bus_r_payload_data[31:0]), //o
-    .io_bus_r_payload_resp  (plicCtrl_io_bus_r_payload_resp[1:0] ), //o
-    .io_sources             (plicCtrl_io_sources[30:0]           ), //i
-    .io_targets             (plicCtrl_io_targets[1:0]            ), //o
-    .clk                    (clk                                 ), //i
-    .reset                  (reset                               )  //i
-  );
   TranslatorWithRollback integer_RfTranslationPlugin_logic_impl (
     .io_rollback                  (integer_RfTranslationPlugin_logic_impl_io_rollback                      ), //i
     .io_writes_0_valid            (integer_RfTranslationPlugin_logic_impl_io_writes_0_valid                ), //i
@@ -6667,9 +6722,52 @@ module NaxRiscvAxi4LinuxPlicClint (
     .reset                         (reset                                                                         )  //i
   );
   always @(*) begin
+    case(_zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT_1)
+      1'b0 : _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT = 2'b11;
+      default : _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT = 2'b10;
+    endcase
+  end
+
+  always @(*) begin
+    case(AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE)
+      1'b0 : _zz_AlignerPlugin_setup_s2m_MASK_BACK = 2'b01;
+      default : _zz_AlignerPlugin_setup_s2m_MASK_BACK = 2'b11;
+    endcase
+  end
+
+  always @(*) begin
     case(_zz_AlignerPlugin_logic_extractors_0_pcWord_1)
       1'b0 : _zz_AlignerPlugin_logic_extractors_0_pcWord = AlignerPlugin_logic_buffer_pc;
       default : _zz_AlignerPlugin_logic_extractors_0_pcWord = AlignerPlugin_setup_s2m_Fetch_FETCH_PC;
+    endcase
+  end
+
+  always @(*) begin
+    case(_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_28)
+      2'b00 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_27 = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_22;
+      2'b01 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_27 = (_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_22 | 32'h40000000);
+      2'b10 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_27 = {{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5,_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst},3'b111},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst},7'h13};
+      default : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_27 = ({{{{{7'h00,_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_1},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_29},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst},(FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12] ? 7'h3b : 7'h33)} | ((FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 5] == 2'b00) ? 32'h40000000 : 32'h00000000));
+    endcase
+  end
+
+  always @(*) begin
+    case(_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_30)
+      3'b000 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_29 = 3'b000;
+      3'b001 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_29 = 3'b100;
+      3'b010 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_29 = 3'b110;
+      3'b011 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_29 = 3'b111;
+      3'b100 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_29 = 3'b000;
+      3'b101 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_29 = 3'b000;
+      3'b110 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_29 = 3'b010;
+      default : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_29 = 3'b011;
+    endcase
+  end
+
+  always @(*) begin
+    case(FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice)
+      1'b0 : _zz_BtbPlugin_logic_applyIt_prediction = FetchPlugin_stages_1_GSHARE_COUNTER_0[1];
+      default : _zz_BtbPlugin_logic_applyIt_prediction = FetchPlugin_stages_1_GSHARE_COUNTER_1[1];
     endcase
   end
 
@@ -7438,7 +7536,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     AlignerPlugin_logic_slices_remains_1 = AlignerPlugin_logic_slices_remains;
-    AlignerPlugin_logic_slices_remains_1 = (AlignerPlugin_logic_slices_remains & (~ (AlignerPlugin_logic_extractors_0_valid ? AlignerPlugin_logic_extractors_0_usage : 2'b00)));
+    AlignerPlugin_logic_slices_remains_1 = (AlignerPlugin_logic_slices_remains & (~ (AlignerPlugin_logic_extractors_0_valid ? AlignerPlugin_logic_extractors_0_usage : 4'b0000)));
   end
 
   always @(*) begin
@@ -7557,7 +7655,7 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     DecoderPlugin_setup_trapRaise = 1'b0;
-    if(when_PrivilegedPlugin_l679) begin
+    if(when_PrivilegedPlugin_l690) begin
       DecoderPlugin_setup_trapRaise = 1'b1;
     end
   end
@@ -7701,7 +7799,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       PrivilegedPlugin_logic_fsm_enumDef_TVEC_READ : begin
       end
       PrivilegedPlugin_logic_fsm_enumDef_XRET : begin
-        if(when_PrivilegedPlugin_l959) begin
+        if(when_PrivilegedPlugin_l970) begin
           PrivilegedPlugin_setup_xretAwayFromMachine = 1'b1;
         end
       end
@@ -7751,7 +7849,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       PrivilegedPlugin_logic_fsm_enumDef_IDLE : begin
       end
       PrivilegedPlugin_logic_fsm_enumDef_SETUP : begin
-        if(!when_PrivilegedPlugin_l773) begin
+        if(!when_PrivilegedPlugin_l784) begin
           case(PrivilegedPlugin_logic_reschedule_payload_cause)
             4'b1001 : begin
             end
@@ -7824,23 +7922,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign EU0_CsrAccessPlugin_setup_onWriteFlushPipeline = 1'b0;
-  assign clint_awready = clintCtrl_io_bus_aw_ready;
-  assign clint_wready = clintCtrl_io_bus_w_ready;
-  assign clint_bvalid = clintCtrl_io_bus_b_valid;
-  assign clint_bresp = clintCtrl_io_bus_b_payload_resp;
-  assign clint_arready = clintCtrl_io_bus_ar_ready;
-  assign clint_rvalid = clintCtrl_io_bus_r_valid;
-  assign clint_rdata = clintCtrl_io_bus_r_payload_data;
-  assign clint_rresp = clintCtrl_io_bus_r_payload_resp;
-  assign plic_awready = plicCtrl_io_bus_aw_ready;
-  assign plic_wready = plicCtrl_io_bus_w_ready;
-  assign plic_bvalid = plicCtrl_io_bus_b_valid;
-  assign plic_bresp = plicCtrl_io_bus_b_payload_resp;
-  assign plic_arready = plicCtrl_io_bus_ar_ready;
-  assign plic_rvalid = plicCtrl_io_bus_r_valid;
-  assign plic_rdata = plicCtrl_io_bus_r_payload_data;
-  assign plic_rresp = plicCtrl_io_bus_r_payload_resp;
-  assign plicCtrl_io_sources = (plicInterrupts >>> 1'd1);
   assign iBusAxi_arvalid = FetchCachePlugin_mem_cmd_valid;
   assign iBusAxi_araddr = FetchCachePlugin_mem_cmd_payload_address;
   assign iBusAxi_arprot = 3'b110;
@@ -8060,49 +8141,107 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign when_FetchCachePlugin_l593 = ((! FetchCachePlugin_logic_invalidate_done) && FetchCachePlugin_logic_invalidate_firstEver);
   assign AlignerPlugin_logic_ignoreInput = AlignerPlugin_setup_s2m_isFlushingRoot;
   assign AlignerPlugin_logic_isInputValid = (AlignerPlugin_setup_s2m_valid && (! AlignerPlugin_logic_ignoreInput));
-  assign FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT = 1'b1;
+  assign FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT = _zz_FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT;
   always @(*) begin
-    AlignerPlugin_setup_s2m_MASK_BACK = 1'b1;
+    AlignerPlugin_setup_s2m_MASK_BACK = _zz_AlignerPlugin_setup_s2m_MASK_BACK;
     if(when_AlignerPlugin_l98) begin
-      AlignerPlugin_setup_s2m_MASK_BACK = 1'b1;
+      AlignerPlugin_setup_s2m_MASK_BACK = 2'b11;
     end
   end
 
   assign when_AlignerPlugin_l98 = (! AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID);
   assign _zz_AlignerPlugin_logic_slices_data_0 = {AlignerPlugin_setup_s2m_Fetch_WORD,AlignerPlugin_logic_buffer_data};
-  assign AlignerPlugin_logic_slices_data_0 = _zz_AlignerPlugin_logic_slices_data_0[31 : 0];
-  assign AlignerPlugin_logic_slices_data_1 = _zz_AlignerPlugin_logic_slices_data_0[63 : 32];
-  assign AlignerPlugin_logic_slices_carry = {(AlignerPlugin_logic_isInputValid ? AlignerPlugin_setup_s2m_MASK_FRONT : 1'b0),AlignerPlugin_logic_buffer_mask};
+  assign AlignerPlugin_logic_slices_data_0 = _zz_AlignerPlugin_logic_slices_data_0[15 : 0];
+  assign AlignerPlugin_logic_slices_data_1 = _zz_AlignerPlugin_logic_slices_data_0[31 : 16];
+  assign AlignerPlugin_logic_slices_data_2 = _zz_AlignerPlugin_logic_slices_data_0[47 : 32];
+  assign AlignerPlugin_logic_slices_data_3 = _zz_AlignerPlugin_logic_slices_data_0[63 : 48];
+  assign AlignerPlugin_logic_slices_carry = {(AlignerPlugin_logic_isInputValid ? AlignerPlugin_setup_s2m_MASK_FRONT : 2'b00),AlignerPlugin_logic_buffer_mask};
   assign AlignerPlugin_logic_slices_remains = AlignerPlugin_logic_slices_carry;
-  assign AlignerPlugin_logic_slices_used = 2'b00;
-  assign AlignerPlugin_logic_decoders_0_usage = 2'b01;
+  assign AlignerPlugin_logic_slices_used = 4'b0000;
+  assign AlignerPlugin_logic_decoders_0_rvc = (AlignerPlugin_logic_slices_data_0[1 : 0] != 2'b11);
+  assign AlignerPlugin_logic_decoders_0_usage = (AlignerPlugin_logic_decoders_0_rvc ? 4'b0001 : 4'b0011);
   assign AlignerPlugin_logic_decoders_0_notEnoughData = 1'b0;
   assign AlignerPlugin_logic_decoders_0_pastPrediction = 1'b0;
   assign AlignerPlugin_logic_decoders_0_usable = ((! AlignerPlugin_logic_decoders_0_notEnoughData) && (! AlignerPlugin_logic_decoders_0_pastPrediction));
-  assign AlignerPlugin_logic_decoders_1_usage = 2'b10;
-  assign AlignerPlugin_logic_decoders_1_notEnoughData = 1'b0;
+  assign AlignerPlugin_logic_decoders_1_rvc = (AlignerPlugin_logic_slices_data_1[1 : 0] != 2'b11);
+  assign AlignerPlugin_logic_decoders_1_usage = (AlignerPlugin_logic_decoders_1_rvc ? 4'b0010 : 4'b0110);
+  assign AlignerPlugin_logic_decoders_1_notEnoughData = ((! AlignerPlugin_logic_decoders_1_rvc) && ((! AlignerPlugin_setup_s2m_MASK_FRONT[0]) || (! AlignerPlugin_logic_isInputValid)));
   assign AlignerPlugin_logic_decoders_1_pastPrediction = 1'b0;
   assign AlignerPlugin_logic_decoders_1_usable = ((! AlignerPlugin_logic_decoders_1_notEnoughData) && (! AlignerPlugin_logic_decoders_1_pastPrediction));
-  assign _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 = 1'b0;
-  assign _zz_AlignerPlugin_logic_extractors_0_maskOh = AlignerPlugin_logic_slices_carry[1 : 0];
-  assign _zz_AlignerPlugin_logic_extractors_0_maskOh_1 = _zz_AlignerPlugin_logic_extractors_0_maskOh[0];
+  assign AlignerPlugin_logic_decoders_2_rvc = (AlignerPlugin_logic_slices_data_2[1 : 0] != 2'b11);
+  assign AlignerPlugin_logic_decoders_2_usage = (AlignerPlugin_logic_decoders_2_rvc ? 4'b0100 : 4'b1100);
+  assign AlignerPlugin_logic_decoders_2_notEnoughData = 1'b0;
   always @(*) begin
-    _zz_AlignerPlugin_logic_extractors_0_maskOh_2[0] = (_zz_AlignerPlugin_logic_extractors_0_maskOh_1 && (! 1'b0));
-    _zz_AlignerPlugin_logic_extractors_0_maskOh_2[1] = (_zz_AlignerPlugin_logic_extractors_0_maskOh[1] && (! _zz_AlignerPlugin_logic_extractors_0_maskOh_1));
+    AlignerPlugin_logic_decoders_2_pastPrediction = 1'b0;
+    if(when_AlignerPlugin_l168) begin
+      AlignerPlugin_logic_decoders_2_pastPrediction = 1'b0;
+    end
   end
 
-  assign AlignerPlugin_logic_extractors_0_maskOh = _zz_AlignerPlugin_logic_extractors_0_maskOh_2;
+  assign AlignerPlugin_logic_decoders_2_usable = ((! AlignerPlugin_logic_decoders_2_notEnoughData) && (! AlignerPlugin_logic_decoders_2_pastPrediction));
+  assign AlignerPlugin_logic_decoders_3_rvc = (AlignerPlugin_logic_slices_data_3[1 : 0] != 2'b11);
+  assign AlignerPlugin_logic_decoders_3_usage = 4'b1000;
+  assign AlignerPlugin_logic_decoders_3_notEnoughData = (! AlignerPlugin_logic_decoders_3_rvc);
+  always @(*) begin
+    AlignerPlugin_logic_decoders_3_pastPrediction = (AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID && (AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE < 1'b1));
+    if(when_AlignerPlugin_l168) begin
+      AlignerPlugin_logic_decoders_3_pastPrediction = 1'b0;
+    end
+  end
+
+  assign AlignerPlugin_logic_decoders_3_usable = ((! AlignerPlugin_logic_decoders_3_notEnoughData) && (! AlignerPlugin_logic_decoders_3_pastPrediction));
+  assign _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_1 = {(AlignerPlugin_setup_s2m_MASK_FRONT & AlignerPlugin_setup_s2m_MASK_BACK),AlignerPlugin_logic_buffer_mask};
+  assign _zz_when_AlignerPlugin_l168 = 1'b0;
+  always @(*) begin
+    _zz_when_AlignerPlugin_l168_1[0] = (_zz_when_AlignerPlugin_l168 && (! _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_1[0]));
+    _zz_when_AlignerPlugin_l168_1[1] = (_zz_when_AlignerPlugin_l168_2 && (! _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_1[1]));
+    _zz_when_AlignerPlugin_l168_1[2] = (_zz_when_AlignerPlugin_l168_3 && (! _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_1[2]));
+    _zz_when_AlignerPlugin_l168_1[3] = (_zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_2 && (! _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_1[3]));
+  end
+
+  assign _zz_when_AlignerPlugin_l168_2 = (((! _zz_when_AlignerPlugin_l168) && _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_1[0]) && (! AlignerPlugin_logic_decoders_0_rvc));
+  assign _zz_when_AlignerPlugin_l168_3 = (((! _zz_when_AlignerPlugin_l168_2) && _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_1[1]) && (! AlignerPlugin_logic_decoders_1_rvc));
+  assign _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_2 = (((! _zz_when_AlignerPlugin_l168_3) && _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_1[2]) && (! AlignerPlugin_logic_decoders_2_rvc));
+  assign when_AlignerPlugin_l168 = (|_zz_when_AlignerPlugin_l168_1[3 : 2]);
+  assign _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 = ((AlignerPlugin_logic_isInputValid && AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID) && (when_AlignerPlugin_l168 || ((&AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE) && (((! _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_2) && _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0_1[3]) && (! AlignerPlugin_logic_decoders_3_rvc)))));
+  assign _zz_AlignerPlugin_logic_extractors_0_maskOh = AlignerPlugin_logic_slices_carry[3 : 0];
+  assign _zz_AlignerPlugin_logic_extractors_0_maskOh_1 = _zz_AlignerPlugin_logic_extractors_0_maskOh[0];
+  assign _zz_AlignerPlugin_logic_extractors_0_maskOh_2 = _zz_AlignerPlugin_logic_extractors_0_maskOh[1];
+  assign _zz_AlignerPlugin_logic_extractors_0_maskOh_3 = _zz_AlignerPlugin_logic_extractors_0_maskOh[2];
+  always @(*) begin
+    _zz_AlignerPlugin_logic_extractors_0_maskOh_4[0] = (_zz_AlignerPlugin_logic_extractors_0_maskOh_1 && (! 1'b0));
+    _zz_AlignerPlugin_logic_extractors_0_maskOh_4[1] = (_zz_AlignerPlugin_logic_extractors_0_maskOh_2 && (! _zz_AlignerPlugin_logic_extractors_0_maskOh_1));
+    _zz_AlignerPlugin_logic_extractors_0_maskOh_4[2] = (_zz_AlignerPlugin_logic_extractors_0_maskOh_3 && (! (|{_zz_AlignerPlugin_logic_extractors_0_maskOh_2,_zz_AlignerPlugin_logic_extractors_0_maskOh_1})));
+    _zz_AlignerPlugin_logic_extractors_0_maskOh_4[3] = (_zz_AlignerPlugin_logic_extractors_0_maskOh[3] && (! (|{_zz_AlignerPlugin_logic_extractors_0_maskOh_3,{_zz_AlignerPlugin_logic_extractors_0_maskOh_2,_zz_AlignerPlugin_logic_extractors_0_maskOh_1}})));
+  end
+
+  assign AlignerPlugin_logic_extractors_0_maskOh = _zz_AlignerPlugin_logic_extractors_0_maskOh_4;
   assign _zz_AlignerPlugin_logic_extractors_0_usage = AlignerPlugin_logic_extractors_0_maskOh[0];
   assign _zz_AlignerPlugin_logic_extractors_0_usage_1 = AlignerPlugin_logic_extractors_0_maskOh[1];
-  assign AlignerPlugin_logic_extractors_0_usage = ((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_decoders_0_usage : 2'b00) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_decoders_1_usage : 2'b00));
+  assign _zz_AlignerPlugin_logic_extractors_0_usage_2 = AlignerPlugin_logic_extractors_0_maskOh[2];
+  assign _zz_AlignerPlugin_logic_extractors_0_usage_3 = AlignerPlugin_logic_extractors_0_maskOh[3];
+  assign AlignerPlugin_logic_extractors_0_usage = (((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_decoders_0_usage : 4'b0000) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_decoders_1_usage : 4'b0000)) | ((_zz_AlignerPlugin_logic_extractors_0_usage_2 ? AlignerPlugin_logic_decoders_2_usage : 4'b0000) | (_zz_AlignerPlugin_logic_extractors_0_usage_3 ? AlignerPlugin_logic_decoders_3_usage : 4'b0000)));
   assign AlignerPlugin_logic_extractors_0_usable = _zz_AlignerPlugin_logic_extractors_0_usable[0];
-  assign AlignerPlugin_logic_extractors_0_slice0 = ((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_slices_data_0 : 32'h00000000) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_slices_data_1 : 32'h00000000));
-  assign AlignerPlugin_logic_extractors_0_valid = ((|AlignerPlugin_logic_slices_carry[1 : 0]) && AlignerPlugin_logic_extractors_0_usable);
-  assign FrontendPlugin_aligned_Frontend_INSTRUCTION_ALIGNED_0 = AlignerPlugin_logic_extractors_0_slice0;
+  assign AlignerPlugin_logic_extractors_0_rvc = _zz_AlignerPlugin_logic_extractors_0_rvc[0];
+  assign AlignerPlugin_logic_extractors_0_slice0 = (((_zz_AlignerPlugin_logic_extractors_0_usage ? AlignerPlugin_logic_slices_data_0 : 16'h0000) | (_zz_AlignerPlugin_logic_extractors_0_usage_1 ? AlignerPlugin_logic_slices_data_1 : 16'h0000)) | ((_zz_AlignerPlugin_logic_extractors_0_usage_2 ? AlignerPlugin_logic_slices_data_2 : 16'h0000) | (_zz_AlignerPlugin_logic_extractors_0_usage_3 ? AlignerPlugin_logic_slices_data_3 : 16'h0000)));
+  assign _zz_AlignerPlugin_logic_extractors_0_slice1 = AlignerPlugin_logic_extractors_0_maskOh[2 : 0];
+  assign AlignerPlugin_logic_extractors_0_slice1 = (((_zz_AlignerPlugin_logic_extractors_0_slice1[0] ? AlignerPlugin_logic_slices_data_1 : 16'h0000) | (_zz_AlignerPlugin_logic_extractors_0_slice1[1] ? AlignerPlugin_logic_slices_data_2 : 16'h0000)) | (_zz_AlignerPlugin_logic_extractors_0_slice1[2] ? AlignerPlugin_logic_slices_data_3 : 16'h0000));
+  assign AlignerPlugin_logic_extractors_0_instruction = {AlignerPlugin_logic_extractors_0_slice1,AlignerPlugin_logic_extractors_0_slice0};
+  assign AlignerPlugin_logic_extractors_0_valid = ((|AlignerPlugin_logic_slices_carry[3 : 0]) && AlignerPlugin_logic_extractors_0_usable);
+  assign FrontendPlugin_aligned_Frontend_INSTRUCTION_ALIGNED_0 = AlignerPlugin_logic_extractors_0_instruction;
   assign FrontendPlugin_aligned_Frontend_MASK_ALIGNED_0 = AlignerPlugin_logic_extractors_0_valid;
-  assign AlignerPlugin_logic_extractors_0_bufferPredictionLast = 1'b1;
-  assign AlignerPlugin_logic_extractors_0_inputPredictionLast = 1'b1;
-  assign AlignerPlugin_logic_extractors_0_lastWord = (|AlignerPlugin_logic_extractors_0_maskOh[1 : 1]);
+  assign FrontendPlugin_aligned_Fetch_INSTRUCTION_SLICE_COUNT_0 = (! AlignerPlugin_logic_extractors_0_rvc);
+  assign AlignerPlugin_logic_extractors_0_sliceLast = (FrontendPlugin_aligned_PC_0[1 : 1] + (! AlignerPlugin_logic_extractors_0_rvc));
+  assign AlignerPlugin_logic_extractors_0_bufferPredictionLast = (AlignerPlugin_logic_buffer_branchSlice == AlignerPlugin_logic_extractors_0_sliceLast);
+  assign AlignerPlugin_logic_extractors_0_inputPredictionLast = (AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE == AlignerPlugin_logic_extractors_0_sliceLast);
+  always @(*) begin
+    AlignerPlugin_logic_extractors_0_lastWord = (|AlignerPlugin_logic_extractors_0_maskOh[3 : 2]);
+    if(when_AlignerPlugin_l204) begin
+      AlignerPlugin_logic_extractors_0_lastWord = 1'b1;
+    end
+  end
+
+  assign when_AlignerPlugin_l204 = ((! AlignerPlugin_logic_extractors_0_rvc) && AlignerPlugin_logic_extractors_0_maskOh[1]);
   always @(*) begin
     if(AlignerPlugin_logic_extractors_0_lastWord) begin
       FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 = ((AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID && (! _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0)) && AlignerPlugin_logic_extractors_0_inputPredictionLast);
@@ -8137,6 +8276,14 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     if(AlignerPlugin_logic_extractors_0_lastWord) begin
+      FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_SLICE_0 = AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_SLICE;
+    end else begin
+      FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_SLICE_0 = AlignerPlugin_logic_buffer_wordContexts_2;
+    end
+  end
+
+  always @(*) begin
+    if(AlignerPlugin_logic_extractors_0_lastWord) begin
       FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_VALUE_0 = AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALUE;
     end else begin
       FrontendPlugin_aligned_Prediction_BRANCH_HISTORY_PUSH_VALUE_0 = AlignerPlugin_logic_buffer_wordContexts_3;
@@ -8151,11 +8298,22 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign _zz_AlignerPlugin_logic_extractors_0_sliceOffset = AlignerPlugin_logic_extractors_0_maskOh[1];
-  assign AlignerPlugin_logic_extractors_0_sliceOffset = _zz_AlignerPlugin_logic_extractors_0_sliceOffset;
-  assign AlignerPlugin_logic_extractors_0_firstWord = AlignerPlugin_logic_extractors_0_sliceOffset[0];
+  always @(*) begin
+    if(AlignerPlugin_logic_extractors_0_lastWord) begin
+      FrontendPlugin_aligned_GSHARE_COUNTER_0_1 = AlignerPlugin_setup_s2m_GSHARE_COUNTER_1;
+    end else begin
+      FrontendPlugin_aligned_GSHARE_COUNTER_0_1 = AlignerPlugin_logic_buffer_wordContexts_4_1;
+    end
+  end
+
+  assign _zz_AlignerPlugin_logic_extractors_0_sliceOffset = AlignerPlugin_logic_extractors_0_maskOh;
+  assign _zz_AlignerPlugin_logic_extractors_0_sliceOffset_1 = _zz_AlignerPlugin_logic_extractors_0_sliceOffset[3];
+  assign _zz_AlignerPlugin_logic_extractors_0_sliceOffset_2 = (_zz_AlignerPlugin_logic_extractors_0_sliceOffset[1] || _zz_AlignerPlugin_logic_extractors_0_sliceOffset_1);
+  assign _zz_AlignerPlugin_logic_extractors_0_sliceOffset_3 = (_zz_AlignerPlugin_logic_extractors_0_sliceOffset[2] || _zz_AlignerPlugin_logic_extractors_0_sliceOffset_1);
+  assign AlignerPlugin_logic_extractors_0_sliceOffset = {_zz_AlignerPlugin_logic_extractors_0_sliceOffset_3,_zz_AlignerPlugin_logic_extractors_0_sliceOffset_2};
+  assign AlignerPlugin_logic_extractors_0_firstWord = AlignerPlugin_logic_extractors_0_sliceOffset[1];
   assign AlignerPlugin_logic_extractors_0_pcWord = _zz_AlignerPlugin_logic_extractors_0_pcWord;
-  assign FrontendPlugin_aligned_PC_0 = {_zz_FrontendPlugin_aligned_PC_0,2'b00};
+  assign FrontendPlugin_aligned_PC_0 = {{_zz_FrontendPlugin_aligned_PC_0,AlignerPlugin_logic_extractors_0_sliceOffset[0 : 0]},1'b0};
   always @(*) begin
     if(AlignerPlugin_logic_extractors_0_firstWord) begin
       FrontendPlugin_aligned_FETCH_ID_0 = AlignerPlugin_setup_s2m_FETCH_ID;
@@ -8184,20 +8342,231 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
+  always @(*) begin
+    FrontendPlugin_aligned_Frontend_FETCH_FAULT_SLICE_0 = 1'bx;
+    if(when_AlignerPlugin_l230) begin
+      FrontendPlugin_aligned_Frontend_FETCH_FAULT_SLICE_0[0] = (! AlignerPlugin_logic_extractors_0_firstWord);
+    end
+    if(when_AlignerPlugin_l235) begin
+      FrontendPlugin_aligned_Frontend_FETCH_FAULT_SLICE_0[0] = 1'b0;
+    end
+  end
+
   assign when_AlignerPlugin_l230 = ((AlignerPlugin_logic_extractors_0_firstWord || AlignerPlugin_logic_extractors_0_lastWord) && AlignerPlugin_setup_s2m_Fetch_WORD_FAULT);
   assign when_AlignerPlugin_l235 = (((! AlignerPlugin_logic_extractors_0_firstWord) || (! AlignerPlugin_logic_extractors_0_lastWord)) && AlignerPlugin_logic_buffer_fault);
   assign FrontendPlugin_aligned_isFireing = (FrontendPlugin_aligned_valid && FrontendPlugin_aligned_ready);
   assign AlignerPlugin_logic_fireOutput = FrontendPlugin_aligned_isFireing;
-  assign AlignerPlugin_logic_fireInput = ((AlignerPlugin_logic_isInputValid && (AlignerPlugin_logic_buffer_mask == 1'b0)) || (AlignerPlugin_logic_fireOutput && (AlignerPlugin_logic_slices_remains_1[0 : 0] == 1'b0)));
-  assign AlignerPlugin_logic_postMask = (_zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 ? 1'b1 : AlignerPlugin_setup_s2m_MASK_BACK);
+  assign AlignerPlugin_logic_fireInput = ((AlignerPlugin_logic_isInputValid && (AlignerPlugin_logic_buffer_mask == 2'b00)) || (AlignerPlugin_logic_fireOutput && (AlignerPlugin_logic_slices_remains_1[1 : 0] == 2'b00)));
+  assign AlignerPlugin_logic_postMask = (_zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 ? 2'b11 : AlignerPlugin_setup_s2m_MASK_BACK);
   assign when_AlignerPlugin_l264 = (AlignerPlugin_setup_s2m_ready || AlignerPlugin_setup_s2m_isFlushed);
   assign _zz_FetchPlugin_stages_1_isFlushingRoot = (_zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 && (! AlignerPlugin_logic_correctionSent));
   assign AlignerPlugin_setup_sequenceJump_valid = (_zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0 && (! AlignerPlugin_logic_correctionSent));
   assign AlignerPlugin_setup_sequenceJump_payload_pc = AlignerPlugin_setup_s2m_Fetch_FETCH_PC_INC;
   assign FrontendPlugin_aligned_valid = AlignerPlugin_logic_extractors_0_valid;
   assign AlignerPlugin_setup_s2m_haltRequest_AlignerPlugin_l270 = (! AlignerPlugin_logic_fireInput);
-  assign FrontendPlugin_decompressed_Frontend_INSTRUCTION_DECOMPRESSED_0 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0;
-  assign FrontendPlugin_decompressed_Frontend_INSTRUCTION_ILLEGAL_0 = 1'b0;
+  assign DecompressorPlugin_logic_ways_0_enabled_isRvc = (FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[1 : 0] != 2'b11);
+  always @(*) begin
+    DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
+    case(switch_DecompressorPlugin_l105)
+      5'h00 : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{{{{{{2'b00,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[10 : 7]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12 : 11]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[5]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6]},2'b00},5'h02},3'b000},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_1},7'h13};
+      end
+      5'h02 : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_2,_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst},3'b010},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_1},7'h03};
+      end
+      5'h05 : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_3[11 : 5],_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_1},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst},3'b011},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_3[4 : 0]},7'h27};
+      end
+      5'h06 : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_2[11 : 5],_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_1},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst},3'b010},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_2[4 : 0]},7'h23};
+      end
+      5'h08 : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7]},3'b000},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7]},7'h13};
+      end
+      5'h09 : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_8[20],_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_8[10 : 1]},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_8[11]},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_8[19 : 12]},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_20},7'h6f};
+      end
+      5'h0a : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5,5'h00},3'b000},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7]},7'h13};
+      end
+      5'h0b : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = ((FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7] == 5'h02) ? {{{{{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_23,_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_24},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_25},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6]},4'b0000},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7]},3'b000},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7]},7'h13} : {{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_26[31 : 12],FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7]},7'h37});
+      end
+      5'h0c : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_27;
+      end
+      5'h0d : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_15[20],_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_15[10 : 1]},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_15[11]},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_15[19 : 12]},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_19},7'h6f};
+      end
+      5'h0e : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_18[12],_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_18[10 : 5]},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_19},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst},3'b000},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_18[4 : 1]},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_18[11]},7'h63};
+      end
+      5'h0f : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_18[12],_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_18[10 : 5]},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_19},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst},3'b001},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_18[4 : 1]},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_18[11]},7'h63};
+      end
+      5'h10 : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{{{6'h00,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 2]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7]},3'b001},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7]},7'h13};
+      end
+      5'h12 : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{{{{{4'b0000,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[3 : 2]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 4]},2'b00},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_21},3'b010},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7]},7'h03};
+      end
+      5'h14 : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = ((FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12 : 2] == 11'h400) ? 32'h00100073 : ((FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 2] == 5'h00) ? {{{{12'h000,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7]},3'b000},(FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12] ? _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_20 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_19)},7'h67} : {{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_31,_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_32},(_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_33 ? _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_34 : _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_19)},3'b000},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7]},7'h33}));
+      end
+      5'h16 : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_35[11 : 5],FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 2]},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_21},3'b010},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_36[4 : 0]},7'h23};
+      end
+      default : begin
+      end
+    endcase
+  end
+
+  always @(*) begin
+    DecompressorPlugin_logic_ways_0_enabled_decompressor_illegal = 1'b0;
+    case(switch_DecompressorPlugin_l105)
+      5'h00 : begin
+        if(when_DecompressorPlugin_l109) begin
+          DecompressorPlugin_logic_ways_0_enabled_decompressor_illegal = 1'b1;
+        end
+      end
+      5'h02 : begin
+      end
+      5'h05 : begin
+      end
+      5'h06 : begin
+      end
+      5'h08 : begin
+      end
+      5'h09 : begin
+      end
+      5'h0a : begin
+      end
+      5'h0b : begin
+        if(when_DecompressorPlugin_l130) begin
+          DecompressorPlugin_logic_ways_0_enabled_decompressor_illegal = 1'b1;
+        end
+      end
+      5'h0c : begin
+      end
+      5'h0d : begin
+      end
+      5'h0e : begin
+      end
+      5'h0f : begin
+      end
+      5'h10 : begin
+      end
+      5'h12 : begin
+        if(when_DecompressorPlugin_l180) begin
+          DecompressorPlugin_logic_ways_0_enabled_decompressor_illegal = 1'b1;
+        end
+      end
+      5'h14 : begin
+        if(when_DecompressorPlugin_l193) begin
+          DecompressorPlugin_logic_ways_0_enabled_decompressor_illegal = 1'b1;
+        end
+      end
+      5'h16 : begin
+      end
+      default : begin
+        DecompressorPlugin_logic_ways_0_enabled_decompressor_illegal = 1'b1;
+      end
+    endcase
+  end
+
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst = {2'b01,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[9 : 7]};
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_1 = {2'b01,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[4 : 2]};
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_2 = {{{{5'h00,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[5]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12 : 10]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6]},2'b00};
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_3 = {{{4'b0000,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 5]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12 : 10]},3'b000};
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_4 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12];
+  always @(*) begin
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5[11] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_4;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5[10] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_4;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5[9] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_4;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5[8] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_4;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5[7] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_4;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5[6] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_4;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5[5] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_4;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_5[4 : 0] = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 2];
+  end
+
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12];
+  always @(*) begin
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7[9] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7[8] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7[7] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7[6] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7[5] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7[4] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7[3] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7[2] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7[1] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7[0] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_6;
+  end
+
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_8 = {{{{{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_7,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[8]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[10 : 9]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[7]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[2]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[5 : 3]},1'b0};
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12];
+  always @(*) begin
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[14] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[13] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[12] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[11] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[10] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[9] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[8] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[7] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[6] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[5] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[4] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[3] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[2] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[1] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_10[0] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_9;
+  end
+
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_11 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12];
+  always @(*) begin
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_12[2] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_11;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_12[1] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_11;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_12[0] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_11;
+  end
+
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12];
+  always @(*) begin
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14[9] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14[8] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14[7] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14[6] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14[5] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14[4] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14[3] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14[2] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14[1] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14[0] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_13;
+  end
+
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_15 = {{{{{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_14,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[8]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[10 : 9]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[7]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[2]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[5 : 3]},1'b0};
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_16 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12];
+  always @(*) begin
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_17[4] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_16;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_17[3] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_16;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_17[2] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_16;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_17[1] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_16;
+    _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_17[0] = _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_16;
+  end
+
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_18 = {{{{{_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_17,FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 5]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[2]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 10]},FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[4 : 3]},1'b0};
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_19 = 5'h00;
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_20 = 5'h01;
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_21 = 5'h02;
+  assign switch_DecompressorPlugin_l105 = {FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[1 : 0],FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[15 : 13]};
+  assign when_DecompressorPlugin_l109 = (FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12 : 5] == 8'h00);
+  assign when_DecompressorPlugin_l130 = ((FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 2] == 5'h00) && (FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12] == 1'b0));
+  assign _zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_22 = {{{{_zz__zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst_22,_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst},3'b101},_zz_DecompressorPlugin_logic_ways_0_enabled_decompressor_inst},7'h13};
+  assign when_DecompressorPlugin_l180 = (FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7] == 5'h00);
+  assign when_DecompressorPlugin_l193 = (((FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[11 : 7] == 5'h00) && (FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[6 : 2] == 5'h00)) && (FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0[12] == 1'b0));
+  assign FrontendPlugin_decompressed_Frontend_INSTRUCTION_DECOMPRESSED_0 = (DecompressorPlugin_logic_ways_0_enabled_isRvc ? DecompressorPlugin_logic_ways_0_enabled_decompressor_inst : FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0);
+  assign FrontendPlugin_decompressed_Frontend_INSTRUCTION_ILLEGAL_0 = (DecompressorPlugin_logic_ways_0_enabled_isRvc && DecompressorPlugin_logic_ways_0_enabled_decompressor_illegal);
   assign integer_RfAllocationPlugin_logic_pop_blocked = (! integer_RfAllocationPlugin_logic_allocator_io_pop_ready);
   assign FrontendPlugin_allocated_haltRequest_RfAllocationPlugin_l55 = integer_RfAllocationPlugin_logic_pop_blocked;
   assign when_RfAllocationPlugin_l63 = 1'b1;
@@ -8258,57 +8627,76 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign BtbPlugin_logic_onLearn_port_valid = BranchContextPlugin_setup_learnValid;
   assign BtbPlugin_logic_onLearn_port_payload_address = _zz_BtbPlugin_logic_onLearn_port_payload_address[2:0];
   assign BtbPlugin_logic_onLearn_port_payload_data_hash = BtbPlugin_logic_onLearn_hash;
+  assign BtbPlugin_logic_onLearn_port_payload_data_slice = _zz_BtbPlugin_logic_onLearn_port_payload_data_slice[0:0];
   assign BtbPlugin_logic_onLearn_port_payload_data_pcTarget = BranchContextPlugin_learn_BRANCH_FINAL_pcTarget;
   assign BtbPlugin_logic_onLearn_port_payload_data_isBranch = BranchContextPlugin_free_learn_Prediction_IS_BRANCH;
   assign BtbPlugin_logic_readCmd_entryAddress = _zz_BtbPlugin_logic_readCmd_entryAddress[2:0];
   assign _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash = BtbPlugin_logic_mem_spinal_port1;
   assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[15 : 0];
-  assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_pcTarget = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[47 : 16];
-  assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_isBranch = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[48];
-  assign BtbPlugin_logic_hitCalc_postPcPrediction = 1'b0;
+  assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[16 : 16];
+  assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_pcTarget = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[48 : 17];
+  assign FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_isBranch = _zz_FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash[49];
+  assign BtbPlugin_logic_hitCalc_postPcPrediction = (FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice < FetchPlugin_stages_1_Fetch_FETCH_PC[1 : 1]);
   assign FetchPlugin_stages_1_BtbPlugin_logic_HIT = ((FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_hash == FetchPlugin_stages_1_Fetch_FETCH_PC[17 : 2]) && (! BtbPlugin_logic_hitCalc_postPcPrediction));
-  assign BtbPlugin_logic_applyIt_prediction = FetchPlugin_stages_1_GSHARE_COUNTER_0[1];
+  assign BtbPlugin_logic_applyIt_prediction = _zz_BtbPlugin_logic_applyIt_prediction;
   assign BtbPlugin_logic_applyIt_needIt = ((FetchPlugin_stages_1_valid && FetchPlugin_stages_1_BtbPlugin_logic_HIT) && (! (FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_isBranch && (! BtbPlugin_logic_applyIt_prediction))));
   assign when_BtbPlugin_l109 = (FetchPlugin_stages_1_ready || FetchPlugin_stages_1_isFlushed);
   assign BtbPlugin_logic_applyIt_doIt = (BtbPlugin_logic_applyIt_needIt && (! BtbPlugin_logic_applyIt_correctionSent));
   assign BtbPlugin_setup_btbJump_valid = BtbPlugin_logic_applyIt_doIt;
   assign BtbPlugin_setup_btbJump_payload_pc = FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_pcTarget;
   assign FetchPlugin_stages_1_Prediction_WORD_BRANCH_VALID = BtbPlugin_logic_applyIt_needIt;
+  assign FetchPlugin_stages_1_Prediction_WORD_BRANCH_SLICE = FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice;
   assign FetchPlugin_stages_1_Prediction_WORD_BRANCH_PC_NEXT = FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_pcTarget;
   assign BtbPlugin_setup_historyPush_flush = (((FetchPlugin_stages_1_valid && FetchPlugin_stages_1_BtbPlugin_logic_HIT) && FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_isBranch) && (! BtbPlugin_logic_applyIt_correctionSent));
   assign BtbPlugin_setup_historyPush_mask[0] = BtbPlugin_setup_historyPush_flush;
   assign BtbPlugin_setup_historyPush_taken[0] = BtbPlugin_logic_applyIt_prediction;
   assign FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALID = BtbPlugin_setup_historyPush_flush;
+  assign FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_SLICE = FetchPlugin_stages_1_BtbPlugin_logic_ENTRY_slice;
   assign FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALUE = BtbPlugin_logic_applyIt_prediction;
-  assign _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH = FetchPlugin_stages_0_Fetch_FETCH_PC[8 : 2];
-  assign FetchPlugin_stages_0_GSharePlugin_logic_HASH = ({_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[0],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[1],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[2],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[3],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[4],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[5],_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[6]}}}}}} ^ _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1);
+  assign _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH = FetchPlugin_stages_0_Fetch_FETCH_PC[7 : 2];
+  assign FetchPlugin_stages_0_GSharePlugin_logic_HASH = ({_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[0],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[1],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[2],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[3],{_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[4],_zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH[5]}}}}} ^ _zz_FetchPlugin_stages_0_GSharePlugin_logic_HASH_1);
   assign FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_valid = GSharePlugin_logic_mem_write_valid;
   assign FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_address = GSharePlugin_logic_mem_write_payload_address;
   assign FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_0 = GSharePlugin_logic_mem_write_payload_data_0;
+  assign FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_1 = GSharePlugin_logic_mem_write_payload_data_1;
+  assign _zz_FetchPlugin_stages_1_GSHARE_COUNTER_0 = GSharePlugin_logic_mem_counter_spinal_port1;
   always @(*) begin
-    FetchPlugin_stages_1_GSHARE_COUNTER_0 = GSharePlugin_logic_mem_counter_spinal_port1[1 : 0];
+    FetchPlugin_stages_1_GSHARE_COUNTER_0 = _zz_FetchPlugin_stages_1_GSHARE_COUNTER_0[1 : 0];
     if(when_GSharePlugin_l98) begin
       FetchPlugin_stages_1_GSHARE_COUNTER_0 = FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_0;
     end
   end
 
+  always @(*) begin
+    FetchPlugin_stages_1_GSHARE_COUNTER_1 = _zz_FetchPlugin_stages_1_GSHARE_COUNTER_0[3 : 2];
+    if(when_GSharePlugin_l98) begin
+      FetchPlugin_stages_1_GSHARE_COUNTER_1 = FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_1;
+    end
+  end
+
   assign when_GSharePlugin_l98 = (FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_valid && (FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_address == FetchPlugin_stages_1_GSharePlugin_logic_HASH));
-  assign FrontendPlugin_decompressed_Prediction_CONDITIONAL_TAKE_IT_0 = FrontendPlugin_decompressed_GSHARE_COUNTER_0_0[1];
-  assign _zz_GSharePlugin_logic_onLearn_hash = BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[8 : 2];
-  assign GSharePlugin_logic_onLearn_hash = ({_zz_GSharePlugin_logic_onLearn_hash[0],{_zz_GSharePlugin_logic_onLearn_hash[1],{_zz_GSharePlugin_logic_onLearn_hash[2],{_zz_GSharePlugin_logic_onLearn_hash[3],{_zz_GSharePlugin_logic_onLearn_hash[4],{_zz_GSharePlugin_logic_onLearn_hash[5],_zz_GSharePlugin_logic_onLearn_hash[6]}}}}}} ^ _zz_GSharePlugin_logic_onLearn_hash_1);
+  assign FrontendPlugin_decompressed_Prediction_CONDITIONAL_TAKE_IT_0 = {FrontendPlugin_decompressed_GSHARE_COUNTER_0_1[1],FrontendPlugin_decompressed_GSHARE_COUNTER_0_0[1]};
+  assign _zz_GSharePlugin_logic_onLearn_hash = BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[7 : 2];
+  assign GSharePlugin_logic_onLearn_hash = ({_zz_GSharePlugin_logic_onLearn_hash[0],{_zz_GSharePlugin_logic_onLearn_hash[1],{_zz_GSharePlugin_logic_onLearn_hash[2],{_zz_GSharePlugin_logic_onLearn_hash[3],{_zz_GSharePlugin_logic_onLearn_hash[4],_zz_GSharePlugin_logic_onLearn_hash[5]}}}}} ^ _zz_GSharePlugin_logic_onLearn_hash_1);
   assign GSharePlugin_logic_onLearn_incrValue = (BranchContextPlugin_learn_BRANCH_FINAL_taken ? 2'b01 : 2'b11);
   always @(*) begin
     GSharePlugin_logic_onLearn_overflow = 1'b0;
     if(when_GSharePlugin_l123) begin
       GSharePlugin_logic_onLearn_overflow = 1'b1;
     end
+    if(when_GSharePlugin_l123_1) begin
+      GSharePlugin_logic_onLearn_overflow = 1'b1;
+    end
   end
 
-  assign GSharePlugin_logic_onLearn_updated_0 = (BranchContextPlugin_free_learn_GSHARE_COUNTER_0 + (1'b1 ? GSharePlugin_logic_onLearn_incrValue : 2'b00));
+  assign GSharePlugin_logic_onLearn_updated_0 = (BranchContextPlugin_free_learn_GSHARE_COUNTER_0 + ((BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[1 : 1] == 1'b0) ? GSharePlugin_logic_onLearn_incrValue : 2'b00));
   assign when_GSharePlugin_l123 = (((BranchContextPlugin_learn_BRANCH_FINAL_taken && BranchContextPlugin_free_learn_GSHARE_COUNTER_0[1]) && (! GSharePlugin_logic_onLearn_updated_0[1])) || (((! BranchContextPlugin_learn_BRANCH_FINAL_taken) && (! BranchContextPlugin_free_learn_GSHARE_COUNTER_0[1])) && GSharePlugin_logic_onLearn_updated_0[1]));
+  assign GSharePlugin_logic_onLearn_updated_1 = (BranchContextPlugin_free_learn_GSHARE_COUNTER_1 + ((BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[1 : 1] == 1'b1) ? GSharePlugin_logic_onLearn_incrValue : 2'b00));
+  assign when_GSharePlugin_l123_1 = (((BranchContextPlugin_learn_BRANCH_FINAL_taken && BranchContextPlugin_free_learn_GSHARE_COUNTER_1[1]) && (! GSharePlugin_logic_onLearn_updated_1[1])) || (((! BranchContextPlugin_learn_BRANCH_FINAL_taken) && (! BranchContextPlugin_free_learn_GSHARE_COUNTER_1[1])) && GSharePlugin_logic_onLearn_updated_1[1]));
   assign GSharePlugin_logic_mem_write_valid = ((BranchContextPlugin_setup_learnValid && BranchContextPlugin_free_learn_Prediction_IS_BRANCH) && (! GSharePlugin_logic_onLearn_overflow));
   assign GSharePlugin_logic_mem_write_payload_address = GSharePlugin_logic_onLearn_hash;
   assign GSharePlugin_logic_mem_write_payload_data_0 = GSharePlugin_logic_onLearn_updated_0;
+  assign GSharePlugin_logic_mem_write_payload_data_1 = GSharePlugin_logic_onLearn_updated_1;
   assign DataCachePlugin_setup_writebackBusy = DataCachePlugin_logic_cache_io_writebackBusy;
   assign DataCachePlugin_setup_refillCompletions = DataCachePlugin_logic_cache_io_refillCompletions;
   assign DataCachePlugin_logic_load_hits = {Lsu2Plugin_setup_cacheLoad_cmd_valid,MmuPlugin_setup_cacheLoad_cmd_valid};
@@ -8543,9 +8931,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign PrivilegedPlugin_logic_supervisor_sip_seipMasked = (PrivilegedPlugin_logic_supervisor_sip_seipOr && PrivilegedPlugin_logic_machine_mideleg_se);
   assign PrivilegedPlugin_logic_supervisor_sip_stipMasked = (PrivilegedPlugin_logic_supervisor_sip_stip && PrivilegedPlugin_logic_machine_mideleg_st);
   assign PrivilegedPlugin_logic_supervisor_sip_ssipMasked = (PrivilegedPlugin_logic_supervisor_sip_ssip && PrivilegedPlugin_logic_machine_mideleg_ss);
-  assign _zz_when_PrivilegedPlugin_l644 = (PrivilegedPlugin_logic_supervisor_sip_ssip && PrivilegedPlugin_logic_supervisor_sie_ssie);
-  assign _zz_when_PrivilegedPlugin_l644_1 = (PrivilegedPlugin_logic_supervisor_sip_stip && PrivilegedPlugin_logic_supervisor_sie_stie);
-  assign _zz_when_PrivilegedPlugin_l644_2 = (PrivilegedPlugin_logic_supervisor_sip_seipOr && PrivilegedPlugin_logic_supervisor_sie_seie);
+  assign _zz_when_PrivilegedPlugin_l653 = (PrivilegedPlugin_logic_supervisor_sip_ssip && PrivilegedPlugin_logic_supervisor_sie_ssie);
+  assign _zz_when_PrivilegedPlugin_l653_1 = (PrivilegedPlugin_logic_supervisor_sip_stip && PrivilegedPlugin_logic_supervisor_sie_stie);
+  assign _zz_when_PrivilegedPlugin_l653_2 = (PrivilegedPlugin_logic_supervisor_sip_seipOr && PrivilegedPlugin_logic_supervisor_sie_seie);
   always @(*) begin
     PrivilegedPlugin_logic_rescheduleUnbuffered_ready = PrivilegedPlugin_logic_reschedule_ready;
     if(when_Stream_l369) begin
@@ -8558,37 +8946,39 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign PrivilegedPlugin_logic_reschedule_payload_cause = PrivilegedPlugin_logic_rescheduleUnbuffered_rData_cause;
   assign PrivilegedPlugin_logic_reschedule_payload_epc = PrivilegedPlugin_logic_rescheduleUnbuffered_rData_epc;
   assign PrivilegedPlugin_logic_reschedule_payload_tval = PrivilegedPlugin_logic_rescheduleUnbuffered_rData_tval;
+  assign PrivilegedPlugin_logic_reschedule_payload_slices = PrivilegedPlugin_logic_rescheduleUnbuffered_rData_slices;
   assign PrivilegedPlugin_logic_reschedule_payload_fromCommit = PrivilegedPlugin_logic_rescheduleUnbuffered_rData_fromCommit;
   always @(*) begin
     PrivilegedPlugin_logic_rescheduleUnbuffered_valid = (CommitPlugin_logic_commit_reschedulePort_valid && CommitPlugin_logic_commit_reschedulePort_payload_trap);
-    if(when_PrivilegedPlugin_l592) begin
+    if(when_PrivilegedPlugin_l601) begin
       PrivilegedPlugin_logic_rescheduleUnbuffered_valid = 1'b1;
     end
   end
 
   always @(*) begin
     PrivilegedPlugin_logic_rescheduleUnbuffered_payload_cause = CommitPlugin_logic_commit_reschedulePort_payload_cause;
-    if(when_PrivilegedPlugin_l592) begin
+    if(when_PrivilegedPlugin_l601) begin
       PrivilegedPlugin_logic_rescheduleUnbuffered_payload_cause = DecoderPlugin_setup_exceptionPort_payload_cause;
     end
   end
 
   always @(*) begin
     PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc = _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc_1[31 : 0];
-    if(when_PrivilegedPlugin_l592) begin
+    if(when_PrivilegedPlugin_l601) begin
       PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc = DecoderPlugin_setup_exceptionPort_payload_epc;
     end
   end
 
+  assign PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices = _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices_1[0 : 0];
   always @(*) begin
     PrivilegedPlugin_logic_rescheduleUnbuffered_payload_tval = CommitPlugin_logic_commit_reschedulePort_payload_tval;
-    if(when_PrivilegedPlugin_l592) begin
+    if(when_PrivilegedPlugin_l601) begin
       PrivilegedPlugin_logic_rescheduleUnbuffered_payload_tval = DecoderPlugin_setup_exceptionPort_payload_tval;
     end
   end
 
   assign PrivilegedPlugin_logic_rescheduleUnbuffered_payload_fromCommit = (CommitPlugin_logic_commit_reschedulePort_valid && CommitPlugin_logic_commit_reschedulePort_payload_trap);
-  assign when_PrivilegedPlugin_l592 = (DecoderPlugin_setup_exceptionPort_valid && (! PrivilegedPlugin_logic_rescheduleUnbuffered_payload_fromCommit));
+  assign when_PrivilegedPlugin_l601 = (DecoderPlugin_setup_exceptionPort_valid && (! PrivilegedPlugin_logic_rescheduleUnbuffered_payload_fromCommit));
   assign PrivilegedPlugin_logic_targetMachine = 1'b1;
   always @(*) begin
     PrivilegedPlugin_logic_reschedule_ready = 1'b0;
@@ -8884,7 +9274,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     EU0_ExecutionUnitBase_pipeline_execute_0_PC_TRUE[0] = 1'b0;
   end
 
-  assign EU0_BranchPlugin_logic_process_slices = (_zz_EU0_BranchPlugin_logic_process_slices + {1'b0,1'b1});
+  assign EU0_BranchPlugin_logic_process_slices = ({1'b0,EU0_ExecutionUnitBase_pipeline_execute_0_Fetch_INSTRUCTION_SLICE_COUNT} + {1'b0,1'b1});
   assign EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE = (EU0_ExecutionUnitBase_pipeline_execute_0_PC + _zz_EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE);
   assign EU0_ExecutionUnitBase_pipeline_execute_0_PC_TARGET = (EU0_ExecutionUnitBase_pipeline_execute_0_BranchPlugin_COND ? EU0_ExecutionUnitBase_pipeline_execute_0_PC_TRUE : EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE);
   assign AguPlugin_logic_func3 = EU0_ExecutionUnitBase_pipeline_execute_0_Frontend_MICRO_OP[14 : 12];
@@ -9064,11 +9454,6 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign DataCachePlugin_mem_write_rsp_payload_id = dBusAxi_bid;
   assign DataCachePlugin_mem_write_rsp_payload_error = (! (dBusAxi_bresp == 2'b00));
   assign dBusAxi_bready = 1'b1;
-  assign PrivilegedPlugin_io_int_machine_external = plicCtrl_io_targets[0];
-  assign PrivilegedPlugin_io_int_machine_timer = clintCtrl_io_timerInterrupt[0];
-  assign PrivilegedPlugin_io_int_machine_software = clintCtrl_io_softwareInterrupt[0];
-  assign PrivilegedPlugin_io_int_supervisor_external = plicCtrl_io_targets[1];
-  assign PrivilegedPlugin_io_rdtime = clintCtrl_io_time;
   assign FrontendPlugin_allocated_haltRequest_FrontendPlugin_l67 = CommitPlugin_logic_reschedule_valid;
   always @(*) begin
     integer_RfTranslationPlugin_logic_impl_io_rollback = CommitPlugin_logic_commit_reschedulePort_valid;
@@ -11005,10 +11390,10 @@ module NaxRiscvAxi4LinuxPlicClint (
         end
         default : begin
           if(Lsu2Plugin_logic_sharedPip_stages_3_IS_LOAD) begin
-            Lsu2Plugin_logic_lq_hazardPrediction_write_payload_address = Lsu2Plugin_logic_sharedPip_stages_3_YOUNGER_LOAD_PC[8 : 2];
+            Lsu2Plugin_logic_lq_hazardPrediction_write_payload_address = Lsu2Plugin_logic_sharedPip_stages_3_YOUNGER_LOAD_PC[7 : 1];
           end else begin
             if(Lsu2Plugin_logic_sharedPip_stages_3_YOUNGER_LOAD_RESCHEDULE) begin
-              Lsu2Plugin_logic_lq_hazardPrediction_write_payload_address = Lsu2Plugin_logic_sharedPip_stages_3_YOUNGER_LOAD_PC[8 : 2];
+              Lsu2Plugin_logic_lq_hazardPrediction_write_payload_address = Lsu2Plugin_logic_sharedPip_stages_3_YOUNGER_LOAD_PC[7 : 1];
             end
           end
         end
@@ -11067,10 +11452,10 @@ module NaxRiscvAxi4LinuxPlicClint (
         end
         default : begin
           if(Lsu2Plugin_logic_sharedPip_stages_3_IS_LOAD) begin
-            Lsu2Plugin_logic_lq_hazardPrediction_write_payload_data_tag = Lsu2Plugin_logic_sharedPip_stages_3_YOUNGER_LOAD_PC[24 : 9];
+            Lsu2Plugin_logic_lq_hazardPrediction_write_payload_data_tag = Lsu2Plugin_logic_sharedPip_stages_3_YOUNGER_LOAD_PC[23 : 8];
           end else begin
             if(Lsu2Plugin_logic_sharedPip_stages_3_YOUNGER_LOAD_RESCHEDULE) begin
-              Lsu2Plugin_logic_lq_hazardPrediction_write_payload_data_tag = Lsu2Plugin_logic_sharedPip_stages_3_YOUNGER_LOAD_PC[24 : 9];
+              Lsu2Plugin_logic_lq_hazardPrediction_write_payload_data_tag = Lsu2Plugin_logic_sharedPip_stages_3_YOUNGER_LOAD_PC[23 : 8];
             end
           end
         end
@@ -12146,12 +12531,12 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign Lsu2Plugin_logic_aguPush_0_hazardPrediction_read_rsp_tag = _zz_Lsu2Plugin_logic_aguPush_0_hazardPrediction_read_rsp_score[18 : 3];
   assign Lsu2Plugin_logic_aguPush_0_hazardPrediction_read_rsp_delta = _zz_Lsu2Plugin_logic_aguPush_0_hazardPrediction_read_rsp_score[21 : 19];
   assign Lsu2Plugin_logic_aguPush_0_hazardPrediction_read_cmd_valid = AguPlugin_setup_port_payload_earlySample;
-  assign Lsu2Plugin_logic_aguPush_0_hazardPrediction_read_cmd_payload = AguPlugin_setup_port_payload_earlyPc[8 : 2];
-  assign Lsu2Plugin_logic_aguPush_0_hazardPrediction_hash = AguPlugin_setup_port_payload_pc[24 : 9];
+  assign Lsu2Plugin_logic_aguPush_0_hazardPrediction_read_cmd_payload = AguPlugin_setup_port_payload_earlyPc[7 : 1];
+  assign Lsu2Plugin_logic_aguPush_0_hazardPrediction_hash = AguPlugin_setup_port_payload_pc[23 : 8];
   assign Lsu2Plugin_logic_aguPush_0_hazardPrediction_hit = ((Lsu2Plugin_logic_aguPush_0_hazardPrediction_read_rsp_score != 3'b000) && (Lsu2Plugin_logic_aguPush_0_hazardPrediction_read_rsp_tag == Lsu2Plugin_logic_aguPush_0_hazardPrediction_hash));
   assign Lsu2Plugin_logic_aguPush_0_hitPrediction_read_rsp_counter = Lsu2Plugin_logic_lq_hitPrediction_mem_spinal_port1[5 : 0];
   assign Lsu2Plugin_logic_aguPush_0_hitPrediction_read_cmd_valid = AguPlugin_setup_port_payload_earlySample;
-  assign Lsu2Plugin_logic_aguPush_0_hitPrediction_read_cmd_payload = AguPlugin_setup_port_payload_earlyPc[7 : 2];
+  assign Lsu2Plugin_logic_aguPush_0_hitPrediction_read_cmd_payload = AguPlugin_setup_port_payload_earlyPc[6 : 1];
   assign Lsu2Plugin_logic_aguPush_0_hitPrediction_likelyToHit = Lsu2Plugin_logic_aguPush_0_hitPrediction_read_rsp_counter[5];
   assign when_Lsu2Plugin_l733 = (Lsu2Plugin_logic_aguPush_0_pushSq && (AguPlugin_setup_port_payload_sc || AguPlugin_setup_port_payload_amo));
   assign switch_Utils_l1423_1 = AguPlugin_setup_port_payload_aguId[2:0];
@@ -12550,7 +12935,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign Lsu2Plugin_logic_sharedPip_stages_3_LOAD_HAZARD_PRED_HIT_FEEDED_overloaded = (Lsu2Plugin_logic_sharedPip_stages_3_LOAD_HAZARD_PRED_HIT_FEEDED || (Lsu2Plugin_logic_sqFeedEvent_valid && (Lsu2Plugin_logic_sqFeedEvent_payload == Lsu2Plugin_logic_sharedPip_stages_3_LOAD_HAZARD_PRED_SQID)));
   assign Lsu2Plugin_logic_sharedPip_stages_0_LOAD_FRESH_PC = AguPlugin_setup_port_payload_pc;
   assign when_Lsu2Plugin_l959 = (Lsu2Plugin_logic_sharedPip_stages_0_isFireing && (! Lsu2Plugin_logic_sharedPip_stages_0_IS_LOAD));
-  assign Lsu2Plugin_logic_sharedPip_hitSpeculation_wakeRob_valid = (Lsu2Plugin_logic_sharedPip_stages_0_isFireing && Lsu2Plugin_logic_sharedPip_stages_0_HIT_SPECULATION);
+  assign Lsu2Plugin_logic_sharedPip_hitSpeculation_wakeRob_valid = ((Lsu2Plugin_logic_sharedPip_stages_0_isFireing && Lsu2Plugin_logic_sharedPip_stages_0_HIT_SPECULATION) && Lsu2Plugin_logic_sharedPip_stages_0_WRITE_RD_agu);
   assign Lsu2Plugin_logic_sharedPip_hitSpeculation_wakeRob_payload_robId = Lsu2Plugin_logic_sharedPip_stages_0_ROB_ID_agu;
   assign Lsu2Plugin_logic_sharedPip_hitSpeculation_wakeRf_valid = ((Lsu2Plugin_logic_sharedPip_stages_0_isFireing && Lsu2Plugin_logic_sharedPip_stages_0_HIT_SPECULATION) && Lsu2Plugin_logic_sharedPip_stages_0_WRITE_RD_agu);
   assign Lsu2Plugin_logic_sharedPip_hitSpeculation_wakeRf_payload_physical = Lsu2Plugin_logic_sharedPip_stages_0_PHYS_RD_agu;
@@ -13645,7 +14030,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_Lsu2Plugin_logic_sharedPip_ctrl_hitPrediction_next = ((Lsu2Plugin_logic_sharedPip_ctrl_doCompletion && (! Lsu2Plugin_logic_sharedPip_stages_3_IS_IO)) ? 6'h3f : 6'h14);
   assign Lsu2Plugin_logic_sharedPip_ctrl_hitPrediction_next = ($signed(_zz_Lsu2Plugin_logic_sharedPip_ctrl_hitPrediction_next_1) + $signed(_zz_Lsu2Plugin_logic_sharedPip_ctrl_hitPrediction_next_2));
   assign Lsu2Plugin_logic_lq_hitPrediction_write_valid = (((Lsu2Plugin_logic_sharedPip_stages_3_isFireing && Lsu2Plugin_logic_sharedPip_stages_3_IS_LOAD) && Lsu2Plugin_logic_sharedPip_stages_3_LOAD_FRESH) && (! Lsu2Plugin_logic_sharedPip_stages_3_SP_FP_ADDRESS));
-  assign Lsu2Plugin_logic_lq_hitPrediction_write_payload_address = Lsu2Plugin_logic_sharedPip_stages_3_LOAD_FRESH_PC[7 : 2];
+  assign Lsu2Plugin_logic_lq_hitPrediction_write_payload_address = Lsu2Plugin_logic_sharedPip_stages_3_LOAD_FRESH_PC[6 : 1];
   assign when_SInt_l131 = Lsu2Plugin_logic_sharedPip_ctrl_hitPrediction_next[6];
   assign when_SInt_l132 = (! (&_zz_when_SInt_l132));
   always @(*) begin
@@ -14262,13 +14647,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign EU0_BranchPlugin_setup_reschedule_payload_robId = EU0_ExecutionUnitBase_pipeline_execute_1_ROB_ID;
   assign EU0_BranchPlugin_setup_reschedule_payload_pcTarget = EU0_ExecutionUnitBase_pipeline_execute_1_PC_TARGET;
   assign EU0_BranchPlugin_setup_reschedule_payload_reason = {3'd0, _zz_EU0_BranchPlugin_setup_reschedule_payload_reason};
-  assign EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_MISSALIGNED = ((EU0_ExecutionUnitBase_pipeline_execute_1_PC_TARGET[1 : 0] != 2'b00) && EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_COND);
   assign EU0_ExecutionUnitBase_pipeline_execute_1_isFireing = (EU0_ExecutionUnitBase_pipeline_execute_1_valid && EU0_ExecutionUnitBase_pipeline_execute_1_ready);
-  assign EU0_BranchPlugin_setup_reschedule_valid = ((EU0_ExecutionUnitBase_pipeline_execute_1_isFireing && EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_SEL) && (EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_MISSPREDICTED || EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_MISSALIGNED));
-  assign EU0_BranchPlugin_setup_reschedule_payload_trap = EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_MISSALIGNED;
-  assign EU0_BranchPlugin_setup_reschedule_payload_skipCommit = EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_MISSALIGNED;
-  assign EU0_BranchPlugin_setup_reschedule_payload_cause = 4'b0000;
-  assign EU0_BranchPlugin_setup_reschedule_payload_tval = EU0_ExecutionUnitBase_pipeline_execute_1_PC_TARGET;
+  assign EU0_BranchPlugin_setup_reschedule_valid = ((EU0_ExecutionUnitBase_pipeline_execute_1_isFireing && EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_SEL) && EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_MISSPREDICTED);
+  assign EU0_BranchPlugin_setup_reschedule_payload_skipCommit = 1'b0;
   assign EU0_BranchPlugin_logic_branch_finalBranch_valid = (EU0_ExecutionUnitBase_pipeline_execute_1_valid && EU0_ExecutionUnitBase_pipeline_execute_1_BranchPlugin_SEL);
   assign EU0_BranchPlugin_logic_branch_finalBranch_payload_address = EU0_ExecutionUnitBase_pipeline_execute_1_BRANCH_ID;
   assign EU0_BranchPlugin_logic_branch_finalBranch_payload_data_pcOnLastSlice = (EU0_ExecutionUnitBase_pipeline_execute_1_PC + _zz_EU0_BranchPlugin_logic_branch_finalBranch_payload_data_pcOnLastSlice);
@@ -15966,34 +16347,34 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     PrivilegedPlugin_logic_interrupt_valid = 1'b0;
-    if(when_PrivilegedPlugin_l638_1) begin
-      if(when_PrivilegedPlugin_l644) begin
+    if(when_PrivilegedPlugin_l647_1) begin
+      if(when_PrivilegedPlugin_l653) begin
         PrivilegedPlugin_logic_interrupt_valid = 1'b1;
       end
-      if(when_PrivilegedPlugin_l644_1) begin
+      if(when_PrivilegedPlugin_l653_1) begin
         PrivilegedPlugin_logic_interrupt_valid = 1'b1;
       end
-      if(when_PrivilegedPlugin_l644_2) begin
+      if(when_PrivilegedPlugin_l653_2) begin
         PrivilegedPlugin_logic_interrupt_valid = 1'b1;
       end
     end
-    if(when_PrivilegedPlugin_l638) begin
-      if(when_PrivilegedPlugin_l644_3) begin
+    if(when_PrivilegedPlugin_l647) begin
+      if(when_PrivilegedPlugin_l653_3) begin
         PrivilegedPlugin_logic_interrupt_valid = 1'b1;
       end
-      if(when_PrivilegedPlugin_l644_4) begin
+      if(when_PrivilegedPlugin_l653_4) begin
         PrivilegedPlugin_logic_interrupt_valid = 1'b1;
       end
-      if(when_PrivilegedPlugin_l644_5) begin
+      if(when_PrivilegedPlugin_l653_5) begin
         PrivilegedPlugin_logic_interrupt_valid = 1'b1;
       end
-      if(when_PrivilegedPlugin_l644_6) begin
+      if(when_PrivilegedPlugin_l653_6) begin
         PrivilegedPlugin_logic_interrupt_valid = 1'b1;
       end
-      if(when_PrivilegedPlugin_l644_7) begin
+      if(when_PrivilegedPlugin_l653_7) begin
         PrivilegedPlugin_logic_interrupt_valid = 1'b1;
       end
-      if(when_PrivilegedPlugin_l644_8) begin
+      if(when_PrivilegedPlugin_l653_8) begin
         PrivilegedPlugin_logic_interrupt_valid = 1'b1;
       end
     end
@@ -16001,34 +16382,34 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     PrivilegedPlugin_logic_interrupt_code = 4'bxxxx;
-    if(when_PrivilegedPlugin_l638_1) begin
-      if(when_PrivilegedPlugin_l644) begin
+    if(when_PrivilegedPlugin_l647_1) begin
+      if(when_PrivilegedPlugin_l653) begin
         PrivilegedPlugin_logic_interrupt_code = 4'b0001;
       end
-      if(when_PrivilegedPlugin_l644_1) begin
+      if(when_PrivilegedPlugin_l653_1) begin
         PrivilegedPlugin_logic_interrupt_code = 4'b0101;
       end
-      if(when_PrivilegedPlugin_l644_2) begin
+      if(when_PrivilegedPlugin_l653_2) begin
         PrivilegedPlugin_logic_interrupt_code = 4'b1001;
       end
     end
-    if(when_PrivilegedPlugin_l638) begin
-      if(when_PrivilegedPlugin_l644_3) begin
+    if(when_PrivilegedPlugin_l647) begin
+      if(when_PrivilegedPlugin_l653_3) begin
         PrivilegedPlugin_logic_interrupt_code = 4'b0111;
       end
-      if(when_PrivilegedPlugin_l644_4) begin
+      if(when_PrivilegedPlugin_l653_4) begin
         PrivilegedPlugin_logic_interrupt_code = 4'b0011;
       end
-      if(when_PrivilegedPlugin_l644_5) begin
+      if(when_PrivilegedPlugin_l653_5) begin
         PrivilegedPlugin_logic_interrupt_code = 4'b1011;
       end
-      if(when_PrivilegedPlugin_l644_6) begin
+      if(when_PrivilegedPlugin_l653_6) begin
         PrivilegedPlugin_logic_interrupt_code = 4'b0001;
       end
-      if(when_PrivilegedPlugin_l644_7) begin
+      if(when_PrivilegedPlugin_l653_7) begin
         PrivilegedPlugin_logic_interrupt_code = 4'b0101;
       end
-      if(when_PrivilegedPlugin_l644_8) begin
+      if(when_PrivilegedPlugin_l653_8) begin
         PrivilegedPlugin_logic_interrupt_code = 4'b1001;
       end
     end
@@ -16036,89 +16417,89 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     PrivilegedPlugin_logic_interrupt_targetPrivilege = 2'bxx;
-    if(when_PrivilegedPlugin_l638_1) begin
-      if(when_PrivilegedPlugin_l644) begin
+    if(when_PrivilegedPlugin_l647_1) begin
+      if(when_PrivilegedPlugin_l653) begin
         PrivilegedPlugin_logic_interrupt_targetPrivilege = 2'b01;
       end
-      if(when_PrivilegedPlugin_l644_1) begin
+      if(when_PrivilegedPlugin_l653_1) begin
         PrivilegedPlugin_logic_interrupt_targetPrivilege = 2'b01;
       end
-      if(when_PrivilegedPlugin_l644_2) begin
+      if(when_PrivilegedPlugin_l653_2) begin
         PrivilegedPlugin_logic_interrupt_targetPrivilege = 2'b01;
       end
     end
-    if(when_PrivilegedPlugin_l638) begin
-      if(when_PrivilegedPlugin_l644_3) begin
+    if(when_PrivilegedPlugin_l647) begin
+      if(when_PrivilegedPlugin_l653_3) begin
         PrivilegedPlugin_logic_interrupt_targetPrivilege = 2'b11;
       end
-      if(when_PrivilegedPlugin_l644_4) begin
+      if(when_PrivilegedPlugin_l653_4) begin
         PrivilegedPlugin_logic_interrupt_targetPrivilege = 2'b11;
       end
-      if(when_PrivilegedPlugin_l644_5) begin
+      if(when_PrivilegedPlugin_l653_5) begin
         PrivilegedPlugin_logic_interrupt_targetPrivilege = 2'b11;
       end
-      if(when_PrivilegedPlugin_l644_6) begin
+      if(when_PrivilegedPlugin_l653_6) begin
         PrivilegedPlugin_logic_interrupt_targetPrivilege = 2'b11;
       end
-      if(when_PrivilegedPlugin_l644_7) begin
+      if(when_PrivilegedPlugin_l653_7) begin
         PrivilegedPlugin_logic_interrupt_targetPrivilege = 2'b11;
       end
-      if(when_PrivilegedPlugin_l644_8) begin
+      if(when_PrivilegedPlugin_l653_8) begin
         PrivilegedPlugin_logic_interrupt_targetPrivilege = 2'b11;
       end
     end
   end
 
-  assign when_PrivilegedPlugin_l638 = (PrivilegedPlugin_logic_machine_mstatus_mie || (! PrivilegedPlugin_setup_withMachinePrivilege));
-  assign when_PrivilegedPlugin_l638_1 = ((PrivilegedPlugin_logic_supervisor_sstatus_sie && (! PrivilegedPlugin_setup_withMachinePrivilege)) || (! PrivilegedPlugin_setup_withSupervisorPrivilege));
-  assign when_PrivilegedPlugin_l644 = ((_zz_when_PrivilegedPlugin_l644 && (1'b1 && PrivilegedPlugin_logic_machine_mideleg_ss)) && (! 1'b0));
-  assign when_PrivilegedPlugin_l644_1 = ((_zz_when_PrivilegedPlugin_l644_1 && (1'b1 && PrivilegedPlugin_logic_machine_mideleg_st)) && (! 1'b0));
-  assign when_PrivilegedPlugin_l644_2 = ((_zz_when_PrivilegedPlugin_l644_2 && (1'b1 && PrivilegedPlugin_logic_machine_mideleg_se)) && (! 1'b0));
-  assign when_PrivilegedPlugin_l644_3 = (((PrivilegedPlugin_logic_machine_mip_mtip && PrivilegedPlugin_logic_machine_mie_mtie) && 1'b1) && (! 1'b0));
-  assign when_PrivilegedPlugin_l644_4 = (((PrivilegedPlugin_logic_machine_mip_msip && PrivilegedPlugin_logic_machine_mie_msie) && 1'b1) && (! 1'b0));
-  assign when_PrivilegedPlugin_l644_5 = (((PrivilegedPlugin_logic_machine_mip_meip && PrivilegedPlugin_logic_machine_mie_meie) && 1'b1) && (! 1'b0));
-  assign when_PrivilegedPlugin_l644_6 = ((_zz_when_PrivilegedPlugin_l644 && 1'b1) && (! (|PrivilegedPlugin_logic_machine_mideleg_ss)));
-  assign when_PrivilegedPlugin_l644_7 = ((_zz_when_PrivilegedPlugin_l644_1 && 1'b1) && (! (|PrivilegedPlugin_logic_machine_mideleg_st)));
-  assign when_PrivilegedPlugin_l644_8 = ((_zz_when_PrivilegedPlugin_l644_2 && 1'b1) && (! (|PrivilegedPlugin_logic_machine_mideleg_se)));
+  assign when_PrivilegedPlugin_l647 = (PrivilegedPlugin_logic_machine_mstatus_mie || (! PrivilegedPlugin_setup_withMachinePrivilege));
+  assign when_PrivilegedPlugin_l647_1 = ((PrivilegedPlugin_logic_supervisor_sstatus_sie && (! PrivilegedPlugin_setup_withMachinePrivilege)) || (! PrivilegedPlugin_setup_withSupervisorPrivilege));
+  assign when_PrivilegedPlugin_l653 = ((_zz_when_PrivilegedPlugin_l653 && (1'b1 && PrivilegedPlugin_logic_machine_mideleg_ss)) && (! 1'b0));
+  assign when_PrivilegedPlugin_l653_1 = ((_zz_when_PrivilegedPlugin_l653_1 && (1'b1 && PrivilegedPlugin_logic_machine_mideleg_st)) && (! 1'b0));
+  assign when_PrivilegedPlugin_l653_2 = ((_zz_when_PrivilegedPlugin_l653_2 && (1'b1 && PrivilegedPlugin_logic_machine_mideleg_se)) && (! 1'b0));
+  assign when_PrivilegedPlugin_l653_3 = (((PrivilegedPlugin_logic_machine_mip_mtip && PrivilegedPlugin_logic_machine_mie_mtie) && 1'b1) && (! 1'b0));
+  assign when_PrivilegedPlugin_l653_4 = (((PrivilegedPlugin_logic_machine_mip_msip && PrivilegedPlugin_logic_machine_mie_msie) && 1'b1) && (! 1'b0));
+  assign when_PrivilegedPlugin_l653_5 = (((PrivilegedPlugin_logic_machine_mip_meip && PrivilegedPlugin_logic_machine_mie_meie) && 1'b1) && (! 1'b0));
+  assign when_PrivilegedPlugin_l653_6 = ((_zz_when_PrivilegedPlugin_l653 && 1'b1) && (! (|PrivilegedPlugin_logic_machine_mideleg_ss)));
+  assign when_PrivilegedPlugin_l653_7 = ((_zz_when_PrivilegedPlugin_l653_1 && 1'b1) && (! (|PrivilegedPlugin_logic_machine_mideleg_st)));
+  assign when_PrivilegedPlugin_l653_8 = ((_zz_when_PrivilegedPlugin_l653_2 && 1'b1) && (! (|PrivilegedPlugin_logic_machine_mideleg_se)));
   assign PrivilegedPlugin_logic_decoderInterrupt_doIt = PrivilegedPlugin_logic_decoderInterrupt_counter[2];
-  assign when_PrivilegedPlugin_l675 = (((! PrivilegedPlugin_logic_decoderInterrupt_pendingInterrupt) || (! DecoderPlugin_setup_trapReady)) || PrivilegedPlugin_logic_decoderInterrupt_raised);
-  assign when_PrivilegedPlugin_l679 = (PrivilegedPlugin_logic_decoderInterrupt_doIt && (! PrivilegedPlugin_logic_decoderInterrupt_raised));
+  assign when_PrivilegedPlugin_l686 = (((! PrivilegedPlugin_logic_decoderInterrupt_pendingInterrupt) || (! DecoderPlugin_setup_trapReady)) || PrivilegedPlugin_logic_decoderInterrupt_raised);
+  assign when_PrivilegedPlugin_l690 = (PrivilegedPlugin_logic_decoderInterrupt_doIt && (! PrivilegedPlugin_logic_decoderInterrupt_raised));
   assign PrivilegedPlugin_logic_decoderInterrupt_buffer_sample = (PrivilegedPlugin_logic_interrupt_valid && (! PrivilegedPlugin_logic_decoderInterrupt_raised));
   always @(*) begin
     PrivilegedPlugin_logic_exception_exceptionTargetPrivilegeUncapped = 2'b11;
     case(PrivilegedPlugin_logic_exception_code)
       4'b0000 : begin
-        if(when_PrivilegedPlugin_l709) begin
+        if(when_PrivilegedPlugin_l720) begin
           PrivilegedPlugin_logic_exception_exceptionTargetPrivilegeUncapped = 2'b01;
         end
       end
       4'b0011 : begin
-        if(when_PrivilegedPlugin_l709_1) begin
+        if(when_PrivilegedPlugin_l720_1) begin
           PrivilegedPlugin_logic_exception_exceptionTargetPrivilegeUncapped = 2'b01;
         end
       end
       4'b1000 : begin
-        if(when_PrivilegedPlugin_l709_2) begin
+        if(when_PrivilegedPlugin_l720_2) begin
           PrivilegedPlugin_logic_exception_exceptionTargetPrivilegeUncapped = 2'b01;
         end
       end
       4'b1001 : begin
-        if(when_PrivilegedPlugin_l709_3) begin
+        if(when_PrivilegedPlugin_l720_3) begin
           PrivilegedPlugin_logic_exception_exceptionTargetPrivilegeUncapped = 2'b01;
         end
       end
       4'b1100 : begin
-        if(when_PrivilegedPlugin_l709_4) begin
+        if(when_PrivilegedPlugin_l720_4) begin
           PrivilegedPlugin_logic_exception_exceptionTargetPrivilegeUncapped = 2'b01;
         end
       end
       4'b1101 : begin
-        if(when_PrivilegedPlugin_l709_5) begin
+        if(when_PrivilegedPlugin_l720_5) begin
           PrivilegedPlugin_logic_exception_exceptionTargetPrivilegeUncapped = 2'b01;
         end
       end
       4'b1111 : begin
-        if(when_PrivilegedPlugin_l709_6) begin
+        if(when_PrivilegedPlugin_l720_6) begin
           PrivilegedPlugin_logic_exception_exceptionTargetPrivilegeUncapped = 2'b01;
         end
       end
@@ -16129,19 +16510,19 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     PrivilegedPlugin_logic_exception_code = PrivilegedPlugin_logic_reschedule_payload_cause;
-    if(when_PrivilegedPlugin_l696) begin
+    if(when_PrivilegedPlugin_l707) begin
       PrivilegedPlugin_logic_exception_code[1 : 0] = PrivilegedPlugin_setup_privilege;
     end
   end
 
-  assign when_PrivilegedPlugin_l696 = (PrivilegedPlugin_logic_reschedule_payload_cause == 4'b1011);
-  assign when_PrivilegedPlugin_l709 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_iam) && (! 1'b0));
-  assign when_PrivilegedPlugin_l709_1 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_bp) && (! 1'b0));
-  assign when_PrivilegedPlugin_l709_2 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_eu) && (! 1'b0));
-  assign when_PrivilegedPlugin_l709_3 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_es) && (! 1'b0));
-  assign when_PrivilegedPlugin_l709_4 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_ipf) && (! 1'b0));
-  assign when_PrivilegedPlugin_l709_5 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_lpf) && (! 1'b0));
-  assign when_PrivilegedPlugin_l709_6 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_spf) && (! 1'b0));
+  assign when_PrivilegedPlugin_l707 = (PrivilegedPlugin_logic_reschedule_payload_cause == 4'b1011);
+  assign when_PrivilegedPlugin_l720 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_iam) && (! 1'b0));
+  assign when_PrivilegedPlugin_l720_1 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_bp) && (! 1'b0));
+  assign when_PrivilegedPlugin_l720_2 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_eu) && (! 1'b0));
+  assign when_PrivilegedPlugin_l720_3 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_es) && (! 1'b0));
+  assign when_PrivilegedPlugin_l720_4 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_ipf) && (! 1'b0));
+  assign when_PrivilegedPlugin_l720_5 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_lpf) && (! 1'b0));
+  assign when_PrivilegedPlugin_l720_6 = ((1'b1 && PrivilegedPlugin_logic_machine_medeleg_spf) && (! 1'b0));
   assign PrivilegedPlugin_logic_exception_targetPrivilege = ((PrivilegedPlugin_setup_privilege < PrivilegedPlugin_logic_exception_exceptionTargetPrivilegeUncapped) ? PrivilegedPlugin_logic_exception_exceptionTargetPrivilegeUncapped : PrivilegedPlugin_setup_privilege);
   assign PrivilegedPlugin_logic_fsm_wantExit = 1'b0;
   always @(*) begin
@@ -16215,7 +16596,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     endcase
   end
 
-  assign FetchPlugin_stages_0_haltRequest_PrivilegedPlugin_l975 = ((! (PrivilegedPlugin_logic_fsm_stateReg == PrivilegedPlugin_logic_fsm_enumDef_IDLE)) || (CommitPlugin_logic_reschedule_valid && CommitPlugin_logic_reschedule_trap));
+  assign FetchPlugin_stages_0_haltRequest_PrivilegedPlugin_l986 = ((! (PrivilegedPlugin_logic_fsm_stateReg == PrivilegedPlugin_logic_fsm_enumDef_IDLE)) || (CommitPlugin_logic_reschedule_valid && CommitPlugin_logic_reschedule_trap));
   assign trap_fire = PrivilegedPlugin_logic_fsm_trap_fire;
   assign trap_code = PrivilegedPlugin_logic_fsm_trap_code;
   assign trap_interrupt = PrivilegedPlugin_logic_fsm_trap_interrupt;
@@ -16296,9 +16677,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign EU0_CsrAccessPlugin_setup_onReadMovingOff = ((! EU0_CsrAccessPlugin_setup_onReadHalt) || EU0_ExecutionUnitBase_pipeline_execute_0_isFlushed);
-  assign _zz_259 = zz__zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue(1'b0);
-  always @(*) _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue = _zz_259;
-  assign _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_1[31 : 0] = 32'h40141101;
+  assign _zz_262 = zz__zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue(1'b0);
+  always @(*) _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue = _zz_262;
+  assign _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_1[31 : 0] = 32'h40141105;
   always @(*) begin
     _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_2 = 32'h00000000;
     _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_2[31 : 31] = PrivilegedPlugin_logic_machine_cause_interrupt;
@@ -16307,9 +16688,9 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_3 = 32'h00000000;
-    _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_3[12 : 11] = PrivilegedPlugin_logic_machine_mstatus_mpp;
     _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_3[7 : 7] = PrivilegedPlugin_logic_machine_mstatus_mpie;
     _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_3[3 : 3] = PrivilegedPlugin_logic_machine_mstatus_mie;
+    _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_3[12 : 11] = PrivilegedPlugin_logic_machine_mstatus_mpp;
     _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_3[31 : 31] = PrivilegedPlugin_logic_machine_mstatus_sd;
     _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_3[22 : 22] = PrivilegedPlugin_logic_machine_mstatus_tsr;
     _zz_EU0_CsrAccessPlugin_logic_fsm_readLogic_csrValue_3[21 : 21] = PrivilegedPlugin_logic_machine_mstatus_tw;
@@ -16426,7 +16807,13 @@ module NaxRiscvAxi4LinuxPlicClint (
       EU0_CsrAccessPlugin_setup_onWriteBits[1 : 0] = 2'b00;
     end
     if(when_CsrAccessPlugin_l327_1) begin
+      EU0_CsrAccessPlugin_setup_onWriteBits[0 : 0] = 1'b0;
+    end
+    if(when_CsrAccessPlugin_l327_2) begin
       EU0_CsrAccessPlugin_setup_onWriteBits[1 : 0] = 2'b00;
+    end
+    if(when_CsrAccessPlugin_l327_3) begin
+      EU0_CsrAccessPlugin_setup_onWriteBits[0 : 0] = 1'b0;
     end
   end
 
@@ -16467,14 +16854,17 @@ module NaxRiscvAxi4LinuxPlicClint (
     endcase
   end
 
-  assign when_CsrAccessPlugin_l327 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesDo && REG_CSR_833);
+  assign when_CsrAccessPlugin_l327 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesDo && REG_CSR_773);
+  assign when_CsrAccessPlugin_l327_1 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesDo && REG_CSR_833);
   assign when_CsrAccessPlugin_l328 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesFireDo && REG_CSR_834);
   assign when_CsrAccessPlugin_l328_1 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesFireDo && REG_CSR_768);
+  assign switch_PrivilegedPlugin_l443 = EU0_CsrAccessPlugin_setup_onWriteBits[12 : 11];
   assign when_CsrAccessPlugin_l328_2 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesFireDo && REG_CSR_836);
   assign when_CsrAccessPlugin_l328_3 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesFireDo && REG_CSR_772);
   assign when_CsrAccessPlugin_l328_4 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesFireDo && REG_CSR_770);
   assign when_CsrAccessPlugin_l328_5 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesFireDo && REG_CSR_771);
-  assign when_CsrAccessPlugin_l327_1 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesDo && REG_CSR_321);
+  assign when_CsrAccessPlugin_l327_2 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesDo && REG_CSR_261);
+  assign when_CsrAccessPlugin_l327_3 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesDo && REG_CSR_321);
   assign when_CsrAccessPlugin_l328_6 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesFireDo && REG_CSR_322);
   assign when_CsrAccessPlugin_l328_7 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesFireDo && REG_CSR_256);
   assign when_CsrAccessPlugin_l328_8 = (EU0_CsrAccessPlugin_logic_fsm_writeLogic_onWritesFireDo && REG_CSR_260);
@@ -16581,6 +16971,9 @@ module NaxRiscvAxi4LinuxPlicClint (
     if(EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_XRET) begin
       EnvCallPlugin_setup_reschedule_payload_tval[1 : 0] = EnvCallPlugin_logic_xretPriv;
     end
+    if(EnvCallPlugin_logic_trap) begin
+      EnvCallPlugin_setup_reschedule_payload_tval = EU0_ExecutionUnitBase_pipeline_execute_2_Frontend_MICRO_OP;
+    end
   end
 
   always @(*) begin
@@ -16608,7 +17001,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     if(EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_ECALL) begin
       EnvCallPlugin_setup_reschedule_payload_cause = 4'b1011;
     end
-    if(when_EnvCallPlugin_l108) begin
+    if(when_EnvCallPlugin_l109) begin
       EnvCallPlugin_setup_reschedule_payload_cause = 4'b1001;
     end
     if(EnvCallPlugin_logic_trap) begin
@@ -16620,18 +17013,18 @@ module NaxRiscvAxi4LinuxPlicClint (
   always @(*) begin
     EnvCallPlugin_logic_trap = 1'b0;
     if(EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_XRET) begin
-      if(when_EnvCallPlugin_l99) begin
+      if(when_EnvCallPlugin_l100) begin
         EnvCallPlugin_logic_trap = 1'b1;
       end
-      if(when_EnvCallPlugin_l100) begin
+      if(when_EnvCallPlugin_l101) begin
         EnvCallPlugin_logic_trap = 1'b1;
       end
     end
     if(EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FENCE_VMA) begin
-      if(when_EnvCallPlugin_l112) begin
+      if(when_EnvCallPlugin_l113) begin
         EnvCallPlugin_logic_trap = 1'b1;
       end
-      if(when_EnvCallPlugin_l113) begin
+      if(when_EnvCallPlugin_l114) begin
         EnvCallPlugin_logic_trap = 1'b1;
       end
     end
@@ -16640,11 +17033,11 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign when_EnvCallPlugin_l99 = (PrivilegedPlugin_setup_privilege < EnvCallPlugin_logic_xretPriv);
-  assign when_EnvCallPlugin_l100 = ((PrivilegedPlugin_logic_machine_mstatus_tsr && (PrivilegedPlugin_setup_privilege == 2'b01)) && (EnvCallPlugin_logic_xretPriv == 2'b01));
-  assign when_EnvCallPlugin_l108 = ((EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FENCE_I || EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FENCE_VMA) || EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FLUSH_DATA);
-  assign when_EnvCallPlugin_l112 = ((PrivilegedPlugin_setup_privilege == 2'b01) && PrivilegedPlugin_logic_machine_mstatus_tvm);
-  assign when_EnvCallPlugin_l113 = (PrivilegedPlugin_setup_privilege == 2'b00);
+  assign when_EnvCallPlugin_l100 = (PrivilegedPlugin_setup_privilege < EnvCallPlugin_logic_xretPriv);
+  assign when_EnvCallPlugin_l101 = ((PrivilegedPlugin_logic_machine_mstatus_tsr && (PrivilegedPlugin_setup_privilege == 2'b01)) && (EnvCallPlugin_logic_xretPriv == 2'b01));
+  assign when_EnvCallPlugin_l109 = ((EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FENCE_I || EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FENCE_VMA) || EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FLUSH_DATA);
+  assign when_EnvCallPlugin_l113 = ((PrivilegedPlugin_setup_privilege == 2'b01) && PrivilegedPlugin_logic_machine_mstatus_tvm);
+  assign when_EnvCallPlugin_l114 = (PrivilegedPlugin_setup_privilege == 2'b00);
   assign EnvCallPlugin_logic_flushes_wantExit = 1'b0;
   always @(*) begin
     EnvCallPlugin_logic_flushes_wantStart = 1'b0;
@@ -16668,14 +17061,14 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign EnvCallPlugin_logic_flushes_wantKill = 1'b0;
-  assign FetchPlugin_stages_0_haltRequest_EnvCallPlugin_l138 = (! (EnvCallPlugin_logic_flushes_stateReg == EnvCallPlugin_logic_flushes_enumDef_IDLE));
+  assign FetchPlugin_stages_0_haltRequest_EnvCallPlugin_l140 = (! (EnvCallPlugin_logic_flushes_stateReg == EnvCallPlugin_logic_flushes_enumDef_IDLE));
   always @(*) begin
     EnvCallPlugin_logic_flushes_stateNext = EnvCallPlugin_logic_flushes_stateReg;
     case(EnvCallPlugin_logic_flushes_stateReg)
       EnvCallPlugin_logic_flushes_enumDef_IDLE : begin
         if(EU0_ExecutionUnitBase_pipeline_execute_2_valid) begin
           if(EU0_ExecutionUnitBase_pipeline_execute_2_ready) begin
-            if(when_EnvCallPlugin_l148) begin
+            if(when_EnvCallPlugin_l150) begin
               EnvCallPlugin_logic_flushes_stateNext = EnvCallPlugin_logic_flushes_enumDef_RESCHEDULE;
             end
             if(EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FLUSH_DATA) begin
@@ -16719,7 +17112,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign when_EnvCallPlugin_l148 = (EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FENCE_I || EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FENCE_VMA);
+  assign when_EnvCallPlugin_l150 = (EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FENCE_I || EU0_ExecutionUnitBase_pipeline_execute_2_EnvCallPlugin_FENCE_VMA);
   assign Lsu2Plugin_logic_sharedPip_stages_1_MMU_IO = ((ioStartAddr <= Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED) && (Lsu2Plugin_logic_sharedPip_stages_1_MMU_TRANSLATED <= _zz_FetchPlugin_stages_1_MMU_IO));
   always @(*) begin
     if(Lsu2Plugin_logic_sharedPip_translationPort_logic_ctrl_requireMmuLockup) begin
@@ -17359,8 +17752,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_FrontendPlugin_decoded_SQ_ALLOC_0 = ((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h10000070) == 32'h00000020);
   assign _zz_FrontendPlugin_decoded_SQ_ALLOC_0_1 = ((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h08000070) == 32'h08000020);
   assign FrontendPlugin_decoded_READ_RS_1_0 = _zz_FrontendPlugin_decoded_READ_RS_1_0[0];
-  assign _zz_260 = zz_DecoderPlugin_logic_slots_0_x0AlwaysZero(1'b0);
-  always @(*) DecoderPlugin_logic_slots_0_x0AlwaysZero = _zz_260;
+  assign _zz_263 = zz_DecoderPlugin_logic_slots_0_x0AlwaysZero(1'b0);
+  always @(*) DecoderPlugin_logic_slots_0_x0AlwaysZero = _zz_263;
   assign _zz_FrontendPlugin_decoded_WRITE_RD_0 = ((FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 & 32'h00000048) == 32'h00000048);
   assign FrontendPlugin_decoded_WRITE_RD_0 = (_zz_FrontendPlugin_decoded_WRITE_RD_0_1[0] && (! (DecoderPlugin_logic_slots_0_rdZero && DecoderPlugin_logic_slots_0_x0AlwaysZero)));
   assign FrontendPlugin_decoded_ALU0_SEL_0 = _zz_FrontendPlugin_decoded_ALU0_SEL_0[0];
@@ -17378,6 +17771,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign when_DecoderPlugin_l302 = (! DecoderPlugin_logic_exception_trigged);
   assign when_DecoderPlugin_l303 = (! DecoderPlugin_logic_exception_trigged);
   assign when_DecoderPlugin_l304 = (! DecoderPlugin_logic_exception_trigged);
+  assign when_DecoderPlugin_l305 = (! DecoderPlugin_logic_exception_trigged);
   assign when_DecoderPlugin_l306 = (! DecoderPlugin_logic_exception_trigged);
   assign when_DecoderPlugin_l307 = (! DecoderPlugin_logic_exception_trigged);
   assign when_DecoderPlugin_l308 = (! DecoderPlugin_logic_exception_trigged);
@@ -17385,6 +17779,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign DecoderPlugin_logic_exception_compressedFault = _zz_DecoderPlugin_logic_exception_compressedFault[0];
   assign DecoderPlugin_logic_exception_fetchFault = _zz_DecoderPlugin_logic_exception_fetchFault[0];
   assign DecoderPlugin_logic_exception_fetchFaultPage = _zz_DecoderPlugin_logic_exception_fetchFaultPage[0];
+  assign DecoderPlugin_logic_exception_fetchFaultSlice = (DecoderPlugin_logic_exception_exceptionReg_0 ? DecoderPlugin_logic_exception_fetchFaultSliceReg_0 : 1'b0);
   assign DecoderPlugin_logic_exception_debugEnter = _zz_DecoderPlugin_logic_exception_debugEnter[0];
   assign DecoderPlugin_logic_exception_pc = (DecoderPlugin_logic_exception_exceptionReg_0 ? DecoderPlugin_logic_exception_epcReg_0 : 32'h00000000);
   assign DecoderPlugin_logic_exception_pipelineEmpty = ((! FrontendPlugin_isBusyAfterDecode) && CommitPlugin_setup_isRobEmpty);
@@ -17455,8 +17850,9 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rdEquRs1 = (FrontendPlugin_decoded_ARCH_RD_0 == FrontendPlugin_decoded_ARCH_RS_0_0);
   assign FrontendPlugin_decoded_RAS_PUSH_0 = ((FrontendPlugin_decoded_IS_JAL_0 || FrontendPlugin_decoded_IS_JALR_0) && DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rdLink);
   assign FrontendPlugin_decoded_RAS_POP_0 = (FrontendPlugin_decoded_IS_JALR_0 && (((! DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rdLink) && DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rs1Link) || ((DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rdLink && DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rs1Link) && (! DecoderPredictionPlugin_logic_decodePatch_slots_0_decode_rdEquRs1))));
-  assign FrontendPlugin_decoded_CONDITIONAL_PREDICTION_0 = FrontendPlugin_decoded_Prediction_CONDITIONAL_TAKE_IT_0[0];
-  assign DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices = (_zz_DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices + {1'b0,1'b1});
+  assign FrontendPlugin_decoded_LAST_SLICE_0 = (FrontendPlugin_decoded_PC_0[1 : 1] + FrontendPlugin_decoded_Fetch_INSTRUCTION_SLICE_COUNT_0);
+  assign FrontendPlugin_decoded_CONDITIONAL_PREDICTION_0 = FrontendPlugin_decoded_Prediction_CONDITIONAL_TAKE_IT_0[FrontendPlugin_decoded_LAST_SLICE_0];
+  assign DecoderPredictionPlugin_logic_decodePatch_slots_0_pcAdd_slices = ({1'b0,FrontendPlugin_decoded_Fetch_INSTRUCTION_SLICE_COUNT_0} + {1'b0,1'b1});
   assign FrontendPlugin_decoded_PC_INC_0 = _zz_FrontendPlugin_decoded_PC_INC_0;
   assign FrontendPlugin_decoded_PC_TARGET_PRE_RAS_0 = ($signed(_zz_FrontendPlugin_decoded_PC_TARGET_PRE_RAS_0) + $signed(FrontendPlugin_decoded_OFFSET_0));
   assign FrontendPlugin_decoded_BAD_RET_PC_0 = (FrontendPlugin_decoded_RAS_POP_0 && (DecoderPredictionPlugin_logic_ras_read != FrontendPlugin_decoded_Prediction_ALIGNED_BRANCH_PC_NEXT_0));
@@ -17581,6 +17977,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign EU0_ExecutionUnitBase_pipeline_fetch_0_READ_RS_1 = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_READ_RS_1_1[0];
   assign EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD_1[0];
   assign EU0_ExecutionUnitBase_pipeline_fetch_0_PC = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC_1[31 : 0];
+  assign EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT_1[0 : 0];
   assign EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID_1[1 : 0];
   assign EU0_ExecutionUnitBase_pipeline_fetch_0_LSU_ID = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_LSU_ID_1[3 : 0];
   assign EU0_ExecutionUnitBase_pipeline_fetch_0_ROB_MSB = _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_ROB_MSB_1[0 : 0];
@@ -17714,6 +18111,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign EU0_ExecutionUnitBase_pipeline_execute_0_BranchPlugin_BRANCH_CTRL = EU0_ExecutionUnitBase_pipeline_fetch_1_BranchPlugin_BRANCH_CTRL;
   assign EU0_ExecutionUnitBase_pipeline_execute_0_Frontend_MICRO_OP = EU0_ExecutionUnitBase_pipeline_fetch_1_Frontend_MICRO_OP;
   assign EU0_ExecutionUnitBase_pipeline_execute_0_PC = EU0_ExecutionUnitBase_pipeline_fetch_1_PC;
+  assign EU0_ExecutionUnitBase_pipeline_execute_0_Fetch_INSTRUCTION_SLICE_COUNT = EU0_ExecutionUnitBase_pipeline_fetch_1_Fetch_INSTRUCTION_SLICE_COUNT;
   assign EU0_ExecutionUnitBase_pipeline_execute_0_BRANCH_ID = EU0_ExecutionUnitBase_pipeline_fetch_1_BRANCH_ID;
   assign EU0_ExecutionUnitBase_pipeline_execute_0_AguPlugin_SEL = EU0_ExecutionUnitBase_pipeline_fetch_1_AguPlugin_SEL;
   assign EU0_ExecutionUnitBase_pipeline_execute_0_ROB_ID = EU0_ExecutionUnitBase_pipeline_fetch_1_ROB_ID;
@@ -17758,7 +18156,7 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign when_Connection_l74_3 = (! EU0_ExecutionUnitBase_pipeline_execute_2_valid);
   assign BranchContextPlugin_free_dispatchMem_writes_0_port_valid = ((FrontendPlugin_dispatch_isFireing && FrontendPlugin_dispatch_BRANCH_SEL_0) && FrontendPlugin_dispatch_Frontend_DISPATCH_MASK_0);
   assign BranchContextPlugin_free_dispatchMem_writes_0_port_payload_address = FrontendPlugin_dispatch_BRANCH_ID_0;
-  assign BranchContextPlugin_free_dispatchMem_writes_0_port_payload_data = {FrontendPlugin_dispatch_Prediction_IS_BRANCH_0,{FrontendPlugin_dispatch_GSHARE_COUNTER_0_0,FrontendPlugin_dispatch_BRANCH_HISTORY_0}};
+  assign BranchContextPlugin_free_dispatchMem_writes_0_port_payload_data = {FrontendPlugin_dispatch_Prediction_IS_BRANCH_0,{{FrontendPlugin_dispatch_GSHARE_COUNTER_0_1,FrontendPlugin_dispatch_GSHARE_COUNTER_0_0},FrontendPlugin_dispatch_BRANCH_HISTORY_0}};
   assign BranchContextPlugin_free_learn_valid = (BranchContextPlugin_logic_ptr_free != BranchContextPlugin_logic_ptr_commited);
   assign BranchContextPlugin_free_learn_bid = BranchContextPlugin_logic_ptr_free[1:0];
   assign _zz_BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice = BranchContextPlugin_logic_mem_finalBranch_spinal_port1;
@@ -17767,8 +18165,10 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign BranchContextPlugin_learn_BRANCH_FINAL_taken = _zz_BranchContextPlugin_learn_BRANCH_FINAL_pcOnLastSlice[64];
   assign BranchContextPlugin_free_learn_raw = BranchContextPlugin_free_dispatchMem_mem_spinal_port1;
   assign BranchContextPlugin_free_learn_BRANCH_HISTORY = BranchContextPlugin_free_learn_raw[23 : 0];
+  assign _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0 = BranchContextPlugin_free_learn_raw[27 : 24];
   assign BranchContextPlugin_free_learn_GSHARE_COUNTER_0 = _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0[1 : 0];
-  assign BranchContextPlugin_free_learn_Prediction_IS_BRANCH = BranchContextPlugin_free_learn_raw[26];
+  assign BranchContextPlugin_free_learn_GSHARE_COUNTER_1 = _zz_BranchContextPlugin_free_learn_GSHARE_COUNTER_0[3 : 2];
+  assign BranchContextPlugin_free_learn_Prediction_IS_BRANCH = BranchContextPlugin_free_learn_raw[28];
   assign BranchContextPlugin_setup_learnValid = BranchContextPlugin_free_learn_valid;
   assign DispatchPlugin_logic_queueStaticWakeTransposed_0 = {DispatchPlugin_logic_queue_io_contexts_7_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_6_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_5_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_4_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_3_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_2_staticWake[0],{DispatchPlugin_logic_queue_io_contexts_1_staticWake[0],DispatchPlugin_logic_queue_io_contexts_0_staticWake[0]}}}}}}};
   assign DispatchPlugin_logic_queueStaticWakeTransposedHistory_0_0 = DispatchPlugin_logic_queueStaticWakeTransposed_0;
@@ -18019,6 +18419,8 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc = CommitPlugin_logic_commit_reschedulePort_payload_robId;
   assign _zz_ALU0_ExecutionUnitBase_pipeline_fetch_0_PC = ALU0_ExecutionUnitBase_pipeline_fetch_0_ROB_ID;
   assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_PC = EU0_ExecutionUnitBase_pipeline_fetch_0_ROB_ID;
+  assign _zz_PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices = CommitPlugin_logic_commit_reschedulePort_payload_robId;
+  assign _zz_EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT = EU0_ExecutionUnitBase_pipeline_fetch_0_ROB_ID;
   assign _zz_integer_RfTranslationPlugin_logic_onCommit_writeRd_0 = CommitPlugin_logic_commit_event_robId;
   assign integer_RfTranslationPlugin_logic_onCommit_writeRd_0 = _zz_integer_RfTranslationPlugin_logic_onCommit_writeRd_0_1[0];
   assign _zz_integer_RfAllocationPlugin_logic_push_writeRd_0 = CommitPlugin_logic_free_port_payload_robId;
@@ -18143,10 +18545,10 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign FrontendPlugin_allocated_isFlushed = CommitPlugin_logic_reschedule_reschedulePort_valid;
   assign when_Connection_l66 = (|{CommitPlugin_logic_reschedule_reschedulePort_valid,(DecoderPredictionPlugin_setup_decodeJump_valid && FrontendPlugin_serialized_ready)});
   assign FrontendPlugin_serialized_isFlushed = when_Connection_l66;
-  assign _zz_FrontendPlugin_decompressed_isFlushed = (|{when_Connection_l66,_zz_FrontendPlugin_decoded_isFlushingRoot});
-  assign FrontendPlugin_decoded_isFlushed = _zz_FrontendPlugin_decompressed_isFlushed;
-  assign FrontendPlugin_decompressed_isFlushed = _zz_FrontendPlugin_decompressed_isFlushed;
-  assign FrontendPlugin_aligned_isFlushed = _zz_FrontendPlugin_decompressed_isFlushed;
+  assign when_Connection_l66_1 = (|{when_Connection_l66,_zz_FrontendPlugin_decoded_isFlushingRoot});
+  assign FrontendPlugin_decoded_isFlushed = when_Connection_l66_1;
+  assign FrontendPlugin_decompressed_isFlushed = when_Connection_l66_1;
+  assign FrontendPlugin_aligned_isFlushed = when_Connection_l66_1;
   assign FrontendPlugin_decoded_isFlushingRoot = (|_zz_FrontendPlugin_decoded_isFlushingRoot);
   assign FrontendPlugin_dispatch_isFlushingRoot = (|CommitPlugin_logic_reschedule_reschedulePort_valid);
   assign FrontendPlugin_aligned_ready = FrontendPlugin_aligned_ready_output;
@@ -18215,10 +18617,12 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign FrontendPlugin_allocated_ARCH_RS_1_0 = FrontendPlugin_serialized_ARCH_RS_1_0;
   assign FrontendPlugin_allocated_READ_RS_1_0 = FrontendPlugin_serialized_READ_RS_1_0;
   assign FrontendPlugin_allocated_BRANCH_HISTORY_0 = FrontendPlugin_serialized_BRANCH_HISTORY_0;
+  assign FrontendPlugin_allocated_Fetch_INSTRUCTION_SLICE_COUNT_0 = FrontendPlugin_serialized_Fetch_INSTRUCTION_SLICE_COUNT_0;
   assign FrontendPlugin_allocated_OP_ID = FrontendPlugin_serialized_OP_ID;
   assign FrontendPlugin_allocated_LQ_ALLOC_0 = FrontendPlugin_serialized_LQ_ALLOC_0;
   assign FrontendPlugin_allocated_SQ_ALLOC_0 = FrontendPlugin_serialized_SQ_ALLOC_0;
   assign FrontendPlugin_allocated_GSHARE_COUNTER_0_0 = FrontendPlugin_serialized_GSHARE_COUNTER_0_0;
+  assign FrontendPlugin_allocated_GSHARE_COUNTER_0_1 = FrontendPlugin_serialized_GSHARE_COUNTER_0_1;
   assign FrontendPlugin_allocated_ALU0_SEL_0 = FrontendPlugin_serialized_ALU0_SEL_0;
   assign FrontendPlugin_allocated_EU0_SEL_0 = FrontendPlugin_serialized_EU0_SEL_0;
   always @(*) begin
@@ -18229,41 +18633,40 @@ module NaxRiscvAxi4LinuxPlicClint (
   end
 
   assign when_Connection_l74_5 = (! FrontendPlugin_dispatch_valid);
-  assign FrontendPlugin_aligned_ready_output = FrontendPlugin_decompressed_ready;
-  assign FrontendPlugin_decompressed_valid = FrontendPlugin_aligned_valid;
-  assign FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0 = FrontendPlugin_aligned_Frontend_INSTRUCTION_ALIGNED_0;
-  assign FrontendPlugin_decompressed_Frontend_MASK_ALIGNED_0 = FrontendPlugin_aligned_Frontend_MASK_ALIGNED_0;
-  assign FrontendPlugin_decompressed_PC_0 = FrontendPlugin_aligned_PC_0;
-  assign FrontendPlugin_decompressed_Prediction_ALIGNED_BRANCH_VALID_0 = FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0;
-  assign FrontendPlugin_decompressed_Prediction_ALIGNED_BRANCH_PC_NEXT_0 = FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_PC_NEXT_0;
-  assign FrontendPlugin_decompressed_BRANCH_HISTORY_0 = FrontendPlugin_aligned_BRANCH_HISTORY_0;
-  assign FrontendPlugin_decompressed_GSHARE_COUNTER_0_0 = FrontendPlugin_aligned_GSHARE_COUNTER_0_0;
-  assign FrontendPlugin_decompressed_FETCH_ID_0 = FrontendPlugin_aligned_FETCH_ID_0;
-  assign FrontendPlugin_decompressed_Frontend_FETCH_FAULT_0 = FrontendPlugin_aligned_Frontend_FETCH_FAULT_0;
-  assign FrontendPlugin_decompressed_Frontend_FETCH_FAULT_PAGE_0 = FrontendPlugin_aligned_Frontend_FETCH_FAULT_PAGE_0;
+  always @(*) begin
+    FrontendPlugin_aligned_ready_output = FrontendPlugin_decompressed_ready;
+    if(when_Connection_l74_6) begin
+      FrontendPlugin_aligned_ready_output = 1'b1;
+    end
+  end
+
+  assign when_Connection_l74_6 = (! FrontendPlugin_decompressed_valid);
   assign FrontendPlugin_decompressed_ready_output = FrontendPlugin_decoded_ready;
   assign FrontendPlugin_decoded_valid = FrontendPlugin_decompressed_valid;
-  assign FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_DECOMPRESSED_0;
   assign FrontendPlugin_decoded_Frontend_INSTRUCTION_ALIGNED_0 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0;
+  assign FrontendPlugin_decoded_Frontend_INSTRUCTION_DECOMPRESSED_0 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_DECOMPRESSED_0;
   assign FrontendPlugin_decoded_Frontend_INSTRUCTION_ILLEGAL_0 = FrontendPlugin_decompressed_Frontend_INSTRUCTION_ILLEGAL_0;
   assign FrontendPlugin_decoded_Prediction_CONDITIONAL_TAKE_IT_0 = FrontendPlugin_decompressed_Prediction_CONDITIONAL_TAKE_IT_0;
   assign FrontendPlugin_decoded_GSHARE_COUNTER_0_0 = FrontendPlugin_decompressed_GSHARE_COUNTER_0_0;
+  assign FrontendPlugin_decoded_GSHARE_COUNTER_0_1 = FrontendPlugin_decompressed_GSHARE_COUNTER_0_1;
   assign FrontendPlugin_decoded_FETCH_ID_0 = FrontendPlugin_decompressed_FETCH_ID_0;
   assign FrontendPlugin_decoded_Frontend_MASK_ALIGNED_0 = FrontendPlugin_decompressed_Frontend_MASK_ALIGNED_0;
   assign FrontendPlugin_decoded_Frontend_FETCH_FAULT_0 = FrontendPlugin_decompressed_Frontend_FETCH_FAULT_0;
   assign FrontendPlugin_decoded_Frontend_FETCH_FAULT_PAGE_0 = FrontendPlugin_decompressed_Frontend_FETCH_FAULT_PAGE_0;
+  assign FrontendPlugin_decoded_Frontend_FETCH_FAULT_SLICE_0 = FrontendPlugin_decompressed_Frontend_FETCH_FAULT_SLICE_0;
   assign FrontendPlugin_decoded_PC_0 = FrontendPlugin_decompressed_PC_0;
+  assign FrontendPlugin_decoded_Fetch_INSTRUCTION_SLICE_COUNT_0 = FrontendPlugin_decompressed_Fetch_INSTRUCTION_SLICE_COUNT_0;
   assign FrontendPlugin_decoded_Prediction_ALIGNED_BRANCH_PC_NEXT_0 = FrontendPlugin_decompressed_Prediction_ALIGNED_BRANCH_PC_NEXT_0;
   assign FrontendPlugin_decoded_Prediction_ALIGNED_BRANCH_VALID_0 = FrontendPlugin_decompressed_Prediction_ALIGNED_BRANCH_VALID_0;
   assign FrontendPlugin_decoded_BRANCH_HISTORY_0 = FrontendPlugin_decompressed_BRANCH_HISTORY_0;
   always @(*) begin
     FrontendPlugin_decoded_ready_output = FrontendPlugin_serialized_ready;
-    if(when_Connection_l74_6) begin
+    if(when_Connection_l74_7) begin
       FrontendPlugin_decoded_ready_output = 1'b1;
     end
   end
 
-  assign when_Connection_l74_6 = (! FrontendPlugin_serialized_valid);
+  assign when_Connection_l74_7 = (! FrontendPlugin_serialized_valid);
   assign PcPlugin_logic_init_booted = PcPlugin_logic_init_counter[6];
   always @(*) begin
     PcPlugin_logic_fetchPc_correction = 1'b0;
@@ -18279,11 +18682,13 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign when_PcPlugin_l84_1 = ((! PcPlugin_logic_fetchPc_output_valid) && PcPlugin_logic_fetchPc_output_ready);
   always @(*) begin
     PcPlugin_logic_fetchPc_pc = (PcPlugin_logic_fetchPc_pcReg + _zz_PcPlugin_logic_fetchPc_pc);
+    if(PcPlugin_logic_fetchPc_inc) begin
+      PcPlugin_logic_fetchPc_pc[1 : 1] = 1'b0;
+    end
     if(PcPlugin_logic_jump_pcLoad_valid) begin
       PcPlugin_logic_fetchPc_pc = PcPlugin_logic_jump_pcLoad_payload_pc;
     end
     PcPlugin_logic_fetchPc_pc[0] = 1'b0;
-    PcPlugin_logic_fetchPc_pc[1] = 1'b0;
   end
 
   always @(*) begin
@@ -18308,10 +18713,10 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign fetchLastFire = FetchPlugin_stages_2_isFireing;
   assign fetchLastId = FetchPlugin_stages_2_FETCH_ID;
   assign AlignerPlugin_setup_s2m_isFlushed = FrontendPlugin_aligned_isFlushed;
-  assign when_Connection_l66_1 = (|{FrontendPlugin_aligned_isFlushed,_zz_FetchPlugin_stages_2_isFlushingRoot});
-  assign FetchPlugin_stages_2_isFlushed = when_Connection_l66_1;
+  assign when_Connection_l66_2 = (|{FrontendPlugin_aligned_isFlushed,_zz_FetchPlugin_stages_2_isFlushingRoot});
+  assign FetchPlugin_stages_2_isFlushed = when_Connection_l66_2;
   assign FetchPlugin_stages_1_isRemoved = (FetchPlugin_stages_1_isFlushed || FetchPlugin_stages_1_isThrown);
-  assign when_Connection_l54 = (|{when_Connection_l66_1,_zz_FetchPlugin_stages_1_isFlushingRoot});
+  assign when_Connection_l54 = (|{when_Connection_l66_2,_zz_FetchPlugin_stages_1_isFlushingRoot});
   assign FetchPlugin_stages_1_isFlushed = when_Connection_l54;
   assign FetchPlugin_stages_1_isFlushingNext = BtbPlugin_logic_applyIt_doIt;
   assign FetchPlugin_stages_1_isThrown = 1'b0;
@@ -18333,7 +18738,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign when_Pipeline_l278_9 = (|{FetchPlugin_stages_0_haltRequest_MmuPlugin_l533,{FetchPlugin_stages_0_haltRequest_EnvCallPlugin_l138,{FetchPlugin_stages_0_haltRequest_PrivilegedPlugin_l975,{FetchPlugin_stages_0_haltRequest_Lsu2Plugin_l1548,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l583,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l552,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l476,FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l389}}}}}}});
+  assign when_Pipeline_l278_9 = (|{FetchPlugin_stages_0_haltRequest_MmuPlugin_l533,{FetchPlugin_stages_0_haltRequest_EnvCallPlugin_l140,{FetchPlugin_stages_0_haltRequest_PrivilegedPlugin_l986,{FetchPlugin_stages_0_haltRequest_Lsu2Plugin_l1548,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l583,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l552,{FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l476,FetchPlugin_stages_0_haltRequest_FetchCachePlugin_l389}}}}}}});
   always @(*) begin
     _zz_FetchPlugin_stages_2_valid = FetchPlugin_stages_1_valid;
     if(FetchPlugin_stages_1_isFlushingRoot) begin
@@ -18360,20 +18765,20 @@ module NaxRiscvAxi4LinuxPlicClint (
   assign when_Pipeline_l278_10 = (|AlignerPlugin_setup_s2m_haltRequest_AlignerPlugin_l270);
   always @(*) begin
     FetchPlugin_stages_0_ready_output = FetchPlugin_stages_1_ready;
-    if(when_Connection_l74_7) begin
+    if(when_Connection_l74_8) begin
       FetchPlugin_stages_0_ready_output = 1'b1;
     end
   end
 
-  assign when_Connection_l74_7 = (! FetchPlugin_stages_1_valid);
+  assign when_Connection_l74_8 = (! FetchPlugin_stages_1_valid);
   always @(*) begin
     FetchPlugin_stages_1_ready_output = FetchPlugin_stages_2_ready;
-    if(when_Connection_l74_8) begin
+    if(when_Connection_l74_9) begin
       FetchPlugin_stages_1_ready_output = 1'b1;
     end
   end
 
-  assign when_Connection_l74_8 = (! FetchPlugin_stages_2_valid);
+  assign when_Connection_l74_9 = (! FetchPlugin_stages_2_valid);
   assign FetchPlugin_stages_2_ready_output = (! FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid);
   assign AlignerPlugin_setup_s2m_valid = (_zz_AlignerPlugin_setup_s2m_valid || FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid);
   always @(*) begin
@@ -18426,6 +18831,14 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     if(FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid) begin
+      AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE = FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE_s2mBuffer;
+    end else begin
+      AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE = FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE;
+    end
+  end
+
+  always @(*) begin
+    if(FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid) begin
       AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID = FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID_s2mBuffer;
     end else begin
       AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID = FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID;
@@ -18458,6 +18871,14 @@ module NaxRiscvAxi4LinuxPlicClint (
 
   always @(*) begin
     if(FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid) begin
+      AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_SLICE = FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE_s2mBuffer;
+    end else begin
+      AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_SLICE = FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE;
+    end
+  end
+
+  always @(*) begin
+    if(FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid) begin
       AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALUE = FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE_s2mBuffer;
     end else begin
       AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALUE = FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE;
@@ -18469,6 +18890,14 @@ module NaxRiscvAxi4LinuxPlicClint (
       AlignerPlugin_setup_s2m_GSHARE_COUNTER_0 = FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_0;
     end else begin
       AlignerPlugin_setup_s2m_GSHARE_COUNTER_0 = FetchPlugin_stages_2_GSHARE_COUNTER_0;
+    end
+  end
+
+  always @(*) begin
+    if(FetchPlugin_stages_2_to_AlignerPlugin_setup_s2m_rValid) begin
+      AlignerPlugin_setup_s2m_GSHARE_COUNTER_1 = FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_1;
+    end else begin
+      AlignerPlugin_setup_s2m_GSHARE_COUNTER_1 = FetchPlugin_stages_2_GSHARE_COUNTER_1;
     end
   end
 
@@ -18489,7 +18918,7 @@ module NaxRiscvAxi4LinuxPlicClint (
         end
       end
       PrivilegedPlugin_logic_fsm_enumDef_SETUP : begin
-        if(when_PrivilegedPlugin_l773) begin
+        if(when_PrivilegedPlugin_l784) begin
           PrivilegedPlugin_logic_fsm_stateNext = PrivilegedPlugin_logic_fsm_enumDef_TVEC_READ;
         end else begin
           case(PrivilegedPlugin_logic_reschedule_payload_cause)
@@ -18551,7 +18980,7 @@ module NaxRiscvAxi4LinuxPlicClint (
     end
   end
 
-  assign when_PrivilegedPlugin_l773 = ((! PrivilegedPlugin_logic_reschedule_payload_fromCommit) && PrivilegedPlugin_logic_decoderInterrupt_raised);
+  assign when_PrivilegedPlugin_l784 = ((! PrivilegedPlugin_logic_reschedule_payload_fromCommit) && PrivilegedPlugin_logic_decoderInterrupt_raised);
   always @(*) begin
     _zz_PrivilegedPlugin_setup_ramWrite_address = 3'b101;
     case(PrivilegedPlugin_logic_fsm_trap_targetPrivilege)
@@ -18596,8 +19025,8 @@ module NaxRiscvAxi4LinuxPlicClint (
     endcase
   end
 
-  assign when_PrivilegedPlugin_l959 = (PrivilegedPlugin_logic_fsm_xret_targetPrivilege < 2'b11);
-  assign switch_PrivilegedPlugin_l960 = PrivilegedPlugin_logic_reschedule_payload_tval[1 : 0];
+  assign when_PrivilegedPlugin_l970 = (PrivilegedPlugin_logic_fsm_xret_targetPrivilege < 2'b11);
+  assign switch_PrivilegedPlugin_l971 = PrivilegedPlugin_logic_reschedule_payload_tval[1 : 0];
   assign when_StateMachine_l253_2 = ((! (PrivilegedPlugin_logic_fsm_stateReg == PrivilegedPlugin_logic_fsm_enumDef_IDLE)) && (PrivilegedPlugin_logic_fsm_stateNext == PrivilegedPlugin_logic_fsm_enumDef_IDLE));
   assign CommitPlugin_logic_free_lineEventStream_fifo_io_flush = 1'b0;
   always @(posedge clk or posedge reset) begin
@@ -18616,7 +19045,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       FetchCachePlugin_logic_refill_pushCounter <= 32'h00000000;
       FetchCachePlugin_logic_refill_cmdSent <= 1'b0;
       FetchCachePlugin_logic_refill_wordIndex <= 4'b0000;
-      AlignerPlugin_logic_buffer_mask <= 1'b0;
+      AlignerPlugin_logic_buffer_mask <= 2'b00;
       AlignerPlugin_logic_correctionSent <= 1'b0;
       BranchContextPlugin_logic_ptr_alloc <= 3'b000;
       BranchContextPlugin_logic_ptr_commited <= 3'b000;
@@ -18849,6 +19278,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       DispatchPlugin_logic_pop_1_stagesList_1_valid <= 1'b0;
       RfDependencyPlugin_logic_forRf_integer_init_counter <= 7'h00;
       FrontendPlugin_dispatch_valid <= 1'b0;
+      FrontendPlugin_decompressed_valid <= 1'b0;
       FrontendPlugin_serialized_valid <= 1'b0;
       PcPlugin_logic_init_counter <= 7'h00;
       PcPlugin_logic_fetchPc_pcReg <= externalResetVector;
@@ -18905,10 +19335,10 @@ module NaxRiscvAxi4LinuxPlicClint (
         FetchCachePlugin_logic_refill_hadError <= 1'b0;
       end
       if(AlignerPlugin_logic_fireOutput) begin
-        AlignerPlugin_logic_buffer_mask <= AlignerPlugin_logic_slices_remains_1[0 : 0];
+        AlignerPlugin_logic_buffer_mask <= AlignerPlugin_logic_slices_remains_1[1 : 0];
       end
       if(AlignerPlugin_logic_fireInput) begin
-        AlignerPlugin_logic_buffer_mask <= ((AlignerPlugin_logic_fireOutput ? AlignerPlugin_logic_slices_remains_1[1 : 1] : AlignerPlugin_setup_s2m_MASK_FRONT) & AlignerPlugin_logic_postMask);
+        AlignerPlugin_logic_buffer_mask <= ((AlignerPlugin_logic_fireOutput ? AlignerPlugin_logic_slices_remains_1[3 : 2] : AlignerPlugin_setup_s2m_MASK_FRONT) & AlignerPlugin_logic_postMask);
       end
       if(AlignerPlugin_setup_sequenceJump_valid) begin
         AlignerPlugin_logic_correctionSent <= 1'b1;
@@ -18917,7 +19347,7 @@ module NaxRiscvAxi4LinuxPlicClint (
         AlignerPlugin_logic_correctionSent <= 1'b0;
       end
       if(FrontendPlugin_aligned_isFlushed) begin
-        AlignerPlugin_logic_buffer_mask <= 1'b0;
+        AlignerPlugin_logic_buffer_mask <= 2'b00;
       end
       if(FrontendPlugin_allocated_isFireing) begin
         BranchContextPlugin_logic_ptr_alloc <= BranchContextPlugin_logic_alloc_allocNext_1;
@@ -19529,10 +19959,10 @@ module NaxRiscvAxi4LinuxPlicClint (
       if(PrivilegedPlugin_logic_decoderInterrupt_pendingInterrupt) begin
         PrivilegedPlugin_logic_decoderInterrupt_counter <= (PrivilegedPlugin_logic_decoderInterrupt_counter + 3'b001);
       end
-      if(when_PrivilegedPlugin_l675) begin
+      if(when_PrivilegedPlugin_l686) begin
         PrivilegedPlugin_logic_decoderInterrupt_counter <= 3'b000;
       end
-      if(when_PrivilegedPlugin_l679) begin
+      if(when_PrivilegedPlugin_l690) begin
         PrivilegedPlugin_logic_decoderInterrupt_raised <= 1'b1;
       end
       if(when_CsrAccessPlugin_l328) begin
@@ -19540,12 +19970,24 @@ module NaxRiscvAxi4LinuxPlicClint (
         PrivilegedPlugin_logic_machine_cause_code <= EU0_CsrAccessPlugin_setup_onWriteBits[3 : 0];
       end
       if(when_CsrAccessPlugin_l328_1) begin
-        PrivilegedPlugin_logic_machine_mstatus_mpp <= EU0_CsrAccessPlugin_setup_onWriteBits[12 : 11];
         PrivilegedPlugin_logic_machine_mstatus_mpie <= EU0_CsrAccessPlugin_setup_onWriteBits[7];
         PrivilegedPlugin_logic_machine_mstatus_mie <= EU0_CsrAccessPlugin_setup_onWriteBits[3];
         PrivilegedPlugin_logic_machine_mstatus_tsr <= EU0_CsrAccessPlugin_setup_onWriteBits[22];
         PrivilegedPlugin_logic_machine_mstatus_tw <= EU0_CsrAccessPlugin_setup_onWriteBits[21];
         PrivilegedPlugin_logic_machine_mstatus_tvm <= EU0_CsrAccessPlugin_setup_onWriteBits[20];
+        case(switch_PrivilegedPlugin_l443)
+          2'b11 : begin
+            PrivilegedPlugin_logic_machine_mstatus_mpp <= 2'b11;
+          end
+          2'b01 : begin
+            PrivilegedPlugin_logic_machine_mstatus_mpp <= 2'b01;
+          end
+          2'b00 : begin
+            PrivilegedPlugin_logic_machine_mstatus_mpp <= 2'b00;
+          end
+          default : begin
+          end
+        endcase
         PrivilegedPlugin_logic_machine_mstatus_fs <= EU0_CsrAccessPlugin_setup_onWriteBits[14 : 13];
         PrivilegedPlugin_logic_supervisor_sstatus_spp <= EU0_CsrAccessPlugin_setup_onWriteBits[8 : 8];
         PrivilegedPlugin_logic_supervisor_sstatus_spie <= EU0_CsrAccessPlugin_setup_onWriteBits[5];
@@ -19766,6 +20208,12 @@ module NaxRiscvAxi4LinuxPlicClint (
       if(CommitPlugin_logic_reschedule_reschedulePort_valid) begin
         FrontendPlugin_dispatch_valid <= 1'b0;
       end
+      if(FrontendPlugin_aligned_ready_output) begin
+        FrontendPlugin_decompressed_valid <= FrontendPlugin_aligned_valid;
+      end
+      if(when_Connection_l66_1) begin
+        FrontendPlugin_decompressed_valid <= 1'b0;
+      end
       if(FrontendPlugin_decoded_ready_output) begin
         FrontendPlugin_serialized_valid <= _zz_FrontendPlugin_serialized_valid;
       end
@@ -19800,7 +20248,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       if(FetchPlugin_stages_1_ready_output) begin
         FetchPlugin_stages_2_valid <= _zz_FetchPlugin_stages_2_valid;
       end
-      if(when_Connection_l66_1) begin
+      if(when_Connection_l66_2) begin
         FetchPlugin_stages_2_valid <= 1'b0;
       end
       if(_zz_AlignerPlugin_setup_s2m_valid) begin
@@ -19828,7 +20276,7 @@ module NaxRiscvAxi4LinuxPlicClint (
         end
         PrivilegedPlugin_logic_fsm_enumDef_XRET : begin
           PrivilegedPlugin_setup_privilege <= PrivilegedPlugin_logic_fsm_xret_targetPrivilege;
-          case(switch_PrivilegedPlugin_l960)
+          case(switch_PrivilegedPlugin_l971)
             2'b11 : begin
               PrivilegedPlugin_logic_machine_mstatus_mpp <= 2'b00;
               PrivilegedPlugin_logic_machine_mstatus_mie <= PrivilegedPlugin_logic_machine_mstatus_mpie;
@@ -19888,11 +20336,14 @@ module NaxRiscvAxi4LinuxPlicClint (
       AlignerPlugin_logic_buffer_fault <= AlignerPlugin_setup_s2m_Fetch_WORD_FAULT;
       AlignerPlugin_logic_buffer_fault_page <= AlignerPlugin_setup_s2m_Fetch_WORD_FAULT_PAGE;
       AlignerPlugin_logic_buffer_branchValid <= (AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_VALID && (! _zz_FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0));
+      AlignerPlugin_logic_buffer_branchSlice <= AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_SLICE;
       AlignerPlugin_logic_buffer_branchPcNext <= AlignerPlugin_setup_s2m_Prediction_WORD_BRANCH_PC_NEXT;
       AlignerPlugin_logic_buffer_wordContexts_0 <= AlignerPlugin_setup_s2m_BRANCH_HISTORY;
       AlignerPlugin_logic_buffer_wordContexts_1 <= AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALID;
+      AlignerPlugin_logic_buffer_wordContexts_2 <= AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_SLICE;
       AlignerPlugin_logic_buffer_wordContexts_3 <= AlignerPlugin_setup_s2m_Prediction_BRANCH_HISTORY_PUSH_VALUE;
       AlignerPlugin_logic_buffer_wordContexts_4_0 <= AlignerPlugin_setup_s2m_GSHARE_COUNTER_0;
+      AlignerPlugin_logic_buffer_wordContexts_4_1 <= AlignerPlugin_setup_s2m_GSHARE_COUNTER_1;
       AlignerPlugin_logic_buffer_firstWordContexts_0 <= AlignerPlugin_setup_s2m_FETCH_ID;
     end
     CommitPlugin_logic_ptr_robLineMaskRsp <= CommitPlugin_setup_robLineMask_mask;
@@ -19900,9 +20351,9 @@ module NaxRiscvAxi4LinuxPlicClint (
       CommitPlugin_logic_reschedule_robId <= ((((_zz_CommitPlugin_logic_reschedule_trap ? Lsu2Plugin_setup_sharedTrap_payload_robId : 4'b0000) | (_zz_CommitPlugin_logic_reschedule_trap_1 ? Lsu2Plugin_setup_specialTrap_payload_robId : 4'b0000)) | ((_zz_CommitPlugin_logic_reschedule_trap_2 ? EU0_BranchPlugin_setup_reschedule_payload_robId : 4'b0000) | (_zz_CommitPlugin_logic_reschedule_trap_3 ? EnvCallPlugin_setup_reschedule_payload_robId : 4'b0000))) | (_zz_CommitPlugin_logic_reschedule_trap_4 ? EU0_CsrAccessPlugin_setup_trap_payload_robId : 4'b0000));
       CommitPlugin_logic_reschedule_trap <= _zz_CommitPlugin_logic_reschedule_trap_5[0];
       CommitPlugin_logic_reschedule_pcTarget <= ((CommitPlugin_logic_reschedule_portsLogic_hits[0] ? Lsu2Plugin_setup_sharedTrap_payload_pcTarget : 32'h00000000) | (CommitPlugin_logic_reschedule_portsLogic_hits[2] ? EU0_BranchPlugin_setup_reschedule_payload_pcTarget : 32'h00000000));
-      CommitPlugin_logic_reschedule_cause <= ((((CommitPlugin_logic_reschedule_portsLogic_hits[0] ? Lsu2Plugin_setup_sharedTrap_payload_cause : 4'b0000) | (CommitPlugin_logic_reschedule_portsLogic_hits[1] ? Lsu2Plugin_setup_specialTrap_payload_cause : 4'b0000)) | ((CommitPlugin_logic_reschedule_portsLogic_hits[2] ? EU0_BranchPlugin_setup_reschedule_payload_cause : 4'b0000) | (CommitPlugin_logic_reschedule_portsLogic_hits[3] ? EnvCallPlugin_setup_reschedule_payload_cause : 4'b0000))) | (CommitPlugin_logic_reschedule_portsLogic_hits[4] ? EU0_CsrAccessPlugin_setup_trap_payload_cause : 4'b0000));
-      CommitPlugin_logic_reschedule_reason <= ((((CommitPlugin_logic_reschedule_portsLogic_hits[0] ? Lsu2Plugin_setup_sharedTrap_payload_reason : 8'h00) | (CommitPlugin_logic_reschedule_portsLogic_hits[1] ? Lsu2Plugin_setup_specialTrap_payload_reason : 8'h00)) | ((CommitPlugin_logic_reschedule_portsLogic_hits[2] ? EU0_BranchPlugin_setup_reschedule_payload_reason : 8'h00) | (CommitPlugin_logic_reschedule_portsLogic_hits[3] ? EnvCallPlugin_setup_reschedule_payload_reason : 8'h00))) | (CommitPlugin_logic_reschedule_portsLogic_hits[4] ? EU0_CsrAccessPlugin_setup_trap_payload_reason : 8'h00));
-      CommitPlugin_logic_reschedule_tval <= ((((CommitPlugin_logic_reschedule_portsLogic_hits[0] ? Lsu2Plugin_setup_sharedTrap_payload_tval : 32'h00000000) | (CommitPlugin_logic_reschedule_portsLogic_hits[1] ? Lsu2Plugin_setup_specialTrap_payload_tval : 32'h00000000)) | ((CommitPlugin_logic_reschedule_portsLogic_hits[2] ? EU0_BranchPlugin_setup_reschedule_payload_tval : 32'h00000000) | (CommitPlugin_logic_reschedule_portsLogic_hits[3] ? EnvCallPlugin_setup_reschedule_payload_tval : 32'h00000000))) | (CommitPlugin_logic_reschedule_portsLogic_hits[4] ? EU0_CsrAccessPlugin_setup_trap_payload_tval : 32'h00000000));
+      CommitPlugin_logic_reschedule_cause <= (((CommitPlugin_logic_reschedule_portsLogic_hits[0] ? Lsu2Plugin_setup_sharedTrap_payload_cause : 4'b0000) | (CommitPlugin_logic_reschedule_portsLogic_hits[1] ? Lsu2Plugin_setup_specialTrap_payload_cause : 4'b0000)) | ((CommitPlugin_logic_reschedule_portsLogic_hits[3] ? EnvCallPlugin_setup_reschedule_payload_cause : 4'b0000) | (CommitPlugin_logic_reschedule_portsLogic_hits[4] ? EU0_CsrAccessPlugin_setup_trap_payload_cause : 4'b0000)));
+      CommitPlugin_logic_reschedule_reason <= (((CommitPlugin_logic_reschedule_portsLogic_hits[0] ? Lsu2Plugin_setup_sharedTrap_payload_reason : 8'h00) | (CommitPlugin_logic_reschedule_portsLogic_hits[1] ? Lsu2Plugin_setup_specialTrap_payload_reason : 8'h00)) | ((CommitPlugin_logic_reschedule_portsLogic_hits[3] ? EnvCallPlugin_setup_reschedule_payload_reason : 8'h00) | (CommitPlugin_logic_reschedule_portsLogic_hits[4] ? EU0_CsrAccessPlugin_setup_trap_payload_reason : 8'h00)));
+      CommitPlugin_logic_reschedule_tval <= (((CommitPlugin_logic_reschedule_portsLogic_hits[0] ? Lsu2Plugin_setup_sharedTrap_payload_tval : 32'h00000000) | (CommitPlugin_logic_reschedule_portsLogic_hits[1] ? Lsu2Plugin_setup_specialTrap_payload_tval : 32'h00000000)) | ((CommitPlugin_logic_reschedule_portsLogic_hits[3] ? EnvCallPlugin_setup_reschedule_payload_tval : 32'h00000000) | (CommitPlugin_logic_reschedule_portsLogic_hits[4] ? EU0_CsrAccessPlugin_setup_trap_payload_tval : 32'h00000000)));
       CommitPlugin_logic_reschedule_skipCommit <= _zz_CommitPlugin_logic_reschedule_skipCommit[0];
     end
     PrivilegedPlugin_logic_supervisor_sip_seipInput <= PrivilegedPlugin_io_int_supervisor_external;
@@ -19910,6 +20361,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       PrivilegedPlugin_logic_rescheduleUnbuffered_rData_cause <= PrivilegedPlugin_logic_rescheduleUnbuffered_payload_cause;
       PrivilegedPlugin_logic_rescheduleUnbuffered_rData_epc <= PrivilegedPlugin_logic_rescheduleUnbuffered_payload_epc;
       PrivilegedPlugin_logic_rescheduleUnbuffered_rData_tval <= PrivilegedPlugin_logic_rescheduleUnbuffered_payload_tval;
+      PrivilegedPlugin_logic_rescheduleUnbuffered_rData_slices <= PrivilegedPlugin_logic_rescheduleUnbuffered_payload_slices;
       PrivilegedPlugin_logic_rescheduleUnbuffered_rData_fromCommit <= PrivilegedPlugin_logic_rescheduleUnbuffered_payload_fromCommit;
     end
     if(LsuPlugin_peripheralBus_cmd_valid) begin
@@ -20585,6 +21037,9 @@ module NaxRiscvAxi4LinuxPlicClint (
     if(when_DecoderPlugin_l304) begin
       DecoderPlugin_logic_exception_fetchFaultPageReg_0 <= FrontendPlugin_decoded_Frontend_FETCH_FAULT_PAGE_0;
     end
+    if(when_DecoderPlugin_l305) begin
+      DecoderPlugin_logic_exception_fetchFaultSliceReg_0 <= FrontendPlugin_decoded_Frontend_FETCH_FAULT_SLICE_0;
+    end
     if(when_DecoderPlugin_l306) begin
       DecoderPlugin_logic_exception_debugEnterReg_0 <= DecoderPlugin_setup_debugEnter_0;
     end
@@ -20622,6 +21077,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       EU0_ExecutionUnitBase_pipeline_fetch_1_PHYS_RD <= EU0_ExecutionUnitBase_pipeline_fetch_0_PHYS_RD;
       EU0_ExecutionUnitBase_pipeline_fetch_1_WRITE_RD <= EU0_ExecutionUnitBase_pipeline_fetch_0_WRITE_RD;
       EU0_ExecutionUnitBase_pipeline_fetch_1_PC <= EU0_ExecutionUnitBase_pipeline_fetch_0_PC;
+      EU0_ExecutionUnitBase_pipeline_fetch_1_Fetch_INSTRUCTION_SLICE_COUNT <= EU0_ExecutionUnitBase_pipeline_fetch_0_Fetch_INSTRUCTION_SLICE_COUNT;
       EU0_ExecutionUnitBase_pipeline_fetch_1_BRANCH_ID <= EU0_ExecutionUnitBase_pipeline_fetch_0_BRANCH_ID;
       EU0_ExecutionUnitBase_pipeline_fetch_1_LSU_ID <= EU0_ExecutionUnitBase_pipeline_fetch_0_LSU_ID;
       EU0_ExecutionUnitBase_pipeline_fetch_1_ROB_MSB <= EU0_ExecutionUnitBase_pipeline_fetch_0_ROB_MSB;
@@ -20667,6 +21123,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       EU0_ExecutionUnitBase_pipeline_execute_1_Frontend_MICRO_OP <= EU0_ExecutionUnitBase_pipeline_execute_0_Frontend_MICRO_OP;
       EU0_ExecutionUnitBase_pipeline_execute_1_PC <= EU0_ExecutionUnitBase_pipeline_execute_0_PC;
       EU0_ExecutionUnitBase_pipeline_execute_1_PC_TRUE <= EU0_ExecutionUnitBase_pipeline_execute_0_PC_TRUE;
+      EU0_ExecutionUnitBase_pipeline_execute_1_Fetch_INSTRUCTION_SLICE_COUNT <= EU0_ExecutionUnitBase_pipeline_execute_0_Fetch_INSTRUCTION_SLICE_COUNT;
       EU0_ExecutionUnitBase_pipeline_execute_1_PC_FALSE <= EU0_ExecutionUnitBase_pipeline_execute_0_PC_FALSE;
       EU0_ExecutionUnitBase_pipeline_execute_1_PC_TARGET <= EU0_ExecutionUnitBase_pipeline_execute_0_PC_TARGET;
       EU0_ExecutionUnitBase_pipeline_execute_1_BRANCH_EARLY_taken <= EU0_ExecutionUnitBase_pipeline_execute_0_BRANCH_EARLY_taken;
@@ -20754,12 +21211,28 @@ module NaxRiscvAxi4LinuxPlicClint (
       FrontendPlugin_dispatch_SQ_ALLOC_0 <= FrontendPlugin_allocated_SQ_ALLOC_0;
       FrontendPlugin_dispatch_Prediction_IS_BRANCH_0 <= FrontendPlugin_allocated_Prediction_IS_BRANCH_0;
       FrontendPlugin_dispatch_GSHARE_COUNTER_0_0 <= FrontendPlugin_allocated_GSHARE_COUNTER_0_0;
+      FrontendPlugin_dispatch_GSHARE_COUNTER_0_1 <= FrontendPlugin_allocated_GSHARE_COUNTER_0_1;
       FrontendPlugin_dispatch_DispatchPlugin_FENCE_OLDER_0 <= FrontendPlugin_allocated_DispatchPlugin_FENCE_OLDER_0;
       FrontendPlugin_dispatch_DispatchPlugin_FENCE_YOUNGER_0 <= FrontendPlugin_allocated_DispatchPlugin_FENCE_YOUNGER_0;
       FrontendPlugin_dispatch_ALU0_SEL_0 <= FrontendPlugin_allocated_ALU0_SEL_0;
       FrontendPlugin_dispatch_EU0_SEL_0 <= FrontendPlugin_allocated_EU0_SEL_0;
       FrontendPlugin_dispatch_RfDependencyPlugin_setup_SKIP_0_0 <= FrontendPlugin_allocated_RfDependencyPlugin_setup_SKIP_0_0;
       FrontendPlugin_dispatch_RfDependencyPlugin_setup_SKIP_1_0 <= FrontendPlugin_allocated_RfDependencyPlugin_setup_SKIP_1_0;
+    end
+    if(FrontendPlugin_aligned_ready_output) begin
+      FrontendPlugin_decompressed_Frontend_INSTRUCTION_ALIGNED_0 <= FrontendPlugin_aligned_Frontend_INSTRUCTION_ALIGNED_0;
+      FrontendPlugin_decompressed_Frontend_MASK_ALIGNED_0 <= FrontendPlugin_aligned_Frontend_MASK_ALIGNED_0;
+      FrontendPlugin_decompressed_Fetch_INSTRUCTION_SLICE_COUNT_0 <= FrontendPlugin_aligned_Fetch_INSTRUCTION_SLICE_COUNT_0;
+      FrontendPlugin_decompressed_PC_0 <= FrontendPlugin_aligned_PC_0;
+      FrontendPlugin_decompressed_Prediction_ALIGNED_BRANCH_VALID_0 <= FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_VALID_0;
+      FrontendPlugin_decompressed_Prediction_ALIGNED_BRANCH_PC_NEXT_0 <= FrontendPlugin_aligned_Prediction_ALIGNED_BRANCH_PC_NEXT_0;
+      FrontendPlugin_decompressed_BRANCH_HISTORY_0 <= FrontendPlugin_aligned_BRANCH_HISTORY_0;
+      FrontendPlugin_decompressed_GSHARE_COUNTER_0_0 <= FrontendPlugin_aligned_GSHARE_COUNTER_0_0;
+      FrontendPlugin_decompressed_GSHARE_COUNTER_0_1 <= FrontendPlugin_aligned_GSHARE_COUNTER_0_1;
+      FrontendPlugin_decompressed_FETCH_ID_0 <= FrontendPlugin_aligned_FETCH_ID_0;
+      FrontendPlugin_decompressed_Frontend_FETCH_FAULT_0 <= FrontendPlugin_aligned_Frontend_FETCH_FAULT_0;
+      FrontendPlugin_decompressed_Frontend_FETCH_FAULT_PAGE_0 <= FrontendPlugin_aligned_Frontend_FETCH_FAULT_PAGE_0;
+      FrontendPlugin_decompressed_Frontend_FETCH_FAULT_SLICE_0 <= FrontendPlugin_aligned_Frontend_FETCH_FAULT_SLICE_0;
     end
     if(FrontendPlugin_decoded_ready_output) begin
       FrontendPlugin_serialized_FETCH_ID_0 <= FrontendPlugin_decoded_FETCH_ID_0;
@@ -20782,6 +21255,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       FrontendPlugin_serialized_IS_ANY_0 <= FrontendPlugin_decoded_IS_ANY_0;
       FrontendPlugin_serialized_RAS_PUSH_0 <= FrontendPlugin_decoded_RAS_PUSH_0;
       FrontendPlugin_serialized_RAS_POP_0 <= FrontendPlugin_decoded_RAS_POP_0;
+      FrontendPlugin_serialized_Fetch_INSTRUCTION_SLICE_COUNT_0 <= FrontendPlugin_decoded_Fetch_INSTRUCTION_SLICE_COUNT_0;
       FrontendPlugin_serialized_PC_INC_0 <= FrontendPlugin_decoded_PC_INC_0;
       FrontendPlugin_serialized_PC_TARGET_PRE_RAS_0 <= FrontendPlugin_decoded_PC_TARGET_PRE_RAS_0;
       FrontendPlugin_serialized_BAD_RET_PC_0 <= FrontendPlugin_decoded_BAD_RET_PC_0;
@@ -20791,6 +21265,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       FrontendPlugin_serialized_Prediction_ALIGNED_BRANCH_VALID_0 <= FrontendPlugin_decoded_Prediction_ALIGNED_BRANCH_VALID_0;
       FrontendPlugin_serialized_BRANCH_HISTORY_0 <= FrontendPlugin_decoded_BRANCH_HISTORY_0;
       FrontendPlugin_serialized_GSHARE_COUNTER_0_0 <= FrontendPlugin_decoded_GSHARE_COUNTER_0_0;
+      FrontendPlugin_serialized_GSHARE_COUNTER_0_1 <= FrontendPlugin_decoded_GSHARE_COUNTER_0_1;
     end
     if(FetchPlugin_stages_0_ready_output) begin
       FetchPlugin_stages_1_FetchCachePlugin_logic_WAYS_TAGS_0_loaded <= FetchPlugin_stages_0_FetchCachePlugin_logic_WAYS_TAGS_0_loaded;
@@ -20802,6 +21277,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_valid <= FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_valid;
       FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_address <= FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_address;
       FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_0 <= FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_0;
+      FetchPlugin_stages_1_GSharePlugin_logic_BYPASS_payload_data_1 <= FetchPlugin_stages_0_GSharePlugin_logic_BYPASS_payload_data_1;
     end
     if(FetchPlugin_stages_1_ready_output) begin
       FetchPlugin_stages_2_FETCH_ID <= FetchPlugin_stages_1_FETCH_ID;
@@ -20814,9 +21290,12 @@ module NaxRiscvAxi4LinuxPlicClint (
       FetchPlugin_stages_2_FetchCachePlugin_logic_WAYS_HIT <= FetchPlugin_stages_1_FetchCachePlugin_logic_WAYS_HIT;
       FetchPlugin_stages_2_AlignerPlugin_MASK_FRONT <= FetchPlugin_stages_1_AlignerPlugin_MASK_FRONT;
       FetchPlugin_stages_2_GSHARE_COUNTER_0 <= FetchPlugin_stages_1_GSHARE_COUNTER_0;
+      FetchPlugin_stages_2_GSHARE_COUNTER_1 <= FetchPlugin_stages_1_GSHARE_COUNTER_1;
       FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID <= FetchPlugin_stages_1_Prediction_WORD_BRANCH_VALID;
+      FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE <= FetchPlugin_stages_1_Prediction_WORD_BRANCH_SLICE;
       FetchPlugin_stages_2_Prediction_WORD_BRANCH_PC_NEXT <= FetchPlugin_stages_1_Prediction_WORD_BRANCH_PC_NEXT;
       FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALID <= FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALID;
+      FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE <= FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_SLICE;
       FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE <= FetchPlugin_stages_1_Prediction_BRANCH_HISTORY_PUSH_VALUE;
       FetchPlugin_stages_2_MMU_IO <= FetchPlugin_stages_1_MMU_IO;
       FetchPlugin_stages_2_MMU_TRANSLATED <= FetchPlugin_stages_1_MMU_TRANSLATED;
@@ -20846,6 +21325,9 @@ module NaxRiscvAxi4LinuxPlicClint (
       FetchPlugin_stages_2_FETCH_ID_s2mBuffer <= FetchPlugin_stages_2_FETCH_ID;
     end
     if(FetchPlugin_stages_2_ready_output) begin
+      FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE_s2mBuffer <= FetchPlugin_stages_2_Prediction_WORD_BRANCH_SLICE;
+    end
+    if(FetchPlugin_stages_2_ready_output) begin
       FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID_s2mBuffer <= FetchPlugin_stages_2_Prediction_WORD_BRANCH_VALID;
     end
     if(FetchPlugin_stages_2_ready_output) begin
@@ -20858,10 +21340,14 @@ module NaxRiscvAxi4LinuxPlicClint (
       FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALID_s2mBuffer <= FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALID;
     end
     if(FetchPlugin_stages_2_ready_output) begin
+      FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE_s2mBuffer <= FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_SLICE;
+    end
+    if(FetchPlugin_stages_2_ready_output) begin
       FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE_s2mBuffer <= FetchPlugin_stages_2_Prediction_BRANCH_HISTORY_PUSH_VALUE;
     end
     if(FetchPlugin_stages_2_ready_output) begin
       FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_0 <= FetchPlugin_stages_2_GSHARE_COUNTER_0;
+      FetchPlugin_stages_2_GSHARE_COUNTER_s2mBuffer_1 <= FetchPlugin_stages_2_GSHARE_COUNTER_1;
     end
     if(FetchPlugin_stages_2_ready_output) begin
       FetchPlugin_stages_2_Fetch_FETCH_PC_INC_s2mBuffer <= FetchPlugin_stages_2_Fetch_FETCH_PC_INC;
@@ -20870,7 +21356,7 @@ module NaxRiscvAxi4LinuxPlicClint (
       PrivilegedPlugin_logic_fsm_enumDef_IDLE : begin
       end
       PrivilegedPlugin_logic_fsm_enumDef_SETUP : begin
-        if(when_PrivilegedPlugin_l773) begin
+        if(when_PrivilegedPlugin_l784) begin
           PrivilegedPlugin_logic_fsm_trap_interrupt <= 1'b1;
           PrivilegedPlugin_logic_fsm_trap_code <= PrivilegedPlugin_logic_decoderInterrupt_buffer_code;
           PrivilegedPlugin_logic_fsm_trap_targetPrivilege <= PrivilegedPlugin_logic_decoderInterrupt_buffer_targetPrivilege;
@@ -27396,2715 +27882,6 @@ module TranslatorWithRollback (
     end
     if(io_rollback) begin
       location_updated <= 32'h00000000;
-    end
-  end
-
-
-endmodule
-
-module AxiLite4Plic (
-  input  wire          io_bus_aw_valid,
-  output wire          io_bus_aw_ready,
-  input  wire [21:0]   io_bus_aw_payload_addr,
-  input  wire [2:0]    io_bus_aw_payload_prot,
-  input  wire          io_bus_w_valid,
-  output wire          io_bus_w_ready,
-  input  wire [31:0]   io_bus_w_payload_data,
-  input  wire [3:0]    io_bus_w_payload_strb,
-  output wire          io_bus_b_valid,
-  input  wire          io_bus_b_ready,
-  output wire [1:0]    io_bus_b_payload_resp,
-  input  wire          io_bus_ar_valid,
-  output wire          io_bus_ar_ready,
-  input  wire [21:0]   io_bus_ar_payload_addr,
-  input  wire [2:0]    io_bus_ar_payload_prot,
-  output wire          io_bus_r_valid,
-  input  wire          io_bus_r_ready,
-  output wire [31:0]   io_bus_r_payload_data,
-  output wire [1:0]    io_bus_r_payload_resp,
-  input  wire [30:0]   io_sources,
-  output wire [1:0]    io_targets,
-  input  wire          clk,
-  input  wire          reset
-);
-
-  wire       [4:0]    _zz_targets_0_bestRequest_id_82;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_83;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_84;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_85;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_86;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_87;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_88;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_89;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_90;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_91;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_92;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_93;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_94;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_95;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_96;
-  wire       [4:0]    _zz_targets_0_bestRequest_id_97;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_82;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_83;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_84;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_85;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_86;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_87;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_88;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_89;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_90;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_91;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_92;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_93;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_94;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_95;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_96;
-  wire       [4:0]    _zz_targets_1_bestRequest_id_97;
-  wire                _zz_gateways_0_ip;
-  wire                _zz_gateways_1_ip;
-  wire                _zz_gateways_2_ip;
-  wire                _zz_gateways_3_ip;
-  wire                _zz_gateways_4_ip;
-  wire                _zz_gateways_5_ip;
-  wire                _zz_gateways_6_ip;
-  wire                _zz_gateways_7_ip;
-  wire                _zz_gateways_8_ip;
-  wire                _zz_gateways_9_ip;
-  wire                _zz_gateways_10_ip;
-  wire                _zz_gateways_11_ip;
-  wire                _zz_gateways_12_ip;
-  wire                _zz_gateways_13_ip;
-  wire                _zz_gateways_14_ip;
-  wire                _zz_gateways_15_ip;
-  wire                _zz_gateways_16_ip;
-  wire                _zz_gateways_17_ip;
-  wire                _zz_gateways_18_ip;
-  wire                _zz_gateways_19_ip;
-  wire                _zz_gateways_20_ip;
-  wire                _zz_gateways_21_ip;
-  wire                _zz_gateways_22_ip;
-  wire                _zz_gateways_23_ip;
-  wire                _zz_gateways_24_ip;
-  wire                _zz_gateways_25_ip;
-  wire                _zz_gateways_26_ip;
-  wire                _zz_gateways_27_ip;
-  wire                _zz_gateways_28_ip;
-  wire                _zz_gateways_29_ip;
-  wire                _zz_gateways_30_ip;
-  wire       [1:0]    gateways_0_priority;
-  reg                 gateways_0_ip;
-  reg                 gateways_0_waitCompletion;
-  wire                when_PlicGateway_l21;
-  wire       [1:0]    gateways_1_priority;
-  reg                 gateways_1_ip;
-  reg                 gateways_1_waitCompletion;
-  wire                when_PlicGateway_l21_1;
-  wire       [1:0]    gateways_2_priority;
-  reg                 gateways_2_ip;
-  reg                 gateways_2_waitCompletion;
-  wire                when_PlicGateway_l21_2;
-  wire       [1:0]    gateways_3_priority;
-  reg                 gateways_3_ip;
-  reg                 gateways_3_waitCompletion;
-  wire                when_PlicGateway_l21_3;
-  wire       [1:0]    gateways_4_priority;
-  reg                 gateways_4_ip;
-  reg                 gateways_4_waitCompletion;
-  wire                when_PlicGateway_l21_4;
-  wire       [1:0]    gateways_5_priority;
-  reg                 gateways_5_ip;
-  reg                 gateways_5_waitCompletion;
-  wire                when_PlicGateway_l21_5;
-  wire       [1:0]    gateways_6_priority;
-  reg                 gateways_6_ip;
-  reg                 gateways_6_waitCompletion;
-  wire                when_PlicGateway_l21_6;
-  wire       [1:0]    gateways_7_priority;
-  reg                 gateways_7_ip;
-  reg                 gateways_7_waitCompletion;
-  wire                when_PlicGateway_l21_7;
-  wire       [1:0]    gateways_8_priority;
-  reg                 gateways_8_ip;
-  reg                 gateways_8_waitCompletion;
-  wire                when_PlicGateway_l21_8;
-  wire       [1:0]    gateways_9_priority;
-  reg                 gateways_9_ip;
-  reg                 gateways_9_waitCompletion;
-  wire                when_PlicGateway_l21_9;
-  wire       [1:0]    gateways_10_priority;
-  reg                 gateways_10_ip;
-  reg                 gateways_10_waitCompletion;
-  wire                when_PlicGateway_l21_10;
-  wire       [1:0]    gateways_11_priority;
-  reg                 gateways_11_ip;
-  reg                 gateways_11_waitCompletion;
-  wire                when_PlicGateway_l21_11;
-  wire       [1:0]    gateways_12_priority;
-  reg                 gateways_12_ip;
-  reg                 gateways_12_waitCompletion;
-  wire                when_PlicGateway_l21_12;
-  wire       [1:0]    gateways_13_priority;
-  reg                 gateways_13_ip;
-  reg                 gateways_13_waitCompletion;
-  wire                when_PlicGateway_l21_13;
-  wire       [1:0]    gateways_14_priority;
-  reg                 gateways_14_ip;
-  reg                 gateways_14_waitCompletion;
-  wire                when_PlicGateway_l21_14;
-  wire       [1:0]    gateways_15_priority;
-  reg                 gateways_15_ip;
-  reg                 gateways_15_waitCompletion;
-  wire                when_PlicGateway_l21_15;
-  wire       [1:0]    gateways_16_priority;
-  reg                 gateways_16_ip;
-  reg                 gateways_16_waitCompletion;
-  wire                when_PlicGateway_l21_16;
-  wire       [1:0]    gateways_17_priority;
-  reg                 gateways_17_ip;
-  reg                 gateways_17_waitCompletion;
-  wire                when_PlicGateway_l21_17;
-  wire       [1:0]    gateways_18_priority;
-  reg                 gateways_18_ip;
-  reg                 gateways_18_waitCompletion;
-  wire                when_PlicGateway_l21_18;
-  wire       [1:0]    gateways_19_priority;
-  reg                 gateways_19_ip;
-  reg                 gateways_19_waitCompletion;
-  wire                when_PlicGateway_l21_19;
-  wire       [1:0]    gateways_20_priority;
-  reg                 gateways_20_ip;
-  reg                 gateways_20_waitCompletion;
-  wire                when_PlicGateway_l21_20;
-  wire       [1:0]    gateways_21_priority;
-  reg                 gateways_21_ip;
-  reg                 gateways_21_waitCompletion;
-  wire                when_PlicGateway_l21_21;
-  wire       [1:0]    gateways_22_priority;
-  reg                 gateways_22_ip;
-  reg                 gateways_22_waitCompletion;
-  wire                when_PlicGateway_l21_22;
-  wire       [1:0]    gateways_23_priority;
-  reg                 gateways_23_ip;
-  reg                 gateways_23_waitCompletion;
-  wire                when_PlicGateway_l21_23;
-  wire       [1:0]    gateways_24_priority;
-  reg                 gateways_24_ip;
-  reg                 gateways_24_waitCompletion;
-  wire                when_PlicGateway_l21_24;
-  wire       [1:0]    gateways_25_priority;
-  reg                 gateways_25_ip;
-  reg                 gateways_25_waitCompletion;
-  wire                when_PlicGateway_l21_25;
-  wire       [1:0]    gateways_26_priority;
-  reg                 gateways_26_ip;
-  reg                 gateways_26_waitCompletion;
-  wire                when_PlicGateway_l21_26;
-  wire       [1:0]    gateways_27_priority;
-  reg                 gateways_27_ip;
-  reg                 gateways_27_waitCompletion;
-  wire                when_PlicGateway_l21_27;
-  wire       [1:0]    gateways_28_priority;
-  reg                 gateways_28_ip;
-  reg                 gateways_28_waitCompletion;
-  wire                when_PlicGateway_l21_28;
-  wire       [1:0]    gateways_29_priority;
-  reg                 gateways_29_ip;
-  reg                 gateways_29_waitCompletion;
-  wire                when_PlicGateway_l21_29;
-  wire       [1:0]    gateways_30_priority;
-  reg                 gateways_30_ip;
-  reg                 gateways_30_waitCompletion;
-  wire                when_PlicGateway_l21_30;
-  wire                targets_0_ie_0;
-  wire                targets_0_ie_1;
-  wire                targets_0_ie_2;
-  wire                targets_0_ie_3;
-  wire                targets_0_ie_4;
-  wire                targets_0_ie_5;
-  wire                targets_0_ie_6;
-  wire                targets_0_ie_7;
-  wire                targets_0_ie_8;
-  wire                targets_0_ie_9;
-  wire                targets_0_ie_10;
-  wire                targets_0_ie_11;
-  wire                targets_0_ie_12;
-  wire                targets_0_ie_13;
-  wire                targets_0_ie_14;
-  wire                targets_0_ie_15;
-  wire                targets_0_ie_16;
-  wire                targets_0_ie_17;
-  wire                targets_0_ie_18;
-  wire                targets_0_ie_19;
-  wire                targets_0_ie_20;
-  wire                targets_0_ie_21;
-  wire                targets_0_ie_22;
-  wire                targets_0_ie_23;
-  wire                targets_0_ie_24;
-  wire                targets_0_ie_25;
-  wire                targets_0_ie_26;
-  wire                targets_0_ie_27;
-  wire                targets_0_ie_28;
-  wire                targets_0_ie_29;
-  wire                targets_0_ie_30;
-  wire       [1:0]    targets_0_threshold;
-  wire       [1:0]    targets_0_requests_0_priority;
-  wire       [4:0]    targets_0_requests_0_id;
-  wire                targets_0_requests_0_valid;
-  wire       [1:0]    targets_0_requests_1_priority;
-  wire       [4:0]    targets_0_requests_1_id;
-  wire                targets_0_requests_1_valid;
-  wire       [1:0]    targets_0_requests_2_priority;
-  wire       [4:0]    targets_0_requests_2_id;
-  wire                targets_0_requests_2_valid;
-  wire       [1:0]    targets_0_requests_3_priority;
-  wire       [4:0]    targets_0_requests_3_id;
-  wire                targets_0_requests_3_valid;
-  wire       [1:0]    targets_0_requests_4_priority;
-  wire       [4:0]    targets_0_requests_4_id;
-  wire                targets_0_requests_4_valid;
-  wire       [1:0]    targets_0_requests_5_priority;
-  wire       [4:0]    targets_0_requests_5_id;
-  wire                targets_0_requests_5_valid;
-  wire       [1:0]    targets_0_requests_6_priority;
-  wire       [4:0]    targets_0_requests_6_id;
-  wire                targets_0_requests_6_valid;
-  wire       [1:0]    targets_0_requests_7_priority;
-  wire       [4:0]    targets_0_requests_7_id;
-  wire                targets_0_requests_7_valid;
-  wire       [1:0]    targets_0_requests_8_priority;
-  wire       [4:0]    targets_0_requests_8_id;
-  wire                targets_0_requests_8_valid;
-  wire       [1:0]    targets_0_requests_9_priority;
-  wire       [4:0]    targets_0_requests_9_id;
-  wire                targets_0_requests_9_valid;
-  wire       [1:0]    targets_0_requests_10_priority;
-  wire       [4:0]    targets_0_requests_10_id;
-  wire                targets_0_requests_10_valid;
-  wire       [1:0]    targets_0_requests_11_priority;
-  wire       [4:0]    targets_0_requests_11_id;
-  wire                targets_0_requests_11_valid;
-  wire       [1:0]    targets_0_requests_12_priority;
-  wire       [4:0]    targets_0_requests_12_id;
-  wire                targets_0_requests_12_valid;
-  wire       [1:0]    targets_0_requests_13_priority;
-  wire       [4:0]    targets_0_requests_13_id;
-  wire                targets_0_requests_13_valid;
-  wire       [1:0]    targets_0_requests_14_priority;
-  wire       [4:0]    targets_0_requests_14_id;
-  wire                targets_0_requests_14_valid;
-  wire       [1:0]    targets_0_requests_15_priority;
-  wire       [4:0]    targets_0_requests_15_id;
-  wire                targets_0_requests_15_valid;
-  wire       [1:0]    targets_0_requests_16_priority;
-  wire       [4:0]    targets_0_requests_16_id;
-  wire                targets_0_requests_16_valid;
-  wire       [1:0]    targets_0_requests_17_priority;
-  wire       [4:0]    targets_0_requests_17_id;
-  wire                targets_0_requests_17_valid;
-  wire       [1:0]    targets_0_requests_18_priority;
-  wire       [4:0]    targets_0_requests_18_id;
-  wire                targets_0_requests_18_valid;
-  wire       [1:0]    targets_0_requests_19_priority;
-  wire       [4:0]    targets_0_requests_19_id;
-  wire                targets_0_requests_19_valid;
-  wire       [1:0]    targets_0_requests_20_priority;
-  wire       [4:0]    targets_0_requests_20_id;
-  wire                targets_0_requests_20_valid;
-  wire       [1:0]    targets_0_requests_21_priority;
-  wire       [4:0]    targets_0_requests_21_id;
-  wire                targets_0_requests_21_valid;
-  wire       [1:0]    targets_0_requests_22_priority;
-  wire       [4:0]    targets_0_requests_22_id;
-  wire                targets_0_requests_22_valid;
-  wire       [1:0]    targets_0_requests_23_priority;
-  wire       [4:0]    targets_0_requests_23_id;
-  wire                targets_0_requests_23_valid;
-  wire       [1:0]    targets_0_requests_24_priority;
-  wire       [4:0]    targets_0_requests_24_id;
-  wire                targets_0_requests_24_valid;
-  wire       [1:0]    targets_0_requests_25_priority;
-  wire       [4:0]    targets_0_requests_25_id;
-  wire                targets_0_requests_25_valid;
-  wire       [1:0]    targets_0_requests_26_priority;
-  wire       [4:0]    targets_0_requests_26_id;
-  wire                targets_0_requests_26_valid;
-  wire       [1:0]    targets_0_requests_27_priority;
-  wire       [4:0]    targets_0_requests_27_id;
-  wire                targets_0_requests_27_valid;
-  wire       [1:0]    targets_0_requests_28_priority;
-  wire       [4:0]    targets_0_requests_28_id;
-  wire                targets_0_requests_28_valid;
-  wire       [1:0]    targets_0_requests_29_priority;
-  wire       [4:0]    targets_0_requests_29_id;
-  wire                targets_0_requests_29_valid;
-  wire       [1:0]    targets_0_requests_30_priority;
-  wire       [4:0]    targets_0_requests_30_id;
-  wire                targets_0_requests_30_valid;
-  wire       [1:0]    targets_0_requests_31_priority;
-  wire       [4:0]    targets_0_requests_31_id;
-  wire                targets_0_requests_31_valid;
-  wire                _zz_targets_0_bestRequest_id;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_1;
-  wire                _zz_targets_0_bestRequest_id_2;
-  wire                _zz_targets_0_bestRequest_id_3;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_4;
-  wire                _zz_targets_0_bestRequest_id_5;
-  wire                _zz_targets_0_bestRequest_id_6;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_7;
-  wire                _zz_targets_0_bestRequest_id_8;
-  wire                _zz_targets_0_bestRequest_id_9;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_10;
-  wire                _zz_targets_0_bestRequest_id_11;
-  wire                _zz_targets_0_bestRequest_id_12;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_13;
-  wire                _zz_targets_0_bestRequest_id_14;
-  wire                _zz_targets_0_bestRequest_id_15;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_16;
-  wire                _zz_targets_0_bestRequest_id_17;
-  wire                _zz_targets_0_bestRequest_id_18;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_19;
-  wire                _zz_targets_0_bestRequest_id_20;
-  wire                _zz_targets_0_bestRequest_id_21;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_22;
-  wire                _zz_targets_0_bestRequest_id_23;
-  wire                _zz_targets_0_bestRequest_id_24;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_25;
-  wire                _zz_targets_0_bestRequest_id_26;
-  wire                _zz_targets_0_bestRequest_id_27;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_28;
-  wire                _zz_targets_0_bestRequest_id_29;
-  wire                _zz_targets_0_bestRequest_id_30;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_31;
-  wire                _zz_targets_0_bestRequest_id_32;
-  wire                _zz_targets_0_bestRequest_id_33;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_34;
-  wire                _zz_targets_0_bestRequest_id_35;
-  wire                _zz_targets_0_bestRequest_id_36;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_37;
-  wire                _zz_targets_0_bestRequest_id_38;
-  wire                _zz_targets_0_bestRequest_id_39;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_40;
-  wire                _zz_targets_0_bestRequest_id_41;
-  wire                _zz_targets_0_bestRequest_id_42;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_43;
-  wire                _zz_targets_0_bestRequest_id_44;
-  wire                _zz_targets_0_bestRequest_id_45;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_46;
-  wire                _zz_targets_0_bestRequest_id_47;
-  wire                _zz_targets_0_bestRequest_id_48;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_49;
-  wire                _zz_targets_0_bestRequest_id_50;
-  wire                _zz_targets_0_bestRequest_id_51;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_52;
-  wire                _zz_targets_0_bestRequest_id_53;
-  wire                _zz_targets_0_bestRequest_id_54;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_55;
-  wire                _zz_targets_0_bestRequest_id_56;
-  wire                _zz_targets_0_bestRequest_id_57;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_58;
-  wire                _zz_targets_0_bestRequest_id_59;
-  wire                _zz_targets_0_bestRequest_id_60;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_61;
-  wire                _zz_targets_0_bestRequest_id_62;
-  wire                _zz_targets_0_bestRequest_id_63;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_64;
-  wire                _zz_targets_0_bestRequest_id_65;
-  wire                _zz_targets_0_bestRequest_id_66;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_67;
-  wire                _zz_targets_0_bestRequest_id_68;
-  wire                _zz_targets_0_bestRequest_id_69;
-  wire       [1:0]    _zz_targets_0_bestRequest_id_70;
-  wire                _zz_targets_0_bestRequest_id_71;
-  wire                _zz_targets_0_bestRequest_id_72;
-  wire       [1:0]    _zz_targets_0_bestRequest_priority;
-  wire                _zz_targets_0_bestRequest_id_73;
-  wire                _zz_targets_0_bestRequest_id_74;
-  wire       [1:0]    _zz_targets_0_bestRequest_priority_1;
-  wire                _zz_targets_0_bestRequest_id_75;
-  wire                _zz_targets_0_bestRequest_id_76;
-  wire       [1:0]    _zz_targets_0_bestRequest_priority_2;
-  wire                _zz_targets_0_bestRequest_id_77;
-  wire                _zz_targets_0_bestRequest_id_78;
-  wire       [1:0]    _zz_targets_0_bestRequest_priority_3;
-  wire                _zz_targets_0_bestRequest_id_79;
-  wire                _zz_targets_0_bestRequest_id_80;
-  wire       [1:0]    _zz_targets_0_bestRequest_priority_4;
-  wire                _zz_targets_0_bestRequest_valid;
-  wire                _zz_targets_0_bestRequest_id_81;
-  wire       [1:0]    _zz_targets_0_bestRequest_priority_5;
-  wire                _zz_targets_0_bestRequest_valid_1;
-  wire                _zz_targets_0_bestRequest_priority_6;
-  reg        [1:0]    targets_0_bestRequest_priority;
-  reg        [4:0]    targets_0_bestRequest_id;
-  reg                 targets_0_bestRequest_valid;
-  wire                targets_0_iep;
-  wire       [4:0]    targets_0_claim;
-  wire                targets_1_ie_0;
-  wire                targets_1_ie_1;
-  wire                targets_1_ie_2;
-  wire                targets_1_ie_3;
-  wire                targets_1_ie_4;
-  wire                targets_1_ie_5;
-  wire                targets_1_ie_6;
-  wire                targets_1_ie_7;
-  wire                targets_1_ie_8;
-  wire                targets_1_ie_9;
-  wire                targets_1_ie_10;
-  wire                targets_1_ie_11;
-  wire                targets_1_ie_12;
-  wire                targets_1_ie_13;
-  wire                targets_1_ie_14;
-  wire                targets_1_ie_15;
-  wire                targets_1_ie_16;
-  wire                targets_1_ie_17;
-  wire                targets_1_ie_18;
-  wire                targets_1_ie_19;
-  wire                targets_1_ie_20;
-  wire                targets_1_ie_21;
-  wire                targets_1_ie_22;
-  wire                targets_1_ie_23;
-  wire                targets_1_ie_24;
-  wire                targets_1_ie_25;
-  wire                targets_1_ie_26;
-  wire                targets_1_ie_27;
-  wire                targets_1_ie_28;
-  wire                targets_1_ie_29;
-  wire                targets_1_ie_30;
-  wire       [1:0]    targets_1_threshold;
-  wire       [1:0]    targets_1_requests_0_priority;
-  wire       [4:0]    targets_1_requests_0_id;
-  wire                targets_1_requests_0_valid;
-  wire       [1:0]    targets_1_requests_1_priority;
-  wire       [4:0]    targets_1_requests_1_id;
-  wire                targets_1_requests_1_valid;
-  wire       [1:0]    targets_1_requests_2_priority;
-  wire       [4:0]    targets_1_requests_2_id;
-  wire                targets_1_requests_2_valid;
-  wire       [1:0]    targets_1_requests_3_priority;
-  wire       [4:0]    targets_1_requests_3_id;
-  wire                targets_1_requests_3_valid;
-  wire       [1:0]    targets_1_requests_4_priority;
-  wire       [4:0]    targets_1_requests_4_id;
-  wire                targets_1_requests_4_valid;
-  wire       [1:0]    targets_1_requests_5_priority;
-  wire       [4:0]    targets_1_requests_5_id;
-  wire                targets_1_requests_5_valid;
-  wire       [1:0]    targets_1_requests_6_priority;
-  wire       [4:0]    targets_1_requests_6_id;
-  wire                targets_1_requests_6_valid;
-  wire       [1:0]    targets_1_requests_7_priority;
-  wire       [4:0]    targets_1_requests_7_id;
-  wire                targets_1_requests_7_valid;
-  wire       [1:0]    targets_1_requests_8_priority;
-  wire       [4:0]    targets_1_requests_8_id;
-  wire                targets_1_requests_8_valid;
-  wire       [1:0]    targets_1_requests_9_priority;
-  wire       [4:0]    targets_1_requests_9_id;
-  wire                targets_1_requests_9_valid;
-  wire       [1:0]    targets_1_requests_10_priority;
-  wire       [4:0]    targets_1_requests_10_id;
-  wire                targets_1_requests_10_valid;
-  wire       [1:0]    targets_1_requests_11_priority;
-  wire       [4:0]    targets_1_requests_11_id;
-  wire                targets_1_requests_11_valid;
-  wire       [1:0]    targets_1_requests_12_priority;
-  wire       [4:0]    targets_1_requests_12_id;
-  wire                targets_1_requests_12_valid;
-  wire       [1:0]    targets_1_requests_13_priority;
-  wire       [4:0]    targets_1_requests_13_id;
-  wire                targets_1_requests_13_valid;
-  wire       [1:0]    targets_1_requests_14_priority;
-  wire       [4:0]    targets_1_requests_14_id;
-  wire                targets_1_requests_14_valid;
-  wire       [1:0]    targets_1_requests_15_priority;
-  wire       [4:0]    targets_1_requests_15_id;
-  wire                targets_1_requests_15_valid;
-  wire       [1:0]    targets_1_requests_16_priority;
-  wire       [4:0]    targets_1_requests_16_id;
-  wire                targets_1_requests_16_valid;
-  wire       [1:0]    targets_1_requests_17_priority;
-  wire       [4:0]    targets_1_requests_17_id;
-  wire                targets_1_requests_17_valid;
-  wire       [1:0]    targets_1_requests_18_priority;
-  wire       [4:0]    targets_1_requests_18_id;
-  wire                targets_1_requests_18_valid;
-  wire       [1:0]    targets_1_requests_19_priority;
-  wire       [4:0]    targets_1_requests_19_id;
-  wire                targets_1_requests_19_valid;
-  wire       [1:0]    targets_1_requests_20_priority;
-  wire       [4:0]    targets_1_requests_20_id;
-  wire                targets_1_requests_20_valid;
-  wire       [1:0]    targets_1_requests_21_priority;
-  wire       [4:0]    targets_1_requests_21_id;
-  wire                targets_1_requests_21_valid;
-  wire       [1:0]    targets_1_requests_22_priority;
-  wire       [4:0]    targets_1_requests_22_id;
-  wire                targets_1_requests_22_valid;
-  wire       [1:0]    targets_1_requests_23_priority;
-  wire       [4:0]    targets_1_requests_23_id;
-  wire                targets_1_requests_23_valid;
-  wire       [1:0]    targets_1_requests_24_priority;
-  wire       [4:0]    targets_1_requests_24_id;
-  wire                targets_1_requests_24_valid;
-  wire       [1:0]    targets_1_requests_25_priority;
-  wire       [4:0]    targets_1_requests_25_id;
-  wire                targets_1_requests_25_valid;
-  wire       [1:0]    targets_1_requests_26_priority;
-  wire       [4:0]    targets_1_requests_26_id;
-  wire                targets_1_requests_26_valid;
-  wire       [1:0]    targets_1_requests_27_priority;
-  wire       [4:0]    targets_1_requests_27_id;
-  wire                targets_1_requests_27_valid;
-  wire       [1:0]    targets_1_requests_28_priority;
-  wire       [4:0]    targets_1_requests_28_id;
-  wire                targets_1_requests_28_valid;
-  wire       [1:0]    targets_1_requests_29_priority;
-  wire       [4:0]    targets_1_requests_29_id;
-  wire                targets_1_requests_29_valid;
-  wire       [1:0]    targets_1_requests_30_priority;
-  wire       [4:0]    targets_1_requests_30_id;
-  wire                targets_1_requests_30_valid;
-  wire       [1:0]    targets_1_requests_31_priority;
-  wire       [4:0]    targets_1_requests_31_id;
-  wire                targets_1_requests_31_valid;
-  wire                _zz_targets_1_bestRequest_id;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_1;
-  wire                _zz_targets_1_bestRequest_id_2;
-  wire                _zz_targets_1_bestRequest_id_3;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_4;
-  wire                _zz_targets_1_bestRequest_id_5;
-  wire                _zz_targets_1_bestRequest_id_6;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_7;
-  wire                _zz_targets_1_bestRequest_id_8;
-  wire                _zz_targets_1_bestRequest_id_9;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_10;
-  wire                _zz_targets_1_bestRequest_id_11;
-  wire                _zz_targets_1_bestRequest_id_12;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_13;
-  wire                _zz_targets_1_bestRequest_id_14;
-  wire                _zz_targets_1_bestRequest_id_15;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_16;
-  wire                _zz_targets_1_bestRequest_id_17;
-  wire                _zz_targets_1_bestRequest_id_18;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_19;
-  wire                _zz_targets_1_bestRequest_id_20;
-  wire                _zz_targets_1_bestRequest_id_21;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_22;
-  wire                _zz_targets_1_bestRequest_id_23;
-  wire                _zz_targets_1_bestRequest_id_24;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_25;
-  wire                _zz_targets_1_bestRequest_id_26;
-  wire                _zz_targets_1_bestRequest_id_27;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_28;
-  wire                _zz_targets_1_bestRequest_id_29;
-  wire                _zz_targets_1_bestRequest_id_30;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_31;
-  wire                _zz_targets_1_bestRequest_id_32;
-  wire                _zz_targets_1_bestRequest_id_33;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_34;
-  wire                _zz_targets_1_bestRequest_id_35;
-  wire                _zz_targets_1_bestRequest_id_36;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_37;
-  wire                _zz_targets_1_bestRequest_id_38;
-  wire                _zz_targets_1_bestRequest_id_39;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_40;
-  wire                _zz_targets_1_bestRequest_id_41;
-  wire                _zz_targets_1_bestRequest_id_42;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_43;
-  wire                _zz_targets_1_bestRequest_id_44;
-  wire                _zz_targets_1_bestRequest_id_45;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_46;
-  wire                _zz_targets_1_bestRequest_id_47;
-  wire                _zz_targets_1_bestRequest_id_48;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_49;
-  wire                _zz_targets_1_bestRequest_id_50;
-  wire                _zz_targets_1_bestRequest_id_51;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_52;
-  wire                _zz_targets_1_bestRequest_id_53;
-  wire                _zz_targets_1_bestRequest_id_54;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_55;
-  wire                _zz_targets_1_bestRequest_id_56;
-  wire                _zz_targets_1_bestRequest_id_57;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_58;
-  wire                _zz_targets_1_bestRequest_id_59;
-  wire                _zz_targets_1_bestRequest_id_60;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_61;
-  wire                _zz_targets_1_bestRequest_id_62;
-  wire                _zz_targets_1_bestRequest_id_63;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_64;
-  wire                _zz_targets_1_bestRequest_id_65;
-  wire                _zz_targets_1_bestRequest_id_66;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_67;
-  wire                _zz_targets_1_bestRequest_id_68;
-  wire                _zz_targets_1_bestRequest_id_69;
-  wire       [1:0]    _zz_targets_1_bestRequest_id_70;
-  wire                _zz_targets_1_bestRequest_id_71;
-  wire                _zz_targets_1_bestRequest_id_72;
-  wire       [1:0]    _zz_targets_1_bestRequest_priority;
-  wire                _zz_targets_1_bestRequest_id_73;
-  wire                _zz_targets_1_bestRequest_id_74;
-  wire       [1:0]    _zz_targets_1_bestRequest_priority_1;
-  wire                _zz_targets_1_bestRequest_id_75;
-  wire                _zz_targets_1_bestRequest_id_76;
-  wire       [1:0]    _zz_targets_1_bestRequest_priority_2;
-  wire                _zz_targets_1_bestRequest_id_77;
-  wire                _zz_targets_1_bestRequest_id_78;
-  wire       [1:0]    _zz_targets_1_bestRequest_priority_3;
-  wire                _zz_targets_1_bestRequest_id_79;
-  wire                _zz_targets_1_bestRequest_id_80;
-  wire       [1:0]    _zz_targets_1_bestRequest_priority_4;
-  wire                _zz_targets_1_bestRequest_valid;
-  wire                _zz_targets_1_bestRequest_id_81;
-  wire       [1:0]    _zz_targets_1_bestRequest_priority_5;
-  wire                _zz_targets_1_bestRequest_valid_1;
-  wire                _zz_targets_1_bestRequest_priority_6;
-  reg        [1:0]    targets_1_bestRequest_priority;
-  reg        [4:0]    targets_1_bestRequest_id;
-  reg                 targets_1_bestRequest_valid;
-  wire                targets_1_iep;
-  wire       [4:0]    targets_1_claim;
-  wire                bus_readErrorFlag;
-  wire                bus_writeErrorFlag;
-  reg                 bus_readHaltRequest;
-  wire                bus_writeHaltRequest;
-  wire                bus_writeJoinEvent_valid;
-  wire                bus_writeJoinEvent_ready;
-  wire                bus_writeOccur;
-  reg        [1:0]    bus_writeRsp_resp;
-  wire                bus_writeJoinEvent_translated_valid;
-  wire                bus_writeJoinEvent_translated_ready;
-  wire       [1:0]    bus_writeJoinEvent_translated_payload_resp;
-  wire                _zz_bus_writeJoinEvent_translated_ready;
-  wire                _zz_bus_writeJoinEvent_translated_ready_1;
-  wire                _zz_io_bus_b_valid;
-  reg                 _zz_io_bus_b_valid_1;
-  reg        [1:0]    _zz_io_bus_b_payload_resp;
-  wire                bus_readDataStage_valid;
-  wire                bus_readDataStage_ready;
-  wire       [21:0]   bus_readDataStage_payload_addr;
-  wire       [2:0]    bus_readDataStage_payload_prot;
-  reg                 io_bus_ar_rValid;
-  wire                bus_readDataStage_fire;
-  reg        [21:0]   io_bus_ar_rData_addr;
-  reg        [2:0]    io_bus_ar_rData_prot;
-  reg        [31:0]   bus_readRsp_data;
-  reg        [1:0]    bus_readRsp_resp;
-  wire                _zz_io_bus_r_valid;
-  wire       [21:0]   bus_readAddressMasked;
-  wire       [21:0]   bus_writeAddressMasked;
-  wire                bus_readOccur;
-  reg        [1:0]    _zz_gateways_0_priority;
-  reg        [1:0]    _zz_gateways_1_priority;
-  reg        [1:0]    _zz_gateways_2_priority;
-  reg        [1:0]    _zz_gateways_3_priority;
-  reg        [1:0]    _zz_gateways_4_priority;
-  reg        [1:0]    _zz_gateways_5_priority;
-  reg        [1:0]    _zz_gateways_6_priority;
-  reg        [1:0]    _zz_gateways_7_priority;
-  reg        [1:0]    _zz_gateways_8_priority;
-  reg        [1:0]    _zz_gateways_9_priority;
-  reg        [1:0]    _zz_gateways_10_priority;
-  reg        [1:0]    _zz_gateways_11_priority;
-  reg        [1:0]    _zz_gateways_12_priority;
-  reg        [1:0]    _zz_gateways_13_priority;
-  reg        [1:0]    _zz_gateways_14_priority;
-  reg        [1:0]    _zz_gateways_15_priority;
-  reg        [1:0]    _zz_gateways_16_priority;
-  reg        [1:0]    _zz_gateways_17_priority;
-  reg        [1:0]    _zz_gateways_18_priority;
-  reg        [1:0]    _zz_gateways_19_priority;
-  reg        [1:0]    _zz_gateways_20_priority;
-  reg        [1:0]    _zz_gateways_21_priority;
-  reg        [1:0]    _zz_gateways_22_priority;
-  reg        [1:0]    _zz_gateways_23_priority;
-  reg        [1:0]    _zz_gateways_24_priority;
-  reg        [1:0]    _zz_gateways_25_priority;
-  reg        [1:0]    _zz_gateways_26_priority;
-  reg        [1:0]    _zz_gateways_27_priority;
-  reg        [1:0]    _zz_gateways_28_priority;
-  reg        [1:0]    _zz_gateways_29_priority;
-  reg        [1:0]    _zz_gateways_30_priority;
-  reg                 mapping_claim_valid;
-  reg        [4:0]    mapping_claim_payload;
-  reg                 mapping_completion_valid;
-  reg        [4:0]    mapping_completion_payload;
-  reg                 mapping_coherencyStall_willIncrement;
-  wire                mapping_coherencyStall_willClear;
-  reg        [0:0]    mapping_coherencyStall_valueNext;
-  reg        [0:0]    mapping_coherencyStall_value;
-  wire                mapping_coherencyStall_willOverflowIfInc;
-  wire                mapping_coherencyStall_willOverflow;
-  wire                when_PlicMapper_l122;
-  reg        [1:0]    _zz_targets_0_threshold;
-  reg                 mapping_targetMapping_0_targetCompletion_valid;
-  wire       [4:0]    mapping_targetMapping_0_targetCompletion_payload;
-  reg                 _zz_targets_0_ie_0;
-  reg                 _zz_targets_0_ie_1;
-  reg                 _zz_targets_0_ie_2;
-  reg                 _zz_targets_0_ie_3;
-  reg                 _zz_targets_0_ie_4;
-  reg                 _zz_targets_0_ie_5;
-  reg                 _zz_targets_0_ie_6;
-  reg                 _zz_targets_0_ie_7;
-  reg                 _zz_targets_0_ie_8;
-  reg                 _zz_targets_0_ie_9;
-  reg                 _zz_targets_0_ie_10;
-  reg                 _zz_targets_0_ie_11;
-  reg                 _zz_targets_0_ie_12;
-  reg                 _zz_targets_0_ie_13;
-  reg                 _zz_targets_0_ie_14;
-  reg                 _zz_targets_0_ie_15;
-  reg                 _zz_targets_0_ie_16;
-  reg                 _zz_targets_0_ie_17;
-  reg                 _zz_targets_0_ie_18;
-  reg                 _zz_targets_0_ie_19;
-  reg                 _zz_targets_0_ie_20;
-  reg                 _zz_targets_0_ie_21;
-  reg                 _zz_targets_0_ie_22;
-  reg                 _zz_targets_0_ie_23;
-  reg                 _zz_targets_0_ie_24;
-  reg                 _zz_targets_0_ie_25;
-  reg                 _zz_targets_0_ie_26;
-  reg                 _zz_targets_0_ie_27;
-  reg                 _zz_targets_0_ie_28;
-  reg                 _zz_targets_0_ie_29;
-  reg                 _zz_targets_0_ie_30;
-  reg        [1:0]    _zz_targets_1_threshold;
-  reg                 mapping_targetMapping_1_targetCompletion_valid;
-  wire       [4:0]    mapping_targetMapping_1_targetCompletion_payload;
-  reg                 _zz_targets_1_ie_0;
-  reg                 _zz_targets_1_ie_1;
-  reg                 _zz_targets_1_ie_2;
-  reg                 _zz_targets_1_ie_3;
-  reg                 _zz_targets_1_ie_4;
-  reg                 _zz_targets_1_ie_5;
-  reg                 _zz_targets_1_ie_6;
-  reg                 _zz_targets_1_ie_7;
-  reg                 _zz_targets_1_ie_8;
-  reg                 _zz_targets_1_ie_9;
-  reg                 _zz_targets_1_ie_10;
-  reg                 _zz_targets_1_ie_11;
-  reg                 _zz_targets_1_ie_12;
-  reg                 _zz_targets_1_ie_13;
-  reg                 _zz_targets_1_ie_14;
-  reg                 _zz_targets_1_ie_15;
-  reg                 _zz_targets_1_ie_16;
-  reg                 _zz_targets_1_ie_17;
-  reg                 _zz_targets_1_ie_18;
-  reg                 _zz_targets_1_ie_19;
-  reg                 _zz_targets_1_ie_20;
-  reg                 _zz_targets_1_ie_21;
-  reg                 _zz_targets_1_ie_22;
-  reg                 _zz_targets_1_ie_23;
-  reg                 _zz_targets_1_ie_24;
-  reg                 _zz_targets_1_ie_25;
-  reg                 _zz_targets_1_ie_26;
-  reg                 _zz_targets_1_ie_27;
-  reg                 _zz_targets_1_ie_28;
-  reg                 _zz_targets_1_ie_29;
-  reg                 _zz_targets_1_ie_30;
-  wire                when_AxiLite4SlaveFactory_l68;
-  wire                when_AxiLite4SlaveFactory_l86;
-
-  assign _zz_targets_0_bestRequest_id_82 = (_zz_targets_0_bestRequest_id ? targets_0_requests_0_id : targets_0_requests_1_id);
-  assign _zz_targets_0_bestRequest_id_83 = (_zz_targets_0_bestRequest_id_3 ? targets_0_requests_2_id : targets_0_requests_3_id);
-  assign _zz_targets_0_bestRequest_id_84 = (_zz_targets_0_bestRequest_id_6 ? targets_0_requests_4_id : targets_0_requests_5_id);
-  assign _zz_targets_0_bestRequest_id_85 = (_zz_targets_0_bestRequest_id_9 ? targets_0_requests_6_id : targets_0_requests_7_id);
-  assign _zz_targets_0_bestRequest_id_86 = (_zz_targets_0_bestRequest_id_12 ? targets_0_requests_8_id : targets_0_requests_9_id);
-  assign _zz_targets_0_bestRequest_id_87 = (_zz_targets_0_bestRequest_id_15 ? targets_0_requests_10_id : targets_0_requests_11_id);
-  assign _zz_targets_0_bestRequest_id_88 = (_zz_targets_0_bestRequest_id_18 ? targets_0_requests_12_id : targets_0_requests_13_id);
-  assign _zz_targets_0_bestRequest_id_89 = (_zz_targets_0_bestRequest_id_21 ? targets_0_requests_14_id : targets_0_requests_15_id);
-  assign _zz_targets_0_bestRequest_id_90 = (_zz_targets_0_bestRequest_id_24 ? targets_0_requests_16_id : targets_0_requests_17_id);
-  assign _zz_targets_0_bestRequest_id_91 = (_zz_targets_0_bestRequest_id_27 ? targets_0_requests_18_id : targets_0_requests_19_id);
-  assign _zz_targets_0_bestRequest_id_92 = (_zz_targets_0_bestRequest_id_30 ? targets_0_requests_20_id : targets_0_requests_21_id);
-  assign _zz_targets_0_bestRequest_id_93 = (_zz_targets_0_bestRequest_id_33 ? targets_0_requests_22_id : targets_0_requests_23_id);
-  assign _zz_targets_0_bestRequest_id_94 = (_zz_targets_0_bestRequest_id_36 ? targets_0_requests_24_id : targets_0_requests_25_id);
-  assign _zz_targets_0_bestRequest_id_95 = (_zz_targets_0_bestRequest_id_39 ? targets_0_requests_26_id : targets_0_requests_27_id);
-  assign _zz_targets_0_bestRequest_id_96 = (_zz_targets_0_bestRequest_id_42 ? targets_0_requests_28_id : targets_0_requests_29_id);
-  assign _zz_targets_0_bestRequest_id_97 = (_zz_targets_0_bestRequest_id_45 ? targets_0_requests_30_id : targets_0_requests_31_id);
-  assign _zz_targets_1_bestRequest_id_82 = (_zz_targets_1_bestRequest_id ? targets_1_requests_0_id : targets_1_requests_1_id);
-  assign _zz_targets_1_bestRequest_id_83 = (_zz_targets_1_bestRequest_id_3 ? targets_1_requests_2_id : targets_1_requests_3_id);
-  assign _zz_targets_1_bestRequest_id_84 = (_zz_targets_1_bestRequest_id_6 ? targets_1_requests_4_id : targets_1_requests_5_id);
-  assign _zz_targets_1_bestRequest_id_85 = (_zz_targets_1_bestRequest_id_9 ? targets_1_requests_6_id : targets_1_requests_7_id);
-  assign _zz_targets_1_bestRequest_id_86 = (_zz_targets_1_bestRequest_id_12 ? targets_1_requests_8_id : targets_1_requests_9_id);
-  assign _zz_targets_1_bestRequest_id_87 = (_zz_targets_1_bestRequest_id_15 ? targets_1_requests_10_id : targets_1_requests_11_id);
-  assign _zz_targets_1_bestRequest_id_88 = (_zz_targets_1_bestRequest_id_18 ? targets_1_requests_12_id : targets_1_requests_13_id);
-  assign _zz_targets_1_bestRequest_id_89 = (_zz_targets_1_bestRequest_id_21 ? targets_1_requests_14_id : targets_1_requests_15_id);
-  assign _zz_targets_1_bestRequest_id_90 = (_zz_targets_1_bestRequest_id_24 ? targets_1_requests_16_id : targets_1_requests_17_id);
-  assign _zz_targets_1_bestRequest_id_91 = (_zz_targets_1_bestRequest_id_27 ? targets_1_requests_18_id : targets_1_requests_19_id);
-  assign _zz_targets_1_bestRequest_id_92 = (_zz_targets_1_bestRequest_id_30 ? targets_1_requests_20_id : targets_1_requests_21_id);
-  assign _zz_targets_1_bestRequest_id_93 = (_zz_targets_1_bestRequest_id_33 ? targets_1_requests_22_id : targets_1_requests_23_id);
-  assign _zz_targets_1_bestRequest_id_94 = (_zz_targets_1_bestRequest_id_36 ? targets_1_requests_24_id : targets_1_requests_25_id);
-  assign _zz_targets_1_bestRequest_id_95 = (_zz_targets_1_bestRequest_id_39 ? targets_1_requests_26_id : targets_1_requests_27_id);
-  assign _zz_targets_1_bestRequest_id_96 = (_zz_targets_1_bestRequest_id_42 ? targets_1_requests_28_id : targets_1_requests_29_id);
-  assign _zz_targets_1_bestRequest_id_97 = (_zz_targets_1_bestRequest_id_45 ? targets_1_requests_30_id : targets_1_requests_31_id);
-  assign _zz_gateways_0_ip = io_sources[0];
-  assign _zz_gateways_1_ip = io_sources[1];
-  assign _zz_gateways_2_ip = io_sources[2];
-  assign _zz_gateways_3_ip = io_sources[3];
-  assign _zz_gateways_4_ip = io_sources[4];
-  assign _zz_gateways_5_ip = io_sources[5];
-  assign _zz_gateways_6_ip = io_sources[6];
-  assign _zz_gateways_7_ip = io_sources[7];
-  assign _zz_gateways_8_ip = io_sources[8];
-  assign _zz_gateways_9_ip = io_sources[9];
-  assign _zz_gateways_10_ip = io_sources[10];
-  assign _zz_gateways_11_ip = io_sources[11];
-  assign _zz_gateways_12_ip = io_sources[12];
-  assign _zz_gateways_13_ip = io_sources[13];
-  assign _zz_gateways_14_ip = io_sources[14];
-  assign _zz_gateways_15_ip = io_sources[15];
-  assign _zz_gateways_16_ip = io_sources[16];
-  assign _zz_gateways_17_ip = io_sources[17];
-  assign _zz_gateways_18_ip = io_sources[18];
-  assign _zz_gateways_19_ip = io_sources[19];
-  assign _zz_gateways_20_ip = io_sources[20];
-  assign _zz_gateways_21_ip = io_sources[21];
-  assign _zz_gateways_22_ip = io_sources[22];
-  assign _zz_gateways_23_ip = io_sources[23];
-  assign _zz_gateways_24_ip = io_sources[24];
-  assign _zz_gateways_25_ip = io_sources[25];
-  assign _zz_gateways_26_ip = io_sources[26];
-  assign _zz_gateways_27_ip = io_sources[27];
-  assign _zz_gateways_28_ip = io_sources[28];
-  assign _zz_gateways_29_ip = io_sources[29];
-  assign _zz_gateways_30_ip = io_sources[30];
-  assign when_PlicGateway_l21 = (! gateways_0_waitCompletion);
-  assign when_PlicGateway_l21_1 = (! gateways_1_waitCompletion);
-  assign when_PlicGateway_l21_2 = (! gateways_2_waitCompletion);
-  assign when_PlicGateway_l21_3 = (! gateways_3_waitCompletion);
-  assign when_PlicGateway_l21_4 = (! gateways_4_waitCompletion);
-  assign when_PlicGateway_l21_5 = (! gateways_5_waitCompletion);
-  assign when_PlicGateway_l21_6 = (! gateways_6_waitCompletion);
-  assign when_PlicGateway_l21_7 = (! gateways_7_waitCompletion);
-  assign when_PlicGateway_l21_8 = (! gateways_8_waitCompletion);
-  assign when_PlicGateway_l21_9 = (! gateways_9_waitCompletion);
-  assign when_PlicGateway_l21_10 = (! gateways_10_waitCompletion);
-  assign when_PlicGateway_l21_11 = (! gateways_11_waitCompletion);
-  assign when_PlicGateway_l21_12 = (! gateways_12_waitCompletion);
-  assign when_PlicGateway_l21_13 = (! gateways_13_waitCompletion);
-  assign when_PlicGateway_l21_14 = (! gateways_14_waitCompletion);
-  assign when_PlicGateway_l21_15 = (! gateways_15_waitCompletion);
-  assign when_PlicGateway_l21_16 = (! gateways_16_waitCompletion);
-  assign when_PlicGateway_l21_17 = (! gateways_17_waitCompletion);
-  assign when_PlicGateway_l21_18 = (! gateways_18_waitCompletion);
-  assign when_PlicGateway_l21_19 = (! gateways_19_waitCompletion);
-  assign when_PlicGateway_l21_20 = (! gateways_20_waitCompletion);
-  assign when_PlicGateway_l21_21 = (! gateways_21_waitCompletion);
-  assign when_PlicGateway_l21_22 = (! gateways_22_waitCompletion);
-  assign when_PlicGateway_l21_23 = (! gateways_23_waitCompletion);
-  assign when_PlicGateway_l21_24 = (! gateways_24_waitCompletion);
-  assign when_PlicGateway_l21_25 = (! gateways_25_waitCompletion);
-  assign when_PlicGateway_l21_26 = (! gateways_26_waitCompletion);
-  assign when_PlicGateway_l21_27 = (! gateways_27_waitCompletion);
-  assign when_PlicGateway_l21_28 = (! gateways_28_waitCompletion);
-  assign when_PlicGateway_l21_29 = (! gateways_29_waitCompletion);
-  assign when_PlicGateway_l21_30 = (! gateways_30_waitCompletion);
-  assign targets_0_requests_0_priority = 2'b00;
-  assign targets_0_requests_0_id = 5'h00;
-  assign targets_0_requests_0_valid = 1'b1;
-  assign targets_0_requests_1_priority = gateways_0_priority;
-  assign targets_0_requests_1_id = 5'h01;
-  assign targets_0_requests_1_valid = (gateways_0_ip && targets_0_ie_0);
-  assign targets_0_requests_2_priority = gateways_1_priority;
-  assign targets_0_requests_2_id = 5'h02;
-  assign targets_0_requests_2_valid = (gateways_1_ip && targets_0_ie_1);
-  assign targets_0_requests_3_priority = gateways_2_priority;
-  assign targets_0_requests_3_id = 5'h03;
-  assign targets_0_requests_3_valid = (gateways_2_ip && targets_0_ie_2);
-  assign targets_0_requests_4_priority = gateways_3_priority;
-  assign targets_0_requests_4_id = 5'h04;
-  assign targets_0_requests_4_valid = (gateways_3_ip && targets_0_ie_3);
-  assign targets_0_requests_5_priority = gateways_4_priority;
-  assign targets_0_requests_5_id = 5'h05;
-  assign targets_0_requests_5_valid = (gateways_4_ip && targets_0_ie_4);
-  assign targets_0_requests_6_priority = gateways_5_priority;
-  assign targets_0_requests_6_id = 5'h06;
-  assign targets_0_requests_6_valid = (gateways_5_ip && targets_0_ie_5);
-  assign targets_0_requests_7_priority = gateways_6_priority;
-  assign targets_0_requests_7_id = 5'h07;
-  assign targets_0_requests_7_valid = (gateways_6_ip && targets_0_ie_6);
-  assign targets_0_requests_8_priority = gateways_7_priority;
-  assign targets_0_requests_8_id = 5'h08;
-  assign targets_0_requests_8_valid = (gateways_7_ip && targets_0_ie_7);
-  assign targets_0_requests_9_priority = gateways_8_priority;
-  assign targets_0_requests_9_id = 5'h09;
-  assign targets_0_requests_9_valid = (gateways_8_ip && targets_0_ie_8);
-  assign targets_0_requests_10_priority = gateways_9_priority;
-  assign targets_0_requests_10_id = 5'h0a;
-  assign targets_0_requests_10_valid = (gateways_9_ip && targets_0_ie_9);
-  assign targets_0_requests_11_priority = gateways_10_priority;
-  assign targets_0_requests_11_id = 5'h0b;
-  assign targets_0_requests_11_valid = (gateways_10_ip && targets_0_ie_10);
-  assign targets_0_requests_12_priority = gateways_11_priority;
-  assign targets_0_requests_12_id = 5'h0c;
-  assign targets_0_requests_12_valid = (gateways_11_ip && targets_0_ie_11);
-  assign targets_0_requests_13_priority = gateways_12_priority;
-  assign targets_0_requests_13_id = 5'h0d;
-  assign targets_0_requests_13_valid = (gateways_12_ip && targets_0_ie_12);
-  assign targets_0_requests_14_priority = gateways_13_priority;
-  assign targets_0_requests_14_id = 5'h0e;
-  assign targets_0_requests_14_valid = (gateways_13_ip && targets_0_ie_13);
-  assign targets_0_requests_15_priority = gateways_14_priority;
-  assign targets_0_requests_15_id = 5'h0f;
-  assign targets_0_requests_15_valid = (gateways_14_ip && targets_0_ie_14);
-  assign targets_0_requests_16_priority = gateways_15_priority;
-  assign targets_0_requests_16_id = 5'h10;
-  assign targets_0_requests_16_valid = (gateways_15_ip && targets_0_ie_15);
-  assign targets_0_requests_17_priority = gateways_16_priority;
-  assign targets_0_requests_17_id = 5'h11;
-  assign targets_0_requests_17_valid = (gateways_16_ip && targets_0_ie_16);
-  assign targets_0_requests_18_priority = gateways_17_priority;
-  assign targets_0_requests_18_id = 5'h12;
-  assign targets_0_requests_18_valid = (gateways_17_ip && targets_0_ie_17);
-  assign targets_0_requests_19_priority = gateways_18_priority;
-  assign targets_0_requests_19_id = 5'h13;
-  assign targets_0_requests_19_valid = (gateways_18_ip && targets_0_ie_18);
-  assign targets_0_requests_20_priority = gateways_19_priority;
-  assign targets_0_requests_20_id = 5'h14;
-  assign targets_0_requests_20_valid = (gateways_19_ip && targets_0_ie_19);
-  assign targets_0_requests_21_priority = gateways_20_priority;
-  assign targets_0_requests_21_id = 5'h15;
-  assign targets_0_requests_21_valid = (gateways_20_ip && targets_0_ie_20);
-  assign targets_0_requests_22_priority = gateways_21_priority;
-  assign targets_0_requests_22_id = 5'h16;
-  assign targets_0_requests_22_valid = (gateways_21_ip && targets_0_ie_21);
-  assign targets_0_requests_23_priority = gateways_22_priority;
-  assign targets_0_requests_23_id = 5'h17;
-  assign targets_0_requests_23_valid = (gateways_22_ip && targets_0_ie_22);
-  assign targets_0_requests_24_priority = gateways_23_priority;
-  assign targets_0_requests_24_id = 5'h18;
-  assign targets_0_requests_24_valid = (gateways_23_ip && targets_0_ie_23);
-  assign targets_0_requests_25_priority = gateways_24_priority;
-  assign targets_0_requests_25_id = 5'h19;
-  assign targets_0_requests_25_valid = (gateways_24_ip && targets_0_ie_24);
-  assign targets_0_requests_26_priority = gateways_25_priority;
-  assign targets_0_requests_26_id = 5'h1a;
-  assign targets_0_requests_26_valid = (gateways_25_ip && targets_0_ie_25);
-  assign targets_0_requests_27_priority = gateways_26_priority;
-  assign targets_0_requests_27_id = 5'h1b;
-  assign targets_0_requests_27_valid = (gateways_26_ip && targets_0_ie_26);
-  assign targets_0_requests_28_priority = gateways_27_priority;
-  assign targets_0_requests_28_id = 5'h1c;
-  assign targets_0_requests_28_valid = (gateways_27_ip && targets_0_ie_27);
-  assign targets_0_requests_29_priority = gateways_28_priority;
-  assign targets_0_requests_29_id = 5'h1d;
-  assign targets_0_requests_29_valid = (gateways_28_ip && targets_0_ie_28);
-  assign targets_0_requests_30_priority = gateways_29_priority;
-  assign targets_0_requests_30_id = 5'h1e;
-  assign targets_0_requests_30_valid = (gateways_29_ip && targets_0_ie_29);
-  assign targets_0_requests_31_priority = gateways_30_priority;
-  assign targets_0_requests_31_id = 5'h1f;
-  assign targets_0_requests_31_valid = (gateways_30_ip && targets_0_ie_30);
-  assign _zz_targets_0_bestRequest_id = ((! targets_0_requests_1_valid) || (targets_0_requests_0_valid && (targets_0_requests_1_priority <= targets_0_requests_0_priority)));
-  assign _zz_targets_0_bestRequest_id_1 = (_zz_targets_0_bestRequest_id ? targets_0_requests_0_priority : targets_0_requests_1_priority);
-  assign _zz_targets_0_bestRequest_id_2 = (_zz_targets_0_bestRequest_id ? targets_0_requests_0_valid : targets_0_requests_1_valid);
-  assign _zz_targets_0_bestRequest_id_3 = ((! targets_0_requests_3_valid) || (targets_0_requests_2_valid && (targets_0_requests_3_priority <= targets_0_requests_2_priority)));
-  assign _zz_targets_0_bestRequest_id_4 = (_zz_targets_0_bestRequest_id_3 ? targets_0_requests_2_priority : targets_0_requests_3_priority);
-  assign _zz_targets_0_bestRequest_id_5 = (_zz_targets_0_bestRequest_id_3 ? targets_0_requests_2_valid : targets_0_requests_3_valid);
-  assign _zz_targets_0_bestRequest_id_6 = ((! targets_0_requests_5_valid) || (targets_0_requests_4_valid && (targets_0_requests_5_priority <= targets_0_requests_4_priority)));
-  assign _zz_targets_0_bestRequest_id_7 = (_zz_targets_0_bestRequest_id_6 ? targets_0_requests_4_priority : targets_0_requests_5_priority);
-  assign _zz_targets_0_bestRequest_id_8 = (_zz_targets_0_bestRequest_id_6 ? targets_0_requests_4_valid : targets_0_requests_5_valid);
-  assign _zz_targets_0_bestRequest_id_9 = ((! targets_0_requests_7_valid) || (targets_0_requests_6_valid && (targets_0_requests_7_priority <= targets_0_requests_6_priority)));
-  assign _zz_targets_0_bestRequest_id_10 = (_zz_targets_0_bestRequest_id_9 ? targets_0_requests_6_priority : targets_0_requests_7_priority);
-  assign _zz_targets_0_bestRequest_id_11 = (_zz_targets_0_bestRequest_id_9 ? targets_0_requests_6_valid : targets_0_requests_7_valid);
-  assign _zz_targets_0_bestRequest_id_12 = ((! targets_0_requests_9_valid) || (targets_0_requests_8_valid && (targets_0_requests_9_priority <= targets_0_requests_8_priority)));
-  assign _zz_targets_0_bestRequest_id_13 = (_zz_targets_0_bestRequest_id_12 ? targets_0_requests_8_priority : targets_0_requests_9_priority);
-  assign _zz_targets_0_bestRequest_id_14 = (_zz_targets_0_bestRequest_id_12 ? targets_0_requests_8_valid : targets_0_requests_9_valid);
-  assign _zz_targets_0_bestRequest_id_15 = ((! targets_0_requests_11_valid) || (targets_0_requests_10_valid && (targets_0_requests_11_priority <= targets_0_requests_10_priority)));
-  assign _zz_targets_0_bestRequest_id_16 = (_zz_targets_0_bestRequest_id_15 ? targets_0_requests_10_priority : targets_0_requests_11_priority);
-  assign _zz_targets_0_bestRequest_id_17 = (_zz_targets_0_bestRequest_id_15 ? targets_0_requests_10_valid : targets_0_requests_11_valid);
-  assign _zz_targets_0_bestRequest_id_18 = ((! targets_0_requests_13_valid) || (targets_0_requests_12_valid && (targets_0_requests_13_priority <= targets_0_requests_12_priority)));
-  assign _zz_targets_0_bestRequest_id_19 = (_zz_targets_0_bestRequest_id_18 ? targets_0_requests_12_priority : targets_0_requests_13_priority);
-  assign _zz_targets_0_bestRequest_id_20 = (_zz_targets_0_bestRequest_id_18 ? targets_0_requests_12_valid : targets_0_requests_13_valid);
-  assign _zz_targets_0_bestRequest_id_21 = ((! targets_0_requests_15_valid) || (targets_0_requests_14_valid && (targets_0_requests_15_priority <= targets_0_requests_14_priority)));
-  assign _zz_targets_0_bestRequest_id_22 = (_zz_targets_0_bestRequest_id_21 ? targets_0_requests_14_priority : targets_0_requests_15_priority);
-  assign _zz_targets_0_bestRequest_id_23 = (_zz_targets_0_bestRequest_id_21 ? targets_0_requests_14_valid : targets_0_requests_15_valid);
-  assign _zz_targets_0_bestRequest_id_24 = ((! targets_0_requests_17_valid) || (targets_0_requests_16_valid && (targets_0_requests_17_priority <= targets_0_requests_16_priority)));
-  assign _zz_targets_0_bestRequest_id_25 = (_zz_targets_0_bestRequest_id_24 ? targets_0_requests_16_priority : targets_0_requests_17_priority);
-  assign _zz_targets_0_bestRequest_id_26 = (_zz_targets_0_bestRequest_id_24 ? targets_0_requests_16_valid : targets_0_requests_17_valid);
-  assign _zz_targets_0_bestRequest_id_27 = ((! targets_0_requests_19_valid) || (targets_0_requests_18_valid && (targets_0_requests_19_priority <= targets_0_requests_18_priority)));
-  assign _zz_targets_0_bestRequest_id_28 = (_zz_targets_0_bestRequest_id_27 ? targets_0_requests_18_priority : targets_0_requests_19_priority);
-  assign _zz_targets_0_bestRequest_id_29 = (_zz_targets_0_bestRequest_id_27 ? targets_0_requests_18_valid : targets_0_requests_19_valid);
-  assign _zz_targets_0_bestRequest_id_30 = ((! targets_0_requests_21_valid) || (targets_0_requests_20_valid && (targets_0_requests_21_priority <= targets_0_requests_20_priority)));
-  assign _zz_targets_0_bestRequest_id_31 = (_zz_targets_0_bestRequest_id_30 ? targets_0_requests_20_priority : targets_0_requests_21_priority);
-  assign _zz_targets_0_bestRequest_id_32 = (_zz_targets_0_bestRequest_id_30 ? targets_0_requests_20_valid : targets_0_requests_21_valid);
-  assign _zz_targets_0_bestRequest_id_33 = ((! targets_0_requests_23_valid) || (targets_0_requests_22_valid && (targets_0_requests_23_priority <= targets_0_requests_22_priority)));
-  assign _zz_targets_0_bestRequest_id_34 = (_zz_targets_0_bestRequest_id_33 ? targets_0_requests_22_priority : targets_0_requests_23_priority);
-  assign _zz_targets_0_bestRequest_id_35 = (_zz_targets_0_bestRequest_id_33 ? targets_0_requests_22_valid : targets_0_requests_23_valid);
-  assign _zz_targets_0_bestRequest_id_36 = ((! targets_0_requests_25_valid) || (targets_0_requests_24_valid && (targets_0_requests_25_priority <= targets_0_requests_24_priority)));
-  assign _zz_targets_0_bestRequest_id_37 = (_zz_targets_0_bestRequest_id_36 ? targets_0_requests_24_priority : targets_0_requests_25_priority);
-  assign _zz_targets_0_bestRequest_id_38 = (_zz_targets_0_bestRequest_id_36 ? targets_0_requests_24_valid : targets_0_requests_25_valid);
-  assign _zz_targets_0_bestRequest_id_39 = ((! targets_0_requests_27_valid) || (targets_0_requests_26_valid && (targets_0_requests_27_priority <= targets_0_requests_26_priority)));
-  assign _zz_targets_0_bestRequest_id_40 = (_zz_targets_0_bestRequest_id_39 ? targets_0_requests_26_priority : targets_0_requests_27_priority);
-  assign _zz_targets_0_bestRequest_id_41 = (_zz_targets_0_bestRequest_id_39 ? targets_0_requests_26_valid : targets_0_requests_27_valid);
-  assign _zz_targets_0_bestRequest_id_42 = ((! targets_0_requests_29_valid) || (targets_0_requests_28_valid && (targets_0_requests_29_priority <= targets_0_requests_28_priority)));
-  assign _zz_targets_0_bestRequest_id_43 = (_zz_targets_0_bestRequest_id_42 ? targets_0_requests_28_priority : targets_0_requests_29_priority);
-  assign _zz_targets_0_bestRequest_id_44 = (_zz_targets_0_bestRequest_id_42 ? targets_0_requests_28_valid : targets_0_requests_29_valid);
-  assign _zz_targets_0_bestRequest_id_45 = ((! targets_0_requests_31_valid) || (targets_0_requests_30_valid && (targets_0_requests_31_priority <= targets_0_requests_30_priority)));
-  assign _zz_targets_0_bestRequest_id_46 = (_zz_targets_0_bestRequest_id_45 ? targets_0_requests_30_priority : targets_0_requests_31_priority);
-  assign _zz_targets_0_bestRequest_id_47 = (_zz_targets_0_bestRequest_id_45 ? targets_0_requests_30_valid : targets_0_requests_31_valid);
-  assign _zz_targets_0_bestRequest_id_48 = ((! _zz_targets_0_bestRequest_id_5) || (_zz_targets_0_bestRequest_id_2 && (_zz_targets_0_bestRequest_id_4 <= _zz_targets_0_bestRequest_id_1)));
-  assign _zz_targets_0_bestRequest_id_49 = (_zz_targets_0_bestRequest_id_48 ? _zz_targets_0_bestRequest_id_1 : _zz_targets_0_bestRequest_id_4);
-  assign _zz_targets_0_bestRequest_id_50 = (_zz_targets_0_bestRequest_id_48 ? _zz_targets_0_bestRequest_id_2 : _zz_targets_0_bestRequest_id_5);
-  assign _zz_targets_0_bestRequest_id_51 = ((! _zz_targets_0_bestRequest_id_11) || (_zz_targets_0_bestRequest_id_8 && (_zz_targets_0_bestRequest_id_10 <= _zz_targets_0_bestRequest_id_7)));
-  assign _zz_targets_0_bestRequest_id_52 = (_zz_targets_0_bestRequest_id_51 ? _zz_targets_0_bestRequest_id_7 : _zz_targets_0_bestRequest_id_10);
-  assign _zz_targets_0_bestRequest_id_53 = (_zz_targets_0_bestRequest_id_51 ? _zz_targets_0_bestRequest_id_8 : _zz_targets_0_bestRequest_id_11);
-  assign _zz_targets_0_bestRequest_id_54 = ((! _zz_targets_0_bestRequest_id_17) || (_zz_targets_0_bestRequest_id_14 && (_zz_targets_0_bestRequest_id_16 <= _zz_targets_0_bestRequest_id_13)));
-  assign _zz_targets_0_bestRequest_id_55 = (_zz_targets_0_bestRequest_id_54 ? _zz_targets_0_bestRequest_id_13 : _zz_targets_0_bestRequest_id_16);
-  assign _zz_targets_0_bestRequest_id_56 = (_zz_targets_0_bestRequest_id_54 ? _zz_targets_0_bestRequest_id_14 : _zz_targets_0_bestRequest_id_17);
-  assign _zz_targets_0_bestRequest_id_57 = ((! _zz_targets_0_bestRequest_id_23) || (_zz_targets_0_bestRequest_id_20 && (_zz_targets_0_bestRequest_id_22 <= _zz_targets_0_bestRequest_id_19)));
-  assign _zz_targets_0_bestRequest_id_58 = (_zz_targets_0_bestRequest_id_57 ? _zz_targets_0_bestRequest_id_19 : _zz_targets_0_bestRequest_id_22);
-  assign _zz_targets_0_bestRequest_id_59 = (_zz_targets_0_bestRequest_id_57 ? _zz_targets_0_bestRequest_id_20 : _zz_targets_0_bestRequest_id_23);
-  assign _zz_targets_0_bestRequest_id_60 = ((! _zz_targets_0_bestRequest_id_29) || (_zz_targets_0_bestRequest_id_26 && (_zz_targets_0_bestRequest_id_28 <= _zz_targets_0_bestRequest_id_25)));
-  assign _zz_targets_0_bestRequest_id_61 = (_zz_targets_0_bestRequest_id_60 ? _zz_targets_0_bestRequest_id_25 : _zz_targets_0_bestRequest_id_28);
-  assign _zz_targets_0_bestRequest_id_62 = (_zz_targets_0_bestRequest_id_60 ? _zz_targets_0_bestRequest_id_26 : _zz_targets_0_bestRequest_id_29);
-  assign _zz_targets_0_bestRequest_id_63 = ((! _zz_targets_0_bestRequest_id_35) || (_zz_targets_0_bestRequest_id_32 && (_zz_targets_0_bestRequest_id_34 <= _zz_targets_0_bestRequest_id_31)));
-  assign _zz_targets_0_bestRequest_id_64 = (_zz_targets_0_bestRequest_id_63 ? _zz_targets_0_bestRequest_id_31 : _zz_targets_0_bestRequest_id_34);
-  assign _zz_targets_0_bestRequest_id_65 = (_zz_targets_0_bestRequest_id_63 ? _zz_targets_0_bestRequest_id_32 : _zz_targets_0_bestRequest_id_35);
-  assign _zz_targets_0_bestRequest_id_66 = ((! _zz_targets_0_bestRequest_id_41) || (_zz_targets_0_bestRequest_id_38 && (_zz_targets_0_bestRequest_id_40 <= _zz_targets_0_bestRequest_id_37)));
-  assign _zz_targets_0_bestRequest_id_67 = (_zz_targets_0_bestRequest_id_66 ? _zz_targets_0_bestRequest_id_37 : _zz_targets_0_bestRequest_id_40);
-  assign _zz_targets_0_bestRequest_id_68 = (_zz_targets_0_bestRequest_id_66 ? _zz_targets_0_bestRequest_id_38 : _zz_targets_0_bestRequest_id_41);
-  assign _zz_targets_0_bestRequest_id_69 = ((! _zz_targets_0_bestRequest_id_47) || (_zz_targets_0_bestRequest_id_44 && (_zz_targets_0_bestRequest_id_46 <= _zz_targets_0_bestRequest_id_43)));
-  assign _zz_targets_0_bestRequest_id_70 = (_zz_targets_0_bestRequest_id_69 ? _zz_targets_0_bestRequest_id_43 : _zz_targets_0_bestRequest_id_46);
-  assign _zz_targets_0_bestRequest_id_71 = (_zz_targets_0_bestRequest_id_69 ? _zz_targets_0_bestRequest_id_44 : _zz_targets_0_bestRequest_id_47);
-  assign _zz_targets_0_bestRequest_id_72 = ((! _zz_targets_0_bestRequest_id_53) || (_zz_targets_0_bestRequest_id_50 && (_zz_targets_0_bestRequest_id_52 <= _zz_targets_0_bestRequest_id_49)));
-  assign _zz_targets_0_bestRequest_priority = (_zz_targets_0_bestRequest_id_72 ? _zz_targets_0_bestRequest_id_49 : _zz_targets_0_bestRequest_id_52);
-  assign _zz_targets_0_bestRequest_id_73 = (_zz_targets_0_bestRequest_id_72 ? _zz_targets_0_bestRequest_id_50 : _zz_targets_0_bestRequest_id_53);
-  assign _zz_targets_0_bestRequest_id_74 = ((! _zz_targets_0_bestRequest_id_59) || (_zz_targets_0_bestRequest_id_56 && (_zz_targets_0_bestRequest_id_58 <= _zz_targets_0_bestRequest_id_55)));
-  assign _zz_targets_0_bestRequest_priority_1 = (_zz_targets_0_bestRequest_id_74 ? _zz_targets_0_bestRequest_id_55 : _zz_targets_0_bestRequest_id_58);
-  assign _zz_targets_0_bestRequest_id_75 = (_zz_targets_0_bestRequest_id_74 ? _zz_targets_0_bestRequest_id_56 : _zz_targets_0_bestRequest_id_59);
-  assign _zz_targets_0_bestRequest_id_76 = ((! _zz_targets_0_bestRequest_id_65) || (_zz_targets_0_bestRequest_id_62 && (_zz_targets_0_bestRequest_id_64 <= _zz_targets_0_bestRequest_id_61)));
-  assign _zz_targets_0_bestRequest_priority_2 = (_zz_targets_0_bestRequest_id_76 ? _zz_targets_0_bestRequest_id_61 : _zz_targets_0_bestRequest_id_64);
-  assign _zz_targets_0_bestRequest_id_77 = (_zz_targets_0_bestRequest_id_76 ? _zz_targets_0_bestRequest_id_62 : _zz_targets_0_bestRequest_id_65);
-  assign _zz_targets_0_bestRequest_id_78 = ((! _zz_targets_0_bestRequest_id_71) || (_zz_targets_0_bestRequest_id_68 && (_zz_targets_0_bestRequest_id_70 <= _zz_targets_0_bestRequest_id_67)));
-  assign _zz_targets_0_bestRequest_priority_3 = (_zz_targets_0_bestRequest_id_78 ? _zz_targets_0_bestRequest_id_67 : _zz_targets_0_bestRequest_id_70);
-  assign _zz_targets_0_bestRequest_id_79 = (_zz_targets_0_bestRequest_id_78 ? _zz_targets_0_bestRequest_id_68 : _zz_targets_0_bestRequest_id_71);
-  assign _zz_targets_0_bestRequest_id_80 = ((! _zz_targets_0_bestRequest_id_75) || (_zz_targets_0_bestRequest_id_73 && (_zz_targets_0_bestRequest_priority_1 <= _zz_targets_0_bestRequest_priority)));
-  assign _zz_targets_0_bestRequest_priority_4 = (_zz_targets_0_bestRequest_id_80 ? _zz_targets_0_bestRequest_priority : _zz_targets_0_bestRequest_priority_1);
-  assign _zz_targets_0_bestRequest_valid = (_zz_targets_0_bestRequest_id_80 ? _zz_targets_0_bestRequest_id_73 : _zz_targets_0_bestRequest_id_75);
-  assign _zz_targets_0_bestRequest_id_81 = ((! _zz_targets_0_bestRequest_id_79) || (_zz_targets_0_bestRequest_id_77 && (_zz_targets_0_bestRequest_priority_3 <= _zz_targets_0_bestRequest_priority_2)));
-  assign _zz_targets_0_bestRequest_priority_5 = (_zz_targets_0_bestRequest_id_81 ? _zz_targets_0_bestRequest_priority_2 : _zz_targets_0_bestRequest_priority_3);
-  assign _zz_targets_0_bestRequest_valid_1 = (_zz_targets_0_bestRequest_id_81 ? _zz_targets_0_bestRequest_id_77 : _zz_targets_0_bestRequest_id_79);
-  assign _zz_targets_0_bestRequest_priority_6 = ((! _zz_targets_0_bestRequest_valid_1) || (_zz_targets_0_bestRequest_valid && (_zz_targets_0_bestRequest_priority_5 <= _zz_targets_0_bestRequest_priority_4)));
-  assign targets_0_iep = (targets_0_threshold < targets_0_bestRequest_priority);
-  assign targets_0_claim = (targets_0_iep ? targets_0_bestRequest_id : 5'h00);
-  assign targets_1_requests_0_priority = 2'b00;
-  assign targets_1_requests_0_id = 5'h00;
-  assign targets_1_requests_0_valid = 1'b1;
-  assign targets_1_requests_1_priority = gateways_0_priority;
-  assign targets_1_requests_1_id = 5'h01;
-  assign targets_1_requests_1_valid = (gateways_0_ip && targets_1_ie_0);
-  assign targets_1_requests_2_priority = gateways_1_priority;
-  assign targets_1_requests_2_id = 5'h02;
-  assign targets_1_requests_2_valid = (gateways_1_ip && targets_1_ie_1);
-  assign targets_1_requests_3_priority = gateways_2_priority;
-  assign targets_1_requests_3_id = 5'h03;
-  assign targets_1_requests_3_valid = (gateways_2_ip && targets_1_ie_2);
-  assign targets_1_requests_4_priority = gateways_3_priority;
-  assign targets_1_requests_4_id = 5'h04;
-  assign targets_1_requests_4_valid = (gateways_3_ip && targets_1_ie_3);
-  assign targets_1_requests_5_priority = gateways_4_priority;
-  assign targets_1_requests_5_id = 5'h05;
-  assign targets_1_requests_5_valid = (gateways_4_ip && targets_1_ie_4);
-  assign targets_1_requests_6_priority = gateways_5_priority;
-  assign targets_1_requests_6_id = 5'h06;
-  assign targets_1_requests_6_valid = (gateways_5_ip && targets_1_ie_5);
-  assign targets_1_requests_7_priority = gateways_6_priority;
-  assign targets_1_requests_7_id = 5'h07;
-  assign targets_1_requests_7_valid = (gateways_6_ip && targets_1_ie_6);
-  assign targets_1_requests_8_priority = gateways_7_priority;
-  assign targets_1_requests_8_id = 5'h08;
-  assign targets_1_requests_8_valid = (gateways_7_ip && targets_1_ie_7);
-  assign targets_1_requests_9_priority = gateways_8_priority;
-  assign targets_1_requests_9_id = 5'h09;
-  assign targets_1_requests_9_valid = (gateways_8_ip && targets_1_ie_8);
-  assign targets_1_requests_10_priority = gateways_9_priority;
-  assign targets_1_requests_10_id = 5'h0a;
-  assign targets_1_requests_10_valid = (gateways_9_ip && targets_1_ie_9);
-  assign targets_1_requests_11_priority = gateways_10_priority;
-  assign targets_1_requests_11_id = 5'h0b;
-  assign targets_1_requests_11_valid = (gateways_10_ip && targets_1_ie_10);
-  assign targets_1_requests_12_priority = gateways_11_priority;
-  assign targets_1_requests_12_id = 5'h0c;
-  assign targets_1_requests_12_valid = (gateways_11_ip && targets_1_ie_11);
-  assign targets_1_requests_13_priority = gateways_12_priority;
-  assign targets_1_requests_13_id = 5'h0d;
-  assign targets_1_requests_13_valid = (gateways_12_ip && targets_1_ie_12);
-  assign targets_1_requests_14_priority = gateways_13_priority;
-  assign targets_1_requests_14_id = 5'h0e;
-  assign targets_1_requests_14_valid = (gateways_13_ip && targets_1_ie_13);
-  assign targets_1_requests_15_priority = gateways_14_priority;
-  assign targets_1_requests_15_id = 5'h0f;
-  assign targets_1_requests_15_valid = (gateways_14_ip && targets_1_ie_14);
-  assign targets_1_requests_16_priority = gateways_15_priority;
-  assign targets_1_requests_16_id = 5'h10;
-  assign targets_1_requests_16_valid = (gateways_15_ip && targets_1_ie_15);
-  assign targets_1_requests_17_priority = gateways_16_priority;
-  assign targets_1_requests_17_id = 5'h11;
-  assign targets_1_requests_17_valid = (gateways_16_ip && targets_1_ie_16);
-  assign targets_1_requests_18_priority = gateways_17_priority;
-  assign targets_1_requests_18_id = 5'h12;
-  assign targets_1_requests_18_valid = (gateways_17_ip && targets_1_ie_17);
-  assign targets_1_requests_19_priority = gateways_18_priority;
-  assign targets_1_requests_19_id = 5'h13;
-  assign targets_1_requests_19_valid = (gateways_18_ip && targets_1_ie_18);
-  assign targets_1_requests_20_priority = gateways_19_priority;
-  assign targets_1_requests_20_id = 5'h14;
-  assign targets_1_requests_20_valid = (gateways_19_ip && targets_1_ie_19);
-  assign targets_1_requests_21_priority = gateways_20_priority;
-  assign targets_1_requests_21_id = 5'h15;
-  assign targets_1_requests_21_valid = (gateways_20_ip && targets_1_ie_20);
-  assign targets_1_requests_22_priority = gateways_21_priority;
-  assign targets_1_requests_22_id = 5'h16;
-  assign targets_1_requests_22_valid = (gateways_21_ip && targets_1_ie_21);
-  assign targets_1_requests_23_priority = gateways_22_priority;
-  assign targets_1_requests_23_id = 5'h17;
-  assign targets_1_requests_23_valid = (gateways_22_ip && targets_1_ie_22);
-  assign targets_1_requests_24_priority = gateways_23_priority;
-  assign targets_1_requests_24_id = 5'h18;
-  assign targets_1_requests_24_valid = (gateways_23_ip && targets_1_ie_23);
-  assign targets_1_requests_25_priority = gateways_24_priority;
-  assign targets_1_requests_25_id = 5'h19;
-  assign targets_1_requests_25_valid = (gateways_24_ip && targets_1_ie_24);
-  assign targets_1_requests_26_priority = gateways_25_priority;
-  assign targets_1_requests_26_id = 5'h1a;
-  assign targets_1_requests_26_valid = (gateways_25_ip && targets_1_ie_25);
-  assign targets_1_requests_27_priority = gateways_26_priority;
-  assign targets_1_requests_27_id = 5'h1b;
-  assign targets_1_requests_27_valid = (gateways_26_ip && targets_1_ie_26);
-  assign targets_1_requests_28_priority = gateways_27_priority;
-  assign targets_1_requests_28_id = 5'h1c;
-  assign targets_1_requests_28_valid = (gateways_27_ip && targets_1_ie_27);
-  assign targets_1_requests_29_priority = gateways_28_priority;
-  assign targets_1_requests_29_id = 5'h1d;
-  assign targets_1_requests_29_valid = (gateways_28_ip && targets_1_ie_28);
-  assign targets_1_requests_30_priority = gateways_29_priority;
-  assign targets_1_requests_30_id = 5'h1e;
-  assign targets_1_requests_30_valid = (gateways_29_ip && targets_1_ie_29);
-  assign targets_1_requests_31_priority = gateways_30_priority;
-  assign targets_1_requests_31_id = 5'h1f;
-  assign targets_1_requests_31_valid = (gateways_30_ip && targets_1_ie_30);
-  assign _zz_targets_1_bestRequest_id = ((! targets_1_requests_1_valid) || (targets_1_requests_0_valid && (targets_1_requests_1_priority <= targets_1_requests_0_priority)));
-  assign _zz_targets_1_bestRequest_id_1 = (_zz_targets_1_bestRequest_id ? targets_1_requests_0_priority : targets_1_requests_1_priority);
-  assign _zz_targets_1_bestRequest_id_2 = (_zz_targets_1_bestRequest_id ? targets_1_requests_0_valid : targets_1_requests_1_valid);
-  assign _zz_targets_1_bestRequest_id_3 = ((! targets_1_requests_3_valid) || (targets_1_requests_2_valid && (targets_1_requests_3_priority <= targets_1_requests_2_priority)));
-  assign _zz_targets_1_bestRequest_id_4 = (_zz_targets_1_bestRequest_id_3 ? targets_1_requests_2_priority : targets_1_requests_3_priority);
-  assign _zz_targets_1_bestRequest_id_5 = (_zz_targets_1_bestRequest_id_3 ? targets_1_requests_2_valid : targets_1_requests_3_valid);
-  assign _zz_targets_1_bestRequest_id_6 = ((! targets_1_requests_5_valid) || (targets_1_requests_4_valid && (targets_1_requests_5_priority <= targets_1_requests_4_priority)));
-  assign _zz_targets_1_bestRequest_id_7 = (_zz_targets_1_bestRequest_id_6 ? targets_1_requests_4_priority : targets_1_requests_5_priority);
-  assign _zz_targets_1_bestRequest_id_8 = (_zz_targets_1_bestRequest_id_6 ? targets_1_requests_4_valid : targets_1_requests_5_valid);
-  assign _zz_targets_1_bestRequest_id_9 = ((! targets_1_requests_7_valid) || (targets_1_requests_6_valid && (targets_1_requests_7_priority <= targets_1_requests_6_priority)));
-  assign _zz_targets_1_bestRequest_id_10 = (_zz_targets_1_bestRequest_id_9 ? targets_1_requests_6_priority : targets_1_requests_7_priority);
-  assign _zz_targets_1_bestRequest_id_11 = (_zz_targets_1_bestRequest_id_9 ? targets_1_requests_6_valid : targets_1_requests_7_valid);
-  assign _zz_targets_1_bestRequest_id_12 = ((! targets_1_requests_9_valid) || (targets_1_requests_8_valid && (targets_1_requests_9_priority <= targets_1_requests_8_priority)));
-  assign _zz_targets_1_bestRequest_id_13 = (_zz_targets_1_bestRequest_id_12 ? targets_1_requests_8_priority : targets_1_requests_9_priority);
-  assign _zz_targets_1_bestRequest_id_14 = (_zz_targets_1_bestRequest_id_12 ? targets_1_requests_8_valid : targets_1_requests_9_valid);
-  assign _zz_targets_1_bestRequest_id_15 = ((! targets_1_requests_11_valid) || (targets_1_requests_10_valid && (targets_1_requests_11_priority <= targets_1_requests_10_priority)));
-  assign _zz_targets_1_bestRequest_id_16 = (_zz_targets_1_bestRequest_id_15 ? targets_1_requests_10_priority : targets_1_requests_11_priority);
-  assign _zz_targets_1_bestRequest_id_17 = (_zz_targets_1_bestRequest_id_15 ? targets_1_requests_10_valid : targets_1_requests_11_valid);
-  assign _zz_targets_1_bestRequest_id_18 = ((! targets_1_requests_13_valid) || (targets_1_requests_12_valid && (targets_1_requests_13_priority <= targets_1_requests_12_priority)));
-  assign _zz_targets_1_bestRequest_id_19 = (_zz_targets_1_bestRequest_id_18 ? targets_1_requests_12_priority : targets_1_requests_13_priority);
-  assign _zz_targets_1_bestRequest_id_20 = (_zz_targets_1_bestRequest_id_18 ? targets_1_requests_12_valid : targets_1_requests_13_valid);
-  assign _zz_targets_1_bestRequest_id_21 = ((! targets_1_requests_15_valid) || (targets_1_requests_14_valid && (targets_1_requests_15_priority <= targets_1_requests_14_priority)));
-  assign _zz_targets_1_bestRequest_id_22 = (_zz_targets_1_bestRequest_id_21 ? targets_1_requests_14_priority : targets_1_requests_15_priority);
-  assign _zz_targets_1_bestRequest_id_23 = (_zz_targets_1_bestRequest_id_21 ? targets_1_requests_14_valid : targets_1_requests_15_valid);
-  assign _zz_targets_1_bestRequest_id_24 = ((! targets_1_requests_17_valid) || (targets_1_requests_16_valid && (targets_1_requests_17_priority <= targets_1_requests_16_priority)));
-  assign _zz_targets_1_bestRequest_id_25 = (_zz_targets_1_bestRequest_id_24 ? targets_1_requests_16_priority : targets_1_requests_17_priority);
-  assign _zz_targets_1_bestRequest_id_26 = (_zz_targets_1_bestRequest_id_24 ? targets_1_requests_16_valid : targets_1_requests_17_valid);
-  assign _zz_targets_1_bestRequest_id_27 = ((! targets_1_requests_19_valid) || (targets_1_requests_18_valid && (targets_1_requests_19_priority <= targets_1_requests_18_priority)));
-  assign _zz_targets_1_bestRequest_id_28 = (_zz_targets_1_bestRequest_id_27 ? targets_1_requests_18_priority : targets_1_requests_19_priority);
-  assign _zz_targets_1_bestRequest_id_29 = (_zz_targets_1_bestRequest_id_27 ? targets_1_requests_18_valid : targets_1_requests_19_valid);
-  assign _zz_targets_1_bestRequest_id_30 = ((! targets_1_requests_21_valid) || (targets_1_requests_20_valid && (targets_1_requests_21_priority <= targets_1_requests_20_priority)));
-  assign _zz_targets_1_bestRequest_id_31 = (_zz_targets_1_bestRequest_id_30 ? targets_1_requests_20_priority : targets_1_requests_21_priority);
-  assign _zz_targets_1_bestRequest_id_32 = (_zz_targets_1_bestRequest_id_30 ? targets_1_requests_20_valid : targets_1_requests_21_valid);
-  assign _zz_targets_1_bestRequest_id_33 = ((! targets_1_requests_23_valid) || (targets_1_requests_22_valid && (targets_1_requests_23_priority <= targets_1_requests_22_priority)));
-  assign _zz_targets_1_bestRequest_id_34 = (_zz_targets_1_bestRequest_id_33 ? targets_1_requests_22_priority : targets_1_requests_23_priority);
-  assign _zz_targets_1_bestRequest_id_35 = (_zz_targets_1_bestRequest_id_33 ? targets_1_requests_22_valid : targets_1_requests_23_valid);
-  assign _zz_targets_1_bestRequest_id_36 = ((! targets_1_requests_25_valid) || (targets_1_requests_24_valid && (targets_1_requests_25_priority <= targets_1_requests_24_priority)));
-  assign _zz_targets_1_bestRequest_id_37 = (_zz_targets_1_bestRequest_id_36 ? targets_1_requests_24_priority : targets_1_requests_25_priority);
-  assign _zz_targets_1_bestRequest_id_38 = (_zz_targets_1_bestRequest_id_36 ? targets_1_requests_24_valid : targets_1_requests_25_valid);
-  assign _zz_targets_1_bestRequest_id_39 = ((! targets_1_requests_27_valid) || (targets_1_requests_26_valid && (targets_1_requests_27_priority <= targets_1_requests_26_priority)));
-  assign _zz_targets_1_bestRequest_id_40 = (_zz_targets_1_bestRequest_id_39 ? targets_1_requests_26_priority : targets_1_requests_27_priority);
-  assign _zz_targets_1_bestRequest_id_41 = (_zz_targets_1_bestRequest_id_39 ? targets_1_requests_26_valid : targets_1_requests_27_valid);
-  assign _zz_targets_1_bestRequest_id_42 = ((! targets_1_requests_29_valid) || (targets_1_requests_28_valid && (targets_1_requests_29_priority <= targets_1_requests_28_priority)));
-  assign _zz_targets_1_bestRequest_id_43 = (_zz_targets_1_bestRequest_id_42 ? targets_1_requests_28_priority : targets_1_requests_29_priority);
-  assign _zz_targets_1_bestRequest_id_44 = (_zz_targets_1_bestRequest_id_42 ? targets_1_requests_28_valid : targets_1_requests_29_valid);
-  assign _zz_targets_1_bestRequest_id_45 = ((! targets_1_requests_31_valid) || (targets_1_requests_30_valid && (targets_1_requests_31_priority <= targets_1_requests_30_priority)));
-  assign _zz_targets_1_bestRequest_id_46 = (_zz_targets_1_bestRequest_id_45 ? targets_1_requests_30_priority : targets_1_requests_31_priority);
-  assign _zz_targets_1_bestRequest_id_47 = (_zz_targets_1_bestRequest_id_45 ? targets_1_requests_30_valid : targets_1_requests_31_valid);
-  assign _zz_targets_1_bestRequest_id_48 = ((! _zz_targets_1_bestRequest_id_5) || (_zz_targets_1_bestRequest_id_2 && (_zz_targets_1_bestRequest_id_4 <= _zz_targets_1_bestRequest_id_1)));
-  assign _zz_targets_1_bestRequest_id_49 = (_zz_targets_1_bestRequest_id_48 ? _zz_targets_1_bestRequest_id_1 : _zz_targets_1_bestRequest_id_4);
-  assign _zz_targets_1_bestRequest_id_50 = (_zz_targets_1_bestRequest_id_48 ? _zz_targets_1_bestRequest_id_2 : _zz_targets_1_bestRequest_id_5);
-  assign _zz_targets_1_bestRequest_id_51 = ((! _zz_targets_1_bestRequest_id_11) || (_zz_targets_1_bestRequest_id_8 && (_zz_targets_1_bestRequest_id_10 <= _zz_targets_1_bestRequest_id_7)));
-  assign _zz_targets_1_bestRequest_id_52 = (_zz_targets_1_bestRequest_id_51 ? _zz_targets_1_bestRequest_id_7 : _zz_targets_1_bestRequest_id_10);
-  assign _zz_targets_1_bestRequest_id_53 = (_zz_targets_1_bestRequest_id_51 ? _zz_targets_1_bestRequest_id_8 : _zz_targets_1_bestRequest_id_11);
-  assign _zz_targets_1_bestRequest_id_54 = ((! _zz_targets_1_bestRequest_id_17) || (_zz_targets_1_bestRequest_id_14 && (_zz_targets_1_bestRequest_id_16 <= _zz_targets_1_bestRequest_id_13)));
-  assign _zz_targets_1_bestRequest_id_55 = (_zz_targets_1_bestRequest_id_54 ? _zz_targets_1_bestRequest_id_13 : _zz_targets_1_bestRequest_id_16);
-  assign _zz_targets_1_bestRequest_id_56 = (_zz_targets_1_bestRequest_id_54 ? _zz_targets_1_bestRequest_id_14 : _zz_targets_1_bestRequest_id_17);
-  assign _zz_targets_1_bestRequest_id_57 = ((! _zz_targets_1_bestRequest_id_23) || (_zz_targets_1_bestRequest_id_20 && (_zz_targets_1_bestRequest_id_22 <= _zz_targets_1_bestRequest_id_19)));
-  assign _zz_targets_1_bestRequest_id_58 = (_zz_targets_1_bestRequest_id_57 ? _zz_targets_1_bestRequest_id_19 : _zz_targets_1_bestRequest_id_22);
-  assign _zz_targets_1_bestRequest_id_59 = (_zz_targets_1_bestRequest_id_57 ? _zz_targets_1_bestRequest_id_20 : _zz_targets_1_bestRequest_id_23);
-  assign _zz_targets_1_bestRequest_id_60 = ((! _zz_targets_1_bestRequest_id_29) || (_zz_targets_1_bestRequest_id_26 && (_zz_targets_1_bestRequest_id_28 <= _zz_targets_1_bestRequest_id_25)));
-  assign _zz_targets_1_bestRequest_id_61 = (_zz_targets_1_bestRequest_id_60 ? _zz_targets_1_bestRequest_id_25 : _zz_targets_1_bestRequest_id_28);
-  assign _zz_targets_1_bestRequest_id_62 = (_zz_targets_1_bestRequest_id_60 ? _zz_targets_1_bestRequest_id_26 : _zz_targets_1_bestRequest_id_29);
-  assign _zz_targets_1_bestRequest_id_63 = ((! _zz_targets_1_bestRequest_id_35) || (_zz_targets_1_bestRequest_id_32 && (_zz_targets_1_bestRequest_id_34 <= _zz_targets_1_bestRequest_id_31)));
-  assign _zz_targets_1_bestRequest_id_64 = (_zz_targets_1_bestRequest_id_63 ? _zz_targets_1_bestRequest_id_31 : _zz_targets_1_bestRequest_id_34);
-  assign _zz_targets_1_bestRequest_id_65 = (_zz_targets_1_bestRequest_id_63 ? _zz_targets_1_bestRequest_id_32 : _zz_targets_1_bestRequest_id_35);
-  assign _zz_targets_1_bestRequest_id_66 = ((! _zz_targets_1_bestRequest_id_41) || (_zz_targets_1_bestRequest_id_38 && (_zz_targets_1_bestRequest_id_40 <= _zz_targets_1_bestRequest_id_37)));
-  assign _zz_targets_1_bestRequest_id_67 = (_zz_targets_1_bestRequest_id_66 ? _zz_targets_1_bestRequest_id_37 : _zz_targets_1_bestRequest_id_40);
-  assign _zz_targets_1_bestRequest_id_68 = (_zz_targets_1_bestRequest_id_66 ? _zz_targets_1_bestRequest_id_38 : _zz_targets_1_bestRequest_id_41);
-  assign _zz_targets_1_bestRequest_id_69 = ((! _zz_targets_1_bestRequest_id_47) || (_zz_targets_1_bestRequest_id_44 && (_zz_targets_1_bestRequest_id_46 <= _zz_targets_1_bestRequest_id_43)));
-  assign _zz_targets_1_bestRequest_id_70 = (_zz_targets_1_bestRequest_id_69 ? _zz_targets_1_bestRequest_id_43 : _zz_targets_1_bestRequest_id_46);
-  assign _zz_targets_1_bestRequest_id_71 = (_zz_targets_1_bestRequest_id_69 ? _zz_targets_1_bestRequest_id_44 : _zz_targets_1_bestRequest_id_47);
-  assign _zz_targets_1_bestRequest_id_72 = ((! _zz_targets_1_bestRequest_id_53) || (_zz_targets_1_bestRequest_id_50 && (_zz_targets_1_bestRequest_id_52 <= _zz_targets_1_bestRequest_id_49)));
-  assign _zz_targets_1_bestRequest_priority = (_zz_targets_1_bestRequest_id_72 ? _zz_targets_1_bestRequest_id_49 : _zz_targets_1_bestRequest_id_52);
-  assign _zz_targets_1_bestRequest_id_73 = (_zz_targets_1_bestRequest_id_72 ? _zz_targets_1_bestRequest_id_50 : _zz_targets_1_bestRequest_id_53);
-  assign _zz_targets_1_bestRequest_id_74 = ((! _zz_targets_1_bestRequest_id_59) || (_zz_targets_1_bestRequest_id_56 && (_zz_targets_1_bestRequest_id_58 <= _zz_targets_1_bestRequest_id_55)));
-  assign _zz_targets_1_bestRequest_priority_1 = (_zz_targets_1_bestRequest_id_74 ? _zz_targets_1_bestRequest_id_55 : _zz_targets_1_bestRequest_id_58);
-  assign _zz_targets_1_bestRequest_id_75 = (_zz_targets_1_bestRequest_id_74 ? _zz_targets_1_bestRequest_id_56 : _zz_targets_1_bestRequest_id_59);
-  assign _zz_targets_1_bestRequest_id_76 = ((! _zz_targets_1_bestRequest_id_65) || (_zz_targets_1_bestRequest_id_62 && (_zz_targets_1_bestRequest_id_64 <= _zz_targets_1_bestRequest_id_61)));
-  assign _zz_targets_1_bestRequest_priority_2 = (_zz_targets_1_bestRequest_id_76 ? _zz_targets_1_bestRequest_id_61 : _zz_targets_1_bestRequest_id_64);
-  assign _zz_targets_1_bestRequest_id_77 = (_zz_targets_1_bestRequest_id_76 ? _zz_targets_1_bestRequest_id_62 : _zz_targets_1_bestRequest_id_65);
-  assign _zz_targets_1_bestRequest_id_78 = ((! _zz_targets_1_bestRequest_id_71) || (_zz_targets_1_bestRequest_id_68 && (_zz_targets_1_bestRequest_id_70 <= _zz_targets_1_bestRequest_id_67)));
-  assign _zz_targets_1_bestRequest_priority_3 = (_zz_targets_1_bestRequest_id_78 ? _zz_targets_1_bestRequest_id_67 : _zz_targets_1_bestRequest_id_70);
-  assign _zz_targets_1_bestRequest_id_79 = (_zz_targets_1_bestRequest_id_78 ? _zz_targets_1_bestRequest_id_68 : _zz_targets_1_bestRequest_id_71);
-  assign _zz_targets_1_bestRequest_id_80 = ((! _zz_targets_1_bestRequest_id_75) || (_zz_targets_1_bestRequest_id_73 && (_zz_targets_1_bestRequest_priority_1 <= _zz_targets_1_bestRequest_priority)));
-  assign _zz_targets_1_bestRequest_priority_4 = (_zz_targets_1_bestRequest_id_80 ? _zz_targets_1_bestRequest_priority : _zz_targets_1_bestRequest_priority_1);
-  assign _zz_targets_1_bestRequest_valid = (_zz_targets_1_bestRequest_id_80 ? _zz_targets_1_bestRequest_id_73 : _zz_targets_1_bestRequest_id_75);
-  assign _zz_targets_1_bestRequest_id_81 = ((! _zz_targets_1_bestRequest_id_79) || (_zz_targets_1_bestRequest_id_77 && (_zz_targets_1_bestRequest_priority_3 <= _zz_targets_1_bestRequest_priority_2)));
-  assign _zz_targets_1_bestRequest_priority_5 = (_zz_targets_1_bestRequest_id_81 ? _zz_targets_1_bestRequest_priority_2 : _zz_targets_1_bestRequest_priority_3);
-  assign _zz_targets_1_bestRequest_valid_1 = (_zz_targets_1_bestRequest_id_81 ? _zz_targets_1_bestRequest_id_77 : _zz_targets_1_bestRequest_id_79);
-  assign _zz_targets_1_bestRequest_priority_6 = ((! _zz_targets_1_bestRequest_valid_1) || (_zz_targets_1_bestRequest_valid && (_zz_targets_1_bestRequest_priority_5 <= _zz_targets_1_bestRequest_priority_4)));
-  assign targets_1_iep = (targets_1_threshold < targets_1_bestRequest_priority);
-  assign targets_1_claim = (targets_1_iep ? targets_1_bestRequest_id : 5'h00);
-  assign io_targets = {targets_1_iep,targets_0_iep};
-  assign bus_readErrorFlag = 1'b0;
-  assign bus_writeErrorFlag = 1'b0;
-  always @(*) begin
-    bus_readHaltRequest = 1'b0;
-    if(when_PlicMapper_l122) begin
-      bus_readHaltRequest = 1'b1;
-    end
-  end
-
-  assign bus_writeHaltRequest = 1'b0;
-  assign bus_writeOccur = (bus_writeJoinEvent_valid && bus_writeJoinEvent_ready);
-  assign bus_writeJoinEvent_valid = (io_bus_aw_valid && io_bus_w_valid);
-  assign io_bus_aw_ready = bus_writeOccur;
-  assign io_bus_w_ready = bus_writeOccur;
-  assign bus_writeJoinEvent_translated_valid = bus_writeJoinEvent_valid;
-  assign bus_writeJoinEvent_ready = bus_writeJoinEvent_translated_ready;
-  assign bus_writeJoinEvent_translated_payload_resp = bus_writeRsp_resp;
-  assign _zz_bus_writeJoinEvent_translated_ready = (! bus_writeHaltRequest);
-  assign bus_writeJoinEvent_translated_ready = (_zz_bus_writeJoinEvent_translated_ready_1 && _zz_bus_writeJoinEvent_translated_ready);
-  assign _zz_bus_writeJoinEvent_translated_ready_1 = (! _zz_io_bus_b_valid_1);
-  assign _zz_io_bus_b_valid = _zz_io_bus_b_valid_1;
-  assign io_bus_b_valid = _zz_io_bus_b_valid;
-  assign io_bus_b_payload_resp = _zz_io_bus_b_payload_resp;
-  assign bus_readDataStage_fire = (bus_readDataStage_valid && bus_readDataStage_ready);
-  assign io_bus_ar_ready = (! io_bus_ar_rValid);
-  assign bus_readDataStage_valid = io_bus_ar_rValid;
-  assign bus_readDataStage_payload_addr = io_bus_ar_rData_addr;
-  assign bus_readDataStage_payload_prot = io_bus_ar_rData_prot;
-  assign _zz_io_bus_r_valid = (! bus_readHaltRequest);
-  assign bus_readDataStage_ready = (io_bus_r_ready && _zz_io_bus_r_valid);
-  assign io_bus_r_valid = (bus_readDataStage_valid && _zz_io_bus_r_valid);
-  assign io_bus_r_payload_data = bus_readRsp_data;
-  assign io_bus_r_payload_resp = bus_readRsp_resp;
-  always @(*) begin
-    if(bus_writeErrorFlag) begin
-      bus_writeRsp_resp = 2'b10;
-    end else begin
-      bus_writeRsp_resp = 2'b00;
-    end
-  end
-
-  always @(*) begin
-    if(bus_readErrorFlag) begin
-      bus_readRsp_resp = 2'b10;
-    end else begin
-      bus_readRsp_resp = 2'b00;
-    end
-  end
-
-  always @(*) begin
-    bus_readRsp_data = 32'h00000000;
-    case(bus_readAddressMasked)
-      22'h000004 : begin
-        bus_readRsp_data[1 : 0] = gateways_0_priority;
-      end
-      22'h001000 : begin
-        bus_readRsp_data[1 : 1] = gateways_0_ip;
-        bus_readRsp_data[2 : 2] = gateways_1_ip;
-        bus_readRsp_data[3 : 3] = gateways_2_ip;
-        bus_readRsp_data[4 : 4] = gateways_3_ip;
-        bus_readRsp_data[5 : 5] = gateways_4_ip;
-        bus_readRsp_data[6 : 6] = gateways_5_ip;
-        bus_readRsp_data[7 : 7] = gateways_6_ip;
-        bus_readRsp_data[8 : 8] = gateways_7_ip;
-        bus_readRsp_data[9 : 9] = gateways_8_ip;
-        bus_readRsp_data[10 : 10] = gateways_9_ip;
-        bus_readRsp_data[11 : 11] = gateways_10_ip;
-        bus_readRsp_data[12 : 12] = gateways_11_ip;
-        bus_readRsp_data[13 : 13] = gateways_12_ip;
-        bus_readRsp_data[14 : 14] = gateways_13_ip;
-        bus_readRsp_data[15 : 15] = gateways_14_ip;
-        bus_readRsp_data[16 : 16] = gateways_15_ip;
-        bus_readRsp_data[17 : 17] = gateways_16_ip;
-        bus_readRsp_data[18 : 18] = gateways_17_ip;
-        bus_readRsp_data[19 : 19] = gateways_18_ip;
-        bus_readRsp_data[20 : 20] = gateways_19_ip;
-        bus_readRsp_data[21 : 21] = gateways_20_ip;
-        bus_readRsp_data[22 : 22] = gateways_21_ip;
-        bus_readRsp_data[23 : 23] = gateways_22_ip;
-        bus_readRsp_data[24 : 24] = gateways_23_ip;
-        bus_readRsp_data[25 : 25] = gateways_24_ip;
-        bus_readRsp_data[26 : 26] = gateways_25_ip;
-        bus_readRsp_data[27 : 27] = gateways_26_ip;
-        bus_readRsp_data[28 : 28] = gateways_27_ip;
-        bus_readRsp_data[29 : 29] = gateways_28_ip;
-        bus_readRsp_data[30 : 30] = gateways_29_ip;
-        bus_readRsp_data[31 : 31] = gateways_30_ip;
-      end
-      22'h000008 : begin
-        bus_readRsp_data[1 : 0] = gateways_1_priority;
-      end
-      22'h00000c : begin
-        bus_readRsp_data[1 : 0] = gateways_2_priority;
-      end
-      22'h000010 : begin
-        bus_readRsp_data[1 : 0] = gateways_3_priority;
-      end
-      22'h000014 : begin
-        bus_readRsp_data[1 : 0] = gateways_4_priority;
-      end
-      22'h000018 : begin
-        bus_readRsp_data[1 : 0] = gateways_5_priority;
-      end
-      22'h00001c : begin
-        bus_readRsp_data[1 : 0] = gateways_6_priority;
-      end
-      22'h000020 : begin
-        bus_readRsp_data[1 : 0] = gateways_7_priority;
-      end
-      22'h000024 : begin
-        bus_readRsp_data[1 : 0] = gateways_8_priority;
-      end
-      22'h000028 : begin
-        bus_readRsp_data[1 : 0] = gateways_9_priority;
-      end
-      22'h00002c : begin
-        bus_readRsp_data[1 : 0] = gateways_10_priority;
-      end
-      22'h000030 : begin
-        bus_readRsp_data[1 : 0] = gateways_11_priority;
-      end
-      22'h000034 : begin
-        bus_readRsp_data[1 : 0] = gateways_12_priority;
-      end
-      22'h000038 : begin
-        bus_readRsp_data[1 : 0] = gateways_13_priority;
-      end
-      22'h00003c : begin
-        bus_readRsp_data[1 : 0] = gateways_14_priority;
-      end
-      22'h000040 : begin
-        bus_readRsp_data[1 : 0] = gateways_15_priority;
-      end
-      22'h000044 : begin
-        bus_readRsp_data[1 : 0] = gateways_16_priority;
-      end
-      22'h000048 : begin
-        bus_readRsp_data[1 : 0] = gateways_17_priority;
-      end
-      22'h00004c : begin
-        bus_readRsp_data[1 : 0] = gateways_18_priority;
-      end
-      22'h000050 : begin
-        bus_readRsp_data[1 : 0] = gateways_19_priority;
-      end
-      22'h000054 : begin
-        bus_readRsp_data[1 : 0] = gateways_20_priority;
-      end
-      22'h000058 : begin
-        bus_readRsp_data[1 : 0] = gateways_21_priority;
-      end
-      22'h00005c : begin
-        bus_readRsp_data[1 : 0] = gateways_22_priority;
-      end
-      22'h000060 : begin
-        bus_readRsp_data[1 : 0] = gateways_23_priority;
-      end
-      22'h000064 : begin
-        bus_readRsp_data[1 : 0] = gateways_24_priority;
-      end
-      22'h000068 : begin
-        bus_readRsp_data[1 : 0] = gateways_25_priority;
-      end
-      22'h00006c : begin
-        bus_readRsp_data[1 : 0] = gateways_26_priority;
-      end
-      22'h000070 : begin
-        bus_readRsp_data[1 : 0] = gateways_27_priority;
-      end
-      22'h000074 : begin
-        bus_readRsp_data[1 : 0] = gateways_28_priority;
-      end
-      22'h000078 : begin
-        bus_readRsp_data[1 : 0] = gateways_29_priority;
-      end
-      22'h00007c : begin
-        bus_readRsp_data[1 : 0] = gateways_30_priority;
-      end
-      22'h200000 : begin
-        bus_readRsp_data[1 : 0] = targets_0_threshold;
-      end
-      22'h200004 : begin
-        bus_readRsp_data[4 : 0] = targets_0_claim;
-      end
-      22'h002000 : begin
-        bus_readRsp_data[1 : 1] = targets_0_ie_0;
-        bus_readRsp_data[2 : 2] = targets_0_ie_1;
-        bus_readRsp_data[3 : 3] = targets_0_ie_2;
-        bus_readRsp_data[4 : 4] = targets_0_ie_3;
-        bus_readRsp_data[5 : 5] = targets_0_ie_4;
-        bus_readRsp_data[6 : 6] = targets_0_ie_5;
-        bus_readRsp_data[7 : 7] = targets_0_ie_6;
-        bus_readRsp_data[8 : 8] = targets_0_ie_7;
-        bus_readRsp_data[9 : 9] = targets_0_ie_8;
-        bus_readRsp_data[10 : 10] = targets_0_ie_9;
-        bus_readRsp_data[11 : 11] = targets_0_ie_10;
-        bus_readRsp_data[12 : 12] = targets_0_ie_11;
-        bus_readRsp_data[13 : 13] = targets_0_ie_12;
-        bus_readRsp_data[14 : 14] = targets_0_ie_13;
-        bus_readRsp_data[15 : 15] = targets_0_ie_14;
-        bus_readRsp_data[16 : 16] = targets_0_ie_15;
-        bus_readRsp_data[17 : 17] = targets_0_ie_16;
-        bus_readRsp_data[18 : 18] = targets_0_ie_17;
-        bus_readRsp_data[19 : 19] = targets_0_ie_18;
-        bus_readRsp_data[20 : 20] = targets_0_ie_19;
-        bus_readRsp_data[21 : 21] = targets_0_ie_20;
-        bus_readRsp_data[22 : 22] = targets_0_ie_21;
-        bus_readRsp_data[23 : 23] = targets_0_ie_22;
-        bus_readRsp_data[24 : 24] = targets_0_ie_23;
-        bus_readRsp_data[25 : 25] = targets_0_ie_24;
-        bus_readRsp_data[26 : 26] = targets_0_ie_25;
-        bus_readRsp_data[27 : 27] = targets_0_ie_26;
-        bus_readRsp_data[28 : 28] = targets_0_ie_27;
-        bus_readRsp_data[29 : 29] = targets_0_ie_28;
-        bus_readRsp_data[30 : 30] = targets_0_ie_29;
-        bus_readRsp_data[31 : 31] = targets_0_ie_30;
-      end
-      22'h201000 : begin
-        bus_readRsp_data[1 : 0] = targets_1_threshold;
-      end
-      22'h201004 : begin
-        bus_readRsp_data[4 : 0] = targets_1_claim;
-      end
-      22'h002080 : begin
-        bus_readRsp_data[1 : 1] = targets_1_ie_0;
-        bus_readRsp_data[2 : 2] = targets_1_ie_1;
-        bus_readRsp_data[3 : 3] = targets_1_ie_2;
-        bus_readRsp_data[4 : 4] = targets_1_ie_3;
-        bus_readRsp_data[5 : 5] = targets_1_ie_4;
-        bus_readRsp_data[6 : 6] = targets_1_ie_5;
-        bus_readRsp_data[7 : 7] = targets_1_ie_6;
-        bus_readRsp_data[8 : 8] = targets_1_ie_7;
-        bus_readRsp_data[9 : 9] = targets_1_ie_8;
-        bus_readRsp_data[10 : 10] = targets_1_ie_9;
-        bus_readRsp_data[11 : 11] = targets_1_ie_10;
-        bus_readRsp_data[12 : 12] = targets_1_ie_11;
-        bus_readRsp_data[13 : 13] = targets_1_ie_12;
-        bus_readRsp_data[14 : 14] = targets_1_ie_13;
-        bus_readRsp_data[15 : 15] = targets_1_ie_14;
-        bus_readRsp_data[16 : 16] = targets_1_ie_15;
-        bus_readRsp_data[17 : 17] = targets_1_ie_16;
-        bus_readRsp_data[18 : 18] = targets_1_ie_17;
-        bus_readRsp_data[19 : 19] = targets_1_ie_18;
-        bus_readRsp_data[20 : 20] = targets_1_ie_19;
-        bus_readRsp_data[21 : 21] = targets_1_ie_20;
-        bus_readRsp_data[22 : 22] = targets_1_ie_21;
-        bus_readRsp_data[23 : 23] = targets_1_ie_22;
-        bus_readRsp_data[24 : 24] = targets_1_ie_23;
-        bus_readRsp_data[25 : 25] = targets_1_ie_24;
-        bus_readRsp_data[26 : 26] = targets_1_ie_25;
-        bus_readRsp_data[27 : 27] = targets_1_ie_26;
-        bus_readRsp_data[28 : 28] = targets_1_ie_27;
-        bus_readRsp_data[29 : 29] = targets_1_ie_28;
-        bus_readRsp_data[30 : 30] = targets_1_ie_29;
-        bus_readRsp_data[31 : 31] = targets_1_ie_30;
-      end
-      default : begin
-      end
-    endcase
-  end
-
-  assign bus_readAddressMasked = (bus_readDataStage_payload_addr & (~ 22'h000003));
-  assign bus_writeAddressMasked = (io_bus_aw_payload_addr & (~ 22'h000003));
-  assign bus_readOccur = (io_bus_r_valid && io_bus_r_ready);
-  assign gateways_0_priority = _zz_gateways_0_priority;
-  assign gateways_1_priority = _zz_gateways_1_priority;
-  assign gateways_2_priority = _zz_gateways_2_priority;
-  assign gateways_3_priority = _zz_gateways_3_priority;
-  assign gateways_4_priority = _zz_gateways_4_priority;
-  assign gateways_5_priority = _zz_gateways_5_priority;
-  assign gateways_6_priority = _zz_gateways_6_priority;
-  assign gateways_7_priority = _zz_gateways_7_priority;
-  assign gateways_8_priority = _zz_gateways_8_priority;
-  assign gateways_9_priority = _zz_gateways_9_priority;
-  assign gateways_10_priority = _zz_gateways_10_priority;
-  assign gateways_11_priority = _zz_gateways_11_priority;
-  assign gateways_12_priority = _zz_gateways_12_priority;
-  assign gateways_13_priority = _zz_gateways_13_priority;
-  assign gateways_14_priority = _zz_gateways_14_priority;
-  assign gateways_15_priority = _zz_gateways_15_priority;
-  assign gateways_16_priority = _zz_gateways_16_priority;
-  assign gateways_17_priority = _zz_gateways_17_priority;
-  assign gateways_18_priority = _zz_gateways_18_priority;
-  assign gateways_19_priority = _zz_gateways_19_priority;
-  assign gateways_20_priority = _zz_gateways_20_priority;
-  assign gateways_21_priority = _zz_gateways_21_priority;
-  assign gateways_22_priority = _zz_gateways_22_priority;
-  assign gateways_23_priority = _zz_gateways_23_priority;
-  assign gateways_24_priority = _zz_gateways_24_priority;
-  assign gateways_25_priority = _zz_gateways_25_priority;
-  assign gateways_26_priority = _zz_gateways_26_priority;
-  assign gateways_27_priority = _zz_gateways_27_priority;
-  assign gateways_28_priority = _zz_gateways_28_priority;
-  assign gateways_29_priority = _zz_gateways_29_priority;
-  assign gateways_30_priority = _zz_gateways_30_priority;
-  always @(*) begin
-    mapping_claim_valid = 1'b0;
-    case(bus_readAddressMasked)
-      22'h200004 : begin
-        if(bus_readOccur) begin
-          mapping_claim_valid = 1'b1;
-        end
-      end
-      22'h201004 : begin
-        if(bus_readOccur) begin
-          mapping_claim_valid = 1'b1;
-        end
-      end
-      default : begin
-      end
-    endcase
-  end
-
-  always @(*) begin
-    mapping_claim_payload = 5'bxxxxx;
-    case(bus_readAddressMasked)
-      22'h200004 : begin
-        if(bus_readOccur) begin
-          mapping_claim_payload = targets_0_claim;
-        end
-      end
-      22'h201004 : begin
-        if(bus_readOccur) begin
-          mapping_claim_payload = targets_1_claim;
-        end
-      end
-      default : begin
-      end
-    endcase
-  end
-
-  always @(*) begin
-    mapping_completion_valid = 1'b0;
-    if(mapping_targetMapping_0_targetCompletion_valid) begin
-      mapping_completion_valid = 1'b1;
-    end
-    if(mapping_targetMapping_1_targetCompletion_valid) begin
-      mapping_completion_valid = 1'b1;
-    end
-  end
-
-  always @(*) begin
-    mapping_completion_payload = 5'bxxxxx;
-    if(mapping_targetMapping_0_targetCompletion_valid) begin
-      mapping_completion_payload = mapping_targetMapping_0_targetCompletion_payload;
-    end
-    if(mapping_targetMapping_1_targetCompletion_valid) begin
-      mapping_completion_payload = mapping_targetMapping_1_targetCompletion_payload;
-    end
-  end
-
-  always @(*) begin
-    mapping_coherencyStall_willIncrement = 1'b0;
-    if(when_PlicMapper_l122) begin
-      mapping_coherencyStall_willIncrement = 1'b1;
-    end
-    if(when_AxiLite4SlaveFactory_l68) begin
-      if(bus_writeJoinEvent_valid) begin
-        mapping_coherencyStall_willIncrement = 1'b1;
-      end
-    end
-    if(when_AxiLite4SlaveFactory_l86) begin
-      if(bus_readDataStage_valid) begin
-        mapping_coherencyStall_willIncrement = 1'b1;
-      end
-    end
-  end
-
-  assign mapping_coherencyStall_willClear = 1'b0;
-  assign mapping_coherencyStall_willOverflowIfInc = (mapping_coherencyStall_value == 1'b1);
-  assign mapping_coherencyStall_willOverflow = (mapping_coherencyStall_willOverflowIfInc && mapping_coherencyStall_willIncrement);
-  always @(*) begin
-    mapping_coherencyStall_valueNext = (mapping_coherencyStall_value + mapping_coherencyStall_willIncrement);
-    if(mapping_coherencyStall_willClear) begin
-      mapping_coherencyStall_valueNext = 1'b0;
-    end
-  end
-
-  assign when_PlicMapper_l122 = (mapping_coherencyStall_value != 1'b0);
-  assign targets_0_threshold = _zz_targets_0_threshold;
-  always @(*) begin
-    mapping_targetMapping_0_targetCompletion_valid = 1'b0;
-    case(bus_writeAddressMasked)
-      22'h200004 : begin
-        if(bus_writeOccur) begin
-          mapping_targetMapping_0_targetCompletion_valid = 1'b1;
-        end
-      end
-      default : begin
-      end
-    endcase
-  end
-
-  assign targets_0_ie_0 = _zz_targets_0_ie_0;
-  assign targets_0_ie_1 = _zz_targets_0_ie_1;
-  assign targets_0_ie_2 = _zz_targets_0_ie_2;
-  assign targets_0_ie_3 = _zz_targets_0_ie_3;
-  assign targets_0_ie_4 = _zz_targets_0_ie_4;
-  assign targets_0_ie_5 = _zz_targets_0_ie_5;
-  assign targets_0_ie_6 = _zz_targets_0_ie_6;
-  assign targets_0_ie_7 = _zz_targets_0_ie_7;
-  assign targets_0_ie_8 = _zz_targets_0_ie_8;
-  assign targets_0_ie_9 = _zz_targets_0_ie_9;
-  assign targets_0_ie_10 = _zz_targets_0_ie_10;
-  assign targets_0_ie_11 = _zz_targets_0_ie_11;
-  assign targets_0_ie_12 = _zz_targets_0_ie_12;
-  assign targets_0_ie_13 = _zz_targets_0_ie_13;
-  assign targets_0_ie_14 = _zz_targets_0_ie_14;
-  assign targets_0_ie_15 = _zz_targets_0_ie_15;
-  assign targets_0_ie_16 = _zz_targets_0_ie_16;
-  assign targets_0_ie_17 = _zz_targets_0_ie_17;
-  assign targets_0_ie_18 = _zz_targets_0_ie_18;
-  assign targets_0_ie_19 = _zz_targets_0_ie_19;
-  assign targets_0_ie_20 = _zz_targets_0_ie_20;
-  assign targets_0_ie_21 = _zz_targets_0_ie_21;
-  assign targets_0_ie_22 = _zz_targets_0_ie_22;
-  assign targets_0_ie_23 = _zz_targets_0_ie_23;
-  assign targets_0_ie_24 = _zz_targets_0_ie_24;
-  assign targets_0_ie_25 = _zz_targets_0_ie_25;
-  assign targets_0_ie_26 = _zz_targets_0_ie_26;
-  assign targets_0_ie_27 = _zz_targets_0_ie_27;
-  assign targets_0_ie_28 = _zz_targets_0_ie_28;
-  assign targets_0_ie_29 = _zz_targets_0_ie_29;
-  assign targets_0_ie_30 = _zz_targets_0_ie_30;
-  assign targets_1_threshold = _zz_targets_1_threshold;
-  always @(*) begin
-    mapping_targetMapping_1_targetCompletion_valid = 1'b0;
-    case(bus_writeAddressMasked)
-      22'h201004 : begin
-        if(bus_writeOccur) begin
-          mapping_targetMapping_1_targetCompletion_valid = 1'b1;
-        end
-      end
-      default : begin
-      end
-    endcase
-  end
-
-  assign targets_1_ie_0 = _zz_targets_1_ie_0;
-  assign targets_1_ie_1 = _zz_targets_1_ie_1;
-  assign targets_1_ie_2 = _zz_targets_1_ie_2;
-  assign targets_1_ie_3 = _zz_targets_1_ie_3;
-  assign targets_1_ie_4 = _zz_targets_1_ie_4;
-  assign targets_1_ie_5 = _zz_targets_1_ie_5;
-  assign targets_1_ie_6 = _zz_targets_1_ie_6;
-  assign targets_1_ie_7 = _zz_targets_1_ie_7;
-  assign targets_1_ie_8 = _zz_targets_1_ie_8;
-  assign targets_1_ie_9 = _zz_targets_1_ie_9;
-  assign targets_1_ie_10 = _zz_targets_1_ie_10;
-  assign targets_1_ie_11 = _zz_targets_1_ie_11;
-  assign targets_1_ie_12 = _zz_targets_1_ie_12;
-  assign targets_1_ie_13 = _zz_targets_1_ie_13;
-  assign targets_1_ie_14 = _zz_targets_1_ie_14;
-  assign targets_1_ie_15 = _zz_targets_1_ie_15;
-  assign targets_1_ie_16 = _zz_targets_1_ie_16;
-  assign targets_1_ie_17 = _zz_targets_1_ie_17;
-  assign targets_1_ie_18 = _zz_targets_1_ie_18;
-  assign targets_1_ie_19 = _zz_targets_1_ie_19;
-  assign targets_1_ie_20 = _zz_targets_1_ie_20;
-  assign targets_1_ie_21 = _zz_targets_1_ie_21;
-  assign targets_1_ie_22 = _zz_targets_1_ie_22;
-  assign targets_1_ie_23 = _zz_targets_1_ie_23;
-  assign targets_1_ie_24 = _zz_targets_1_ie_24;
-  assign targets_1_ie_25 = _zz_targets_1_ie_25;
-  assign targets_1_ie_26 = _zz_targets_1_ie_26;
-  assign targets_1_ie_27 = _zz_targets_1_ie_27;
-  assign targets_1_ie_28 = _zz_targets_1_ie_28;
-  assign targets_1_ie_29 = _zz_targets_1_ie_29;
-  assign targets_1_ie_30 = _zz_targets_1_ie_30;
-  assign mapping_targetMapping_0_targetCompletion_payload = io_bus_w_payload_data[4 : 0];
-  assign mapping_targetMapping_1_targetCompletion_payload = io_bus_w_payload_data[4 : 0];
-  assign when_AxiLite4SlaveFactory_l68 = 1'b1;
-  assign when_AxiLite4SlaveFactory_l86 = 1'b1;
-  always @(posedge clk or posedge reset) begin
-    if(reset) begin
-      gateways_0_ip <= 1'b0;
-      gateways_0_waitCompletion <= 1'b0;
-      gateways_1_ip <= 1'b0;
-      gateways_1_waitCompletion <= 1'b0;
-      gateways_2_ip <= 1'b0;
-      gateways_2_waitCompletion <= 1'b0;
-      gateways_3_ip <= 1'b0;
-      gateways_3_waitCompletion <= 1'b0;
-      gateways_4_ip <= 1'b0;
-      gateways_4_waitCompletion <= 1'b0;
-      gateways_5_ip <= 1'b0;
-      gateways_5_waitCompletion <= 1'b0;
-      gateways_6_ip <= 1'b0;
-      gateways_6_waitCompletion <= 1'b0;
-      gateways_7_ip <= 1'b0;
-      gateways_7_waitCompletion <= 1'b0;
-      gateways_8_ip <= 1'b0;
-      gateways_8_waitCompletion <= 1'b0;
-      gateways_9_ip <= 1'b0;
-      gateways_9_waitCompletion <= 1'b0;
-      gateways_10_ip <= 1'b0;
-      gateways_10_waitCompletion <= 1'b0;
-      gateways_11_ip <= 1'b0;
-      gateways_11_waitCompletion <= 1'b0;
-      gateways_12_ip <= 1'b0;
-      gateways_12_waitCompletion <= 1'b0;
-      gateways_13_ip <= 1'b0;
-      gateways_13_waitCompletion <= 1'b0;
-      gateways_14_ip <= 1'b0;
-      gateways_14_waitCompletion <= 1'b0;
-      gateways_15_ip <= 1'b0;
-      gateways_15_waitCompletion <= 1'b0;
-      gateways_16_ip <= 1'b0;
-      gateways_16_waitCompletion <= 1'b0;
-      gateways_17_ip <= 1'b0;
-      gateways_17_waitCompletion <= 1'b0;
-      gateways_18_ip <= 1'b0;
-      gateways_18_waitCompletion <= 1'b0;
-      gateways_19_ip <= 1'b0;
-      gateways_19_waitCompletion <= 1'b0;
-      gateways_20_ip <= 1'b0;
-      gateways_20_waitCompletion <= 1'b0;
-      gateways_21_ip <= 1'b0;
-      gateways_21_waitCompletion <= 1'b0;
-      gateways_22_ip <= 1'b0;
-      gateways_22_waitCompletion <= 1'b0;
-      gateways_23_ip <= 1'b0;
-      gateways_23_waitCompletion <= 1'b0;
-      gateways_24_ip <= 1'b0;
-      gateways_24_waitCompletion <= 1'b0;
-      gateways_25_ip <= 1'b0;
-      gateways_25_waitCompletion <= 1'b0;
-      gateways_26_ip <= 1'b0;
-      gateways_26_waitCompletion <= 1'b0;
-      gateways_27_ip <= 1'b0;
-      gateways_27_waitCompletion <= 1'b0;
-      gateways_28_ip <= 1'b0;
-      gateways_28_waitCompletion <= 1'b0;
-      gateways_29_ip <= 1'b0;
-      gateways_29_waitCompletion <= 1'b0;
-      gateways_30_ip <= 1'b0;
-      gateways_30_waitCompletion <= 1'b0;
-      _zz_io_bus_b_valid_1 <= 1'b0;
-      io_bus_ar_rValid <= 1'b0;
-      _zz_gateways_0_priority <= 2'b00;
-      _zz_gateways_1_priority <= 2'b00;
-      _zz_gateways_2_priority <= 2'b00;
-      _zz_gateways_3_priority <= 2'b00;
-      _zz_gateways_4_priority <= 2'b00;
-      _zz_gateways_5_priority <= 2'b00;
-      _zz_gateways_6_priority <= 2'b00;
-      _zz_gateways_7_priority <= 2'b00;
-      _zz_gateways_8_priority <= 2'b00;
-      _zz_gateways_9_priority <= 2'b00;
-      _zz_gateways_10_priority <= 2'b00;
-      _zz_gateways_11_priority <= 2'b00;
-      _zz_gateways_12_priority <= 2'b00;
-      _zz_gateways_13_priority <= 2'b00;
-      _zz_gateways_14_priority <= 2'b00;
-      _zz_gateways_15_priority <= 2'b00;
-      _zz_gateways_16_priority <= 2'b00;
-      _zz_gateways_17_priority <= 2'b00;
-      _zz_gateways_18_priority <= 2'b00;
-      _zz_gateways_19_priority <= 2'b00;
-      _zz_gateways_20_priority <= 2'b00;
-      _zz_gateways_21_priority <= 2'b00;
-      _zz_gateways_22_priority <= 2'b00;
-      _zz_gateways_23_priority <= 2'b00;
-      _zz_gateways_24_priority <= 2'b00;
-      _zz_gateways_25_priority <= 2'b00;
-      _zz_gateways_26_priority <= 2'b00;
-      _zz_gateways_27_priority <= 2'b00;
-      _zz_gateways_28_priority <= 2'b00;
-      _zz_gateways_29_priority <= 2'b00;
-      _zz_gateways_30_priority <= 2'b00;
-      mapping_coherencyStall_value <= 1'b0;
-      _zz_targets_0_threshold <= 2'b00;
-      _zz_targets_0_ie_0 <= 1'b0;
-      _zz_targets_0_ie_1 <= 1'b0;
-      _zz_targets_0_ie_2 <= 1'b0;
-      _zz_targets_0_ie_3 <= 1'b0;
-      _zz_targets_0_ie_4 <= 1'b0;
-      _zz_targets_0_ie_5 <= 1'b0;
-      _zz_targets_0_ie_6 <= 1'b0;
-      _zz_targets_0_ie_7 <= 1'b0;
-      _zz_targets_0_ie_8 <= 1'b0;
-      _zz_targets_0_ie_9 <= 1'b0;
-      _zz_targets_0_ie_10 <= 1'b0;
-      _zz_targets_0_ie_11 <= 1'b0;
-      _zz_targets_0_ie_12 <= 1'b0;
-      _zz_targets_0_ie_13 <= 1'b0;
-      _zz_targets_0_ie_14 <= 1'b0;
-      _zz_targets_0_ie_15 <= 1'b0;
-      _zz_targets_0_ie_16 <= 1'b0;
-      _zz_targets_0_ie_17 <= 1'b0;
-      _zz_targets_0_ie_18 <= 1'b0;
-      _zz_targets_0_ie_19 <= 1'b0;
-      _zz_targets_0_ie_20 <= 1'b0;
-      _zz_targets_0_ie_21 <= 1'b0;
-      _zz_targets_0_ie_22 <= 1'b0;
-      _zz_targets_0_ie_23 <= 1'b0;
-      _zz_targets_0_ie_24 <= 1'b0;
-      _zz_targets_0_ie_25 <= 1'b0;
-      _zz_targets_0_ie_26 <= 1'b0;
-      _zz_targets_0_ie_27 <= 1'b0;
-      _zz_targets_0_ie_28 <= 1'b0;
-      _zz_targets_0_ie_29 <= 1'b0;
-      _zz_targets_0_ie_30 <= 1'b0;
-      _zz_targets_1_threshold <= 2'b00;
-      _zz_targets_1_ie_0 <= 1'b0;
-      _zz_targets_1_ie_1 <= 1'b0;
-      _zz_targets_1_ie_2 <= 1'b0;
-      _zz_targets_1_ie_3 <= 1'b0;
-      _zz_targets_1_ie_4 <= 1'b0;
-      _zz_targets_1_ie_5 <= 1'b0;
-      _zz_targets_1_ie_6 <= 1'b0;
-      _zz_targets_1_ie_7 <= 1'b0;
-      _zz_targets_1_ie_8 <= 1'b0;
-      _zz_targets_1_ie_9 <= 1'b0;
-      _zz_targets_1_ie_10 <= 1'b0;
-      _zz_targets_1_ie_11 <= 1'b0;
-      _zz_targets_1_ie_12 <= 1'b0;
-      _zz_targets_1_ie_13 <= 1'b0;
-      _zz_targets_1_ie_14 <= 1'b0;
-      _zz_targets_1_ie_15 <= 1'b0;
-      _zz_targets_1_ie_16 <= 1'b0;
-      _zz_targets_1_ie_17 <= 1'b0;
-      _zz_targets_1_ie_18 <= 1'b0;
-      _zz_targets_1_ie_19 <= 1'b0;
-      _zz_targets_1_ie_20 <= 1'b0;
-      _zz_targets_1_ie_21 <= 1'b0;
-      _zz_targets_1_ie_22 <= 1'b0;
-      _zz_targets_1_ie_23 <= 1'b0;
-      _zz_targets_1_ie_24 <= 1'b0;
-      _zz_targets_1_ie_25 <= 1'b0;
-      _zz_targets_1_ie_26 <= 1'b0;
-      _zz_targets_1_ie_27 <= 1'b0;
-      _zz_targets_1_ie_28 <= 1'b0;
-      _zz_targets_1_ie_29 <= 1'b0;
-      _zz_targets_1_ie_30 <= 1'b0;
-    end else begin
-      if(when_PlicGateway_l21) begin
-        gateways_0_ip <= _zz_gateways_0_ip;
-        gateways_0_waitCompletion <= _zz_gateways_0_ip;
-      end
-      if(when_PlicGateway_l21_1) begin
-        gateways_1_ip <= _zz_gateways_1_ip;
-        gateways_1_waitCompletion <= _zz_gateways_1_ip;
-      end
-      if(when_PlicGateway_l21_2) begin
-        gateways_2_ip <= _zz_gateways_2_ip;
-        gateways_2_waitCompletion <= _zz_gateways_2_ip;
-      end
-      if(when_PlicGateway_l21_3) begin
-        gateways_3_ip <= _zz_gateways_3_ip;
-        gateways_3_waitCompletion <= _zz_gateways_3_ip;
-      end
-      if(when_PlicGateway_l21_4) begin
-        gateways_4_ip <= _zz_gateways_4_ip;
-        gateways_4_waitCompletion <= _zz_gateways_4_ip;
-      end
-      if(when_PlicGateway_l21_5) begin
-        gateways_5_ip <= _zz_gateways_5_ip;
-        gateways_5_waitCompletion <= _zz_gateways_5_ip;
-      end
-      if(when_PlicGateway_l21_6) begin
-        gateways_6_ip <= _zz_gateways_6_ip;
-        gateways_6_waitCompletion <= _zz_gateways_6_ip;
-      end
-      if(when_PlicGateway_l21_7) begin
-        gateways_7_ip <= _zz_gateways_7_ip;
-        gateways_7_waitCompletion <= _zz_gateways_7_ip;
-      end
-      if(when_PlicGateway_l21_8) begin
-        gateways_8_ip <= _zz_gateways_8_ip;
-        gateways_8_waitCompletion <= _zz_gateways_8_ip;
-      end
-      if(when_PlicGateway_l21_9) begin
-        gateways_9_ip <= _zz_gateways_9_ip;
-        gateways_9_waitCompletion <= _zz_gateways_9_ip;
-      end
-      if(when_PlicGateway_l21_10) begin
-        gateways_10_ip <= _zz_gateways_10_ip;
-        gateways_10_waitCompletion <= _zz_gateways_10_ip;
-      end
-      if(when_PlicGateway_l21_11) begin
-        gateways_11_ip <= _zz_gateways_11_ip;
-        gateways_11_waitCompletion <= _zz_gateways_11_ip;
-      end
-      if(when_PlicGateway_l21_12) begin
-        gateways_12_ip <= _zz_gateways_12_ip;
-        gateways_12_waitCompletion <= _zz_gateways_12_ip;
-      end
-      if(when_PlicGateway_l21_13) begin
-        gateways_13_ip <= _zz_gateways_13_ip;
-        gateways_13_waitCompletion <= _zz_gateways_13_ip;
-      end
-      if(when_PlicGateway_l21_14) begin
-        gateways_14_ip <= _zz_gateways_14_ip;
-        gateways_14_waitCompletion <= _zz_gateways_14_ip;
-      end
-      if(when_PlicGateway_l21_15) begin
-        gateways_15_ip <= _zz_gateways_15_ip;
-        gateways_15_waitCompletion <= _zz_gateways_15_ip;
-      end
-      if(when_PlicGateway_l21_16) begin
-        gateways_16_ip <= _zz_gateways_16_ip;
-        gateways_16_waitCompletion <= _zz_gateways_16_ip;
-      end
-      if(when_PlicGateway_l21_17) begin
-        gateways_17_ip <= _zz_gateways_17_ip;
-        gateways_17_waitCompletion <= _zz_gateways_17_ip;
-      end
-      if(when_PlicGateway_l21_18) begin
-        gateways_18_ip <= _zz_gateways_18_ip;
-        gateways_18_waitCompletion <= _zz_gateways_18_ip;
-      end
-      if(when_PlicGateway_l21_19) begin
-        gateways_19_ip <= _zz_gateways_19_ip;
-        gateways_19_waitCompletion <= _zz_gateways_19_ip;
-      end
-      if(when_PlicGateway_l21_20) begin
-        gateways_20_ip <= _zz_gateways_20_ip;
-        gateways_20_waitCompletion <= _zz_gateways_20_ip;
-      end
-      if(when_PlicGateway_l21_21) begin
-        gateways_21_ip <= _zz_gateways_21_ip;
-        gateways_21_waitCompletion <= _zz_gateways_21_ip;
-      end
-      if(when_PlicGateway_l21_22) begin
-        gateways_22_ip <= _zz_gateways_22_ip;
-        gateways_22_waitCompletion <= _zz_gateways_22_ip;
-      end
-      if(when_PlicGateway_l21_23) begin
-        gateways_23_ip <= _zz_gateways_23_ip;
-        gateways_23_waitCompletion <= _zz_gateways_23_ip;
-      end
-      if(when_PlicGateway_l21_24) begin
-        gateways_24_ip <= _zz_gateways_24_ip;
-        gateways_24_waitCompletion <= _zz_gateways_24_ip;
-      end
-      if(when_PlicGateway_l21_25) begin
-        gateways_25_ip <= _zz_gateways_25_ip;
-        gateways_25_waitCompletion <= _zz_gateways_25_ip;
-      end
-      if(when_PlicGateway_l21_26) begin
-        gateways_26_ip <= _zz_gateways_26_ip;
-        gateways_26_waitCompletion <= _zz_gateways_26_ip;
-      end
-      if(when_PlicGateway_l21_27) begin
-        gateways_27_ip <= _zz_gateways_27_ip;
-        gateways_27_waitCompletion <= _zz_gateways_27_ip;
-      end
-      if(when_PlicGateway_l21_28) begin
-        gateways_28_ip <= _zz_gateways_28_ip;
-        gateways_28_waitCompletion <= _zz_gateways_28_ip;
-      end
-      if(when_PlicGateway_l21_29) begin
-        gateways_29_ip <= _zz_gateways_29_ip;
-        gateways_29_waitCompletion <= _zz_gateways_29_ip;
-      end
-      if(when_PlicGateway_l21_30) begin
-        gateways_30_ip <= _zz_gateways_30_ip;
-        gateways_30_waitCompletion <= _zz_gateways_30_ip;
-      end
-      if((bus_writeJoinEvent_translated_valid && _zz_bus_writeJoinEvent_translated_ready)) begin
-        _zz_io_bus_b_valid_1 <= 1'b1;
-      end
-      if((_zz_io_bus_b_valid && io_bus_b_ready)) begin
-        _zz_io_bus_b_valid_1 <= 1'b0;
-      end
-      if(io_bus_ar_valid) begin
-        io_bus_ar_rValid <= 1'b1;
-      end
-      if(bus_readDataStage_fire) begin
-        io_bus_ar_rValid <= 1'b0;
-      end
-      if(mapping_claim_valid) begin
-        case(mapping_claim_payload)
-          5'h01 : begin
-            gateways_0_ip <= 1'b0;
-          end
-          5'h02 : begin
-            gateways_1_ip <= 1'b0;
-          end
-          5'h03 : begin
-            gateways_2_ip <= 1'b0;
-          end
-          5'h04 : begin
-            gateways_3_ip <= 1'b0;
-          end
-          5'h05 : begin
-            gateways_4_ip <= 1'b0;
-          end
-          5'h06 : begin
-            gateways_5_ip <= 1'b0;
-          end
-          5'h07 : begin
-            gateways_6_ip <= 1'b0;
-          end
-          5'h08 : begin
-            gateways_7_ip <= 1'b0;
-          end
-          5'h09 : begin
-            gateways_8_ip <= 1'b0;
-          end
-          5'h0a : begin
-            gateways_9_ip <= 1'b0;
-          end
-          5'h0b : begin
-            gateways_10_ip <= 1'b0;
-          end
-          5'h0c : begin
-            gateways_11_ip <= 1'b0;
-          end
-          5'h0d : begin
-            gateways_12_ip <= 1'b0;
-          end
-          5'h0e : begin
-            gateways_13_ip <= 1'b0;
-          end
-          5'h0f : begin
-            gateways_14_ip <= 1'b0;
-          end
-          5'h10 : begin
-            gateways_15_ip <= 1'b0;
-          end
-          5'h11 : begin
-            gateways_16_ip <= 1'b0;
-          end
-          5'h12 : begin
-            gateways_17_ip <= 1'b0;
-          end
-          5'h13 : begin
-            gateways_18_ip <= 1'b0;
-          end
-          5'h14 : begin
-            gateways_19_ip <= 1'b0;
-          end
-          5'h15 : begin
-            gateways_20_ip <= 1'b0;
-          end
-          5'h16 : begin
-            gateways_21_ip <= 1'b0;
-          end
-          5'h17 : begin
-            gateways_22_ip <= 1'b0;
-          end
-          5'h18 : begin
-            gateways_23_ip <= 1'b0;
-          end
-          5'h19 : begin
-            gateways_24_ip <= 1'b0;
-          end
-          5'h1a : begin
-            gateways_25_ip <= 1'b0;
-          end
-          5'h1b : begin
-            gateways_26_ip <= 1'b0;
-          end
-          5'h1c : begin
-            gateways_27_ip <= 1'b0;
-          end
-          5'h1d : begin
-            gateways_28_ip <= 1'b0;
-          end
-          5'h1e : begin
-            gateways_29_ip <= 1'b0;
-          end
-          5'h1f : begin
-            gateways_30_ip <= 1'b0;
-          end
-          default : begin
-          end
-        endcase
-      end
-      if(mapping_completion_valid) begin
-        case(mapping_completion_payload)
-          5'h01 : begin
-            gateways_0_waitCompletion <= 1'b0;
-          end
-          5'h02 : begin
-            gateways_1_waitCompletion <= 1'b0;
-          end
-          5'h03 : begin
-            gateways_2_waitCompletion <= 1'b0;
-          end
-          5'h04 : begin
-            gateways_3_waitCompletion <= 1'b0;
-          end
-          5'h05 : begin
-            gateways_4_waitCompletion <= 1'b0;
-          end
-          5'h06 : begin
-            gateways_5_waitCompletion <= 1'b0;
-          end
-          5'h07 : begin
-            gateways_6_waitCompletion <= 1'b0;
-          end
-          5'h08 : begin
-            gateways_7_waitCompletion <= 1'b0;
-          end
-          5'h09 : begin
-            gateways_8_waitCompletion <= 1'b0;
-          end
-          5'h0a : begin
-            gateways_9_waitCompletion <= 1'b0;
-          end
-          5'h0b : begin
-            gateways_10_waitCompletion <= 1'b0;
-          end
-          5'h0c : begin
-            gateways_11_waitCompletion <= 1'b0;
-          end
-          5'h0d : begin
-            gateways_12_waitCompletion <= 1'b0;
-          end
-          5'h0e : begin
-            gateways_13_waitCompletion <= 1'b0;
-          end
-          5'h0f : begin
-            gateways_14_waitCompletion <= 1'b0;
-          end
-          5'h10 : begin
-            gateways_15_waitCompletion <= 1'b0;
-          end
-          5'h11 : begin
-            gateways_16_waitCompletion <= 1'b0;
-          end
-          5'h12 : begin
-            gateways_17_waitCompletion <= 1'b0;
-          end
-          5'h13 : begin
-            gateways_18_waitCompletion <= 1'b0;
-          end
-          5'h14 : begin
-            gateways_19_waitCompletion <= 1'b0;
-          end
-          5'h15 : begin
-            gateways_20_waitCompletion <= 1'b0;
-          end
-          5'h16 : begin
-            gateways_21_waitCompletion <= 1'b0;
-          end
-          5'h17 : begin
-            gateways_22_waitCompletion <= 1'b0;
-          end
-          5'h18 : begin
-            gateways_23_waitCompletion <= 1'b0;
-          end
-          5'h19 : begin
-            gateways_24_waitCompletion <= 1'b0;
-          end
-          5'h1a : begin
-            gateways_25_waitCompletion <= 1'b0;
-          end
-          5'h1b : begin
-            gateways_26_waitCompletion <= 1'b0;
-          end
-          5'h1c : begin
-            gateways_27_waitCompletion <= 1'b0;
-          end
-          5'h1d : begin
-            gateways_28_waitCompletion <= 1'b0;
-          end
-          5'h1e : begin
-            gateways_29_waitCompletion <= 1'b0;
-          end
-          5'h1f : begin
-            gateways_30_waitCompletion <= 1'b0;
-          end
-          default : begin
-          end
-        endcase
-      end
-      mapping_coherencyStall_value <= mapping_coherencyStall_valueNext;
-      case(bus_writeAddressMasked)
-        22'h000004 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_0_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000008 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_1_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h00000c : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_2_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000010 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_3_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000014 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_4_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000018 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_5_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h00001c : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_6_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000020 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_7_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000024 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_8_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000028 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_9_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h00002c : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_10_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000030 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_11_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000034 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_12_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000038 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_13_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h00003c : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_14_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000040 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_15_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000044 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_16_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000048 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_17_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h00004c : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_18_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000050 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_19_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000054 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_20_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000058 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_21_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h00005c : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_22_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000060 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_23_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000064 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_24_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000068 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_25_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h00006c : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_26_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000070 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_27_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000074 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_28_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h000078 : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_29_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h00007c : begin
-          if(bus_writeOccur) begin
-            _zz_gateways_30_priority <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h200000 : begin
-          if(bus_writeOccur) begin
-            _zz_targets_0_threshold <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h002000 : begin
-          if(bus_writeOccur) begin
-            _zz_targets_0_ie_0 <= io_bus_w_payload_data[1];
-            _zz_targets_0_ie_1 <= io_bus_w_payload_data[2];
-            _zz_targets_0_ie_2 <= io_bus_w_payload_data[3];
-            _zz_targets_0_ie_3 <= io_bus_w_payload_data[4];
-            _zz_targets_0_ie_4 <= io_bus_w_payload_data[5];
-            _zz_targets_0_ie_5 <= io_bus_w_payload_data[6];
-            _zz_targets_0_ie_6 <= io_bus_w_payload_data[7];
-            _zz_targets_0_ie_7 <= io_bus_w_payload_data[8];
-            _zz_targets_0_ie_8 <= io_bus_w_payload_data[9];
-            _zz_targets_0_ie_9 <= io_bus_w_payload_data[10];
-            _zz_targets_0_ie_10 <= io_bus_w_payload_data[11];
-            _zz_targets_0_ie_11 <= io_bus_w_payload_data[12];
-            _zz_targets_0_ie_12 <= io_bus_w_payload_data[13];
-            _zz_targets_0_ie_13 <= io_bus_w_payload_data[14];
-            _zz_targets_0_ie_14 <= io_bus_w_payload_data[15];
-            _zz_targets_0_ie_15 <= io_bus_w_payload_data[16];
-            _zz_targets_0_ie_16 <= io_bus_w_payload_data[17];
-            _zz_targets_0_ie_17 <= io_bus_w_payload_data[18];
-            _zz_targets_0_ie_18 <= io_bus_w_payload_data[19];
-            _zz_targets_0_ie_19 <= io_bus_w_payload_data[20];
-            _zz_targets_0_ie_20 <= io_bus_w_payload_data[21];
-            _zz_targets_0_ie_21 <= io_bus_w_payload_data[22];
-            _zz_targets_0_ie_22 <= io_bus_w_payload_data[23];
-            _zz_targets_0_ie_23 <= io_bus_w_payload_data[24];
-            _zz_targets_0_ie_24 <= io_bus_w_payload_data[25];
-            _zz_targets_0_ie_25 <= io_bus_w_payload_data[26];
-            _zz_targets_0_ie_26 <= io_bus_w_payload_data[27];
-            _zz_targets_0_ie_27 <= io_bus_w_payload_data[28];
-            _zz_targets_0_ie_28 <= io_bus_w_payload_data[29];
-            _zz_targets_0_ie_29 <= io_bus_w_payload_data[30];
-            _zz_targets_0_ie_30 <= io_bus_w_payload_data[31];
-          end
-        end
-        22'h201000 : begin
-          if(bus_writeOccur) begin
-            _zz_targets_1_threshold <= io_bus_w_payload_data[1 : 0];
-          end
-        end
-        22'h002080 : begin
-          if(bus_writeOccur) begin
-            _zz_targets_1_ie_0 <= io_bus_w_payload_data[1];
-            _zz_targets_1_ie_1 <= io_bus_w_payload_data[2];
-            _zz_targets_1_ie_2 <= io_bus_w_payload_data[3];
-            _zz_targets_1_ie_3 <= io_bus_w_payload_data[4];
-            _zz_targets_1_ie_4 <= io_bus_w_payload_data[5];
-            _zz_targets_1_ie_5 <= io_bus_w_payload_data[6];
-            _zz_targets_1_ie_6 <= io_bus_w_payload_data[7];
-            _zz_targets_1_ie_7 <= io_bus_w_payload_data[8];
-            _zz_targets_1_ie_8 <= io_bus_w_payload_data[9];
-            _zz_targets_1_ie_9 <= io_bus_w_payload_data[10];
-            _zz_targets_1_ie_10 <= io_bus_w_payload_data[11];
-            _zz_targets_1_ie_11 <= io_bus_w_payload_data[12];
-            _zz_targets_1_ie_12 <= io_bus_w_payload_data[13];
-            _zz_targets_1_ie_13 <= io_bus_w_payload_data[14];
-            _zz_targets_1_ie_14 <= io_bus_w_payload_data[15];
-            _zz_targets_1_ie_15 <= io_bus_w_payload_data[16];
-            _zz_targets_1_ie_16 <= io_bus_w_payload_data[17];
-            _zz_targets_1_ie_17 <= io_bus_w_payload_data[18];
-            _zz_targets_1_ie_18 <= io_bus_w_payload_data[19];
-            _zz_targets_1_ie_19 <= io_bus_w_payload_data[20];
-            _zz_targets_1_ie_20 <= io_bus_w_payload_data[21];
-            _zz_targets_1_ie_21 <= io_bus_w_payload_data[22];
-            _zz_targets_1_ie_22 <= io_bus_w_payload_data[23];
-            _zz_targets_1_ie_23 <= io_bus_w_payload_data[24];
-            _zz_targets_1_ie_24 <= io_bus_w_payload_data[25];
-            _zz_targets_1_ie_25 <= io_bus_w_payload_data[26];
-            _zz_targets_1_ie_26 <= io_bus_w_payload_data[27];
-            _zz_targets_1_ie_27 <= io_bus_w_payload_data[28];
-            _zz_targets_1_ie_28 <= io_bus_w_payload_data[29];
-            _zz_targets_1_ie_29 <= io_bus_w_payload_data[30];
-            _zz_targets_1_ie_30 <= io_bus_w_payload_data[31];
-          end
-        end
-        default : begin
-        end
-      endcase
-    end
-  end
-
-  always @(posedge clk) begin
-    targets_0_bestRequest_priority <= (_zz_targets_0_bestRequest_priority_6 ? _zz_targets_0_bestRequest_priority_4 : _zz_targets_0_bestRequest_priority_5);
-    targets_0_bestRequest_id <= (_zz_targets_0_bestRequest_priority_6 ? (_zz_targets_0_bestRequest_id_80 ? (_zz_targets_0_bestRequest_id_72 ? (_zz_targets_0_bestRequest_id_48 ? _zz_targets_0_bestRequest_id_82 : _zz_targets_0_bestRequest_id_83) : (_zz_targets_0_bestRequest_id_51 ? _zz_targets_0_bestRequest_id_84 : _zz_targets_0_bestRequest_id_85)) : (_zz_targets_0_bestRequest_id_74 ? (_zz_targets_0_bestRequest_id_54 ? _zz_targets_0_bestRequest_id_86 : _zz_targets_0_bestRequest_id_87) : (_zz_targets_0_bestRequest_id_57 ? _zz_targets_0_bestRequest_id_88 : _zz_targets_0_bestRequest_id_89))) : (_zz_targets_0_bestRequest_id_81 ? (_zz_targets_0_bestRequest_id_76 ? (_zz_targets_0_bestRequest_id_60 ? _zz_targets_0_bestRequest_id_90 : _zz_targets_0_bestRequest_id_91) : (_zz_targets_0_bestRequest_id_63 ? _zz_targets_0_bestRequest_id_92 : _zz_targets_0_bestRequest_id_93)) : (_zz_targets_0_bestRequest_id_78 ? (_zz_targets_0_bestRequest_id_66 ? _zz_targets_0_bestRequest_id_94 : _zz_targets_0_bestRequest_id_95) : (_zz_targets_0_bestRequest_id_69 ? _zz_targets_0_bestRequest_id_96 : _zz_targets_0_bestRequest_id_97))));
-    targets_0_bestRequest_valid <= (_zz_targets_0_bestRequest_priority_6 ? _zz_targets_0_bestRequest_valid : _zz_targets_0_bestRequest_valid_1);
-    targets_1_bestRequest_priority <= (_zz_targets_1_bestRequest_priority_6 ? _zz_targets_1_bestRequest_priority_4 : _zz_targets_1_bestRequest_priority_5);
-    targets_1_bestRequest_id <= (_zz_targets_1_bestRequest_priority_6 ? (_zz_targets_1_bestRequest_id_80 ? (_zz_targets_1_bestRequest_id_72 ? (_zz_targets_1_bestRequest_id_48 ? _zz_targets_1_bestRequest_id_82 : _zz_targets_1_bestRequest_id_83) : (_zz_targets_1_bestRequest_id_51 ? _zz_targets_1_bestRequest_id_84 : _zz_targets_1_bestRequest_id_85)) : (_zz_targets_1_bestRequest_id_74 ? (_zz_targets_1_bestRequest_id_54 ? _zz_targets_1_bestRequest_id_86 : _zz_targets_1_bestRequest_id_87) : (_zz_targets_1_bestRequest_id_57 ? _zz_targets_1_bestRequest_id_88 : _zz_targets_1_bestRequest_id_89))) : (_zz_targets_1_bestRequest_id_81 ? (_zz_targets_1_bestRequest_id_76 ? (_zz_targets_1_bestRequest_id_60 ? _zz_targets_1_bestRequest_id_90 : _zz_targets_1_bestRequest_id_91) : (_zz_targets_1_bestRequest_id_63 ? _zz_targets_1_bestRequest_id_92 : _zz_targets_1_bestRequest_id_93)) : (_zz_targets_1_bestRequest_id_78 ? (_zz_targets_1_bestRequest_id_66 ? _zz_targets_1_bestRequest_id_94 : _zz_targets_1_bestRequest_id_95) : (_zz_targets_1_bestRequest_id_69 ? _zz_targets_1_bestRequest_id_96 : _zz_targets_1_bestRequest_id_97))));
-    targets_1_bestRequest_valid <= (_zz_targets_1_bestRequest_priority_6 ? _zz_targets_1_bestRequest_valid : _zz_targets_1_bestRequest_valid_1);
-    if(_zz_bus_writeJoinEvent_translated_ready_1) begin
-      _zz_io_bus_b_payload_resp <= bus_writeJoinEvent_translated_payload_resp;
-    end
-    if(io_bus_ar_ready) begin
-      io_bus_ar_rData_addr <= io_bus_ar_payload_addr;
-      io_bus_ar_rData_prot <= io_bus_ar_payload_prot;
-    end
-  end
-
-
-endmodule
-
-module AxiLite4Clint (
-  input  wire          io_bus_aw_valid,
-  output wire          io_bus_aw_ready,
-  input  wire [15:0]   io_bus_aw_payload_addr,
-  input  wire [2:0]    io_bus_aw_payload_prot,
-  input  wire          io_bus_w_valid,
-  output wire          io_bus_w_ready,
-  input  wire [31:0]   io_bus_w_payload_data,
-  input  wire [3:0]    io_bus_w_payload_strb,
-  output wire          io_bus_b_valid,
-  input  wire          io_bus_b_ready,
-  output wire [1:0]    io_bus_b_payload_resp,
-  input  wire          io_bus_ar_valid,
-  output wire          io_bus_ar_ready,
-  input  wire [15:0]   io_bus_ar_payload_addr,
-  input  wire [2:0]    io_bus_ar_payload_prot,
-  output wire          io_bus_r_valid,
-  input  wire          io_bus_r_ready,
-  output wire [31:0]   io_bus_r_payload_data,
-  output wire [1:0]    io_bus_r_payload_resp,
-  output wire [0:0]    io_timerInterrupt,
-  output wire [0:0]    io_softwareInterrupt,
-  output wire [63:0]   io_time,
-  input  wire          clk,
-  input  wire          reset
-);
-
-  wire                factory_readErrorFlag;
-  wire                factory_writeErrorFlag;
-  wire                factory_readHaltRequest;
-  wire                factory_writeHaltRequest;
-  wire                factory_writeJoinEvent_valid;
-  wire                factory_writeJoinEvent_ready;
-  wire                factory_writeOccur;
-  reg        [1:0]    factory_writeRsp_resp;
-  wire                factory_writeJoinEvent_translated_valid;
-  wire                factory_writeJoinEvent_translated_ready;
-  wire       [1:0]    factory_writeJoinEvent_translated_payload_resp;
-  wire                _zz_factory_writeJoinEvent_translated_ready;
-  wire                _zz_factory_writeJoinEvent_translated_ready_1;
-  wire                _zz_io_bus_b_valid;
-  reg                 _zz_io_bus_b_valid_1;
-  reg        [1:0]    _zz_io_bus_b_payload_resp;
-  wire                factory_readDataStage_valid;
-  wire                factory_readDataStage_ready;
-  wire       [15:0]   factory_readDataStage_payload_addr;
-  wire       [2:0]    factory_readDataStage_payload_prot;
-  reg                 io_bus_ar_rValid;
-  wire                factory_readDataStage_fire;
-  reg        [15:0]   io_bus_ar_rData_addr;
-  reg        [2:0]    io_bus_ar_rData_prot;
-  reg        [31:0]   factory_readRsp_data;
-  reg        [1:0]    factory_readRsp_resp;
-  wire                _zz_io_bus_r_valid;
-  wire       [15:0]   factory_readAddressMasked;
-  wire       [15:0]   factory_writeAddressMasked;
-  wire                factory_readOccur;
-  wire                logic_stop;
-  reg        [63:0]   logic_time;
-  wire                when_Clint_l39;
-  reg        [63:0]   logic_harts_0_cmp;
-  reg                 logic_harts_0_timerInterrupt;
-  reg                 logic_harts_0_softwareInterrupt;
-  wire       [63:0]   _zz_factory_readRsp_data;
-  wire                when_AxiLite4SlaveFactory_l68;
-  wire                when_AxiLite4SlaveFactory_l68_1;
-  wire                when_AxiLite4SlaveFactory_l86;
-  wire                when_AxiLite4SlaveFactory_l86_1;
-
-  assign factory_readErrorFlag = 1'b0;
-  assign factory_writeErrorFlag = 1'b0;
-  assign factory_readHaltRequest = 1'b0;
-  assign factory_writeHaltRequest = 1'b0;
-  assign factory_writeOccur = (factory_writeJoinEvent_valid && factory_writeJoinEvent_ready);
-  assign factory_writeJoinEvent_valid = (io_bus_aw_valid && io_bus_w_valid);
-  assign io_bus_aw_ready = factory_writeOccur;
-  assign io_bus_w_ready = factory_writeOccur;
-  assign factory_writeJoinEvent_translated_valid = factory_writeJoinEvent_valid;
-  assign factory_writeJoinEvent_ready = factory_writeJoinEvent_translated_ready;
-  assign factory_writeJoinEvent_translated_payload_resp = factory_writeRsp_resp;
-  assign _zz_factory_writeJoinEvent_translated_ready = (! factory_writeHaltRequest);
-  assign factory_writeJoinEvent_translated_ready = (_zz_factory_writeJoinEvent_translated_ready_1 && _zz_factory_writeJoinEvent_translated_ready);
-  assign _zz_factory_writeJoinEvent_translated_ready_1 = (! _zz_io_bus_b_valid_1);
-  assign _zz_io_bus_b_valid = _zz_io_bus_b_valid_1;
-  assign io_bus_b_valid = _zz_io_bus_b_valid;
-  assign io_bus_b_payload_resp = _zz_io_bus_b_payload_resp;
-  assign factory_readDataStage_fire = (factory_readDataStage_valid && factory_readDataStage_ready);
-  assign io_bus_ar_ready = (! io_bus_ar_rValid);
-  assign factory_readDataStage_valid = io_bus_ar_rValid;
-  assign factory_readDataStage_payload_addr = io_bus_ar_rData_addr;
-  assign factory_readDataStage_payload_prot = io_bus_ar_rData_prot;
-  assign _zz_io_bus_r_valid = (! factory_readHaltRequest);
-  assign factory_readDataStage_ready = (io_bus_r_ready && _zz_io_bus_r_valid);
-  assign io_bus_r_valid = (factory_readDataStage_valid && _zz_io_bus_r_valid);
-  assign io_bus_r_payload_data = factory_readRsp_data;
-  assign io_bus_r_payload_resp = factory_readRsp_resp;
-  always @(*) begin
-    if(factory_writeErrorFlag) begin
-      factory_writeRsp_resp = 2'b10;
-    end else begin
-      factory_writeRsp_resp = 2'b00;
-    end
-  end
-
-  always @(*) begin
-    if(factory_readErrorFlag) begin
-      factory_readRsp_resp = 2'b10;
-    end else begin
-      factory_readRsp_resp = 2'b00;
-    end
-  end
-
-  always @(*) begin
-    factory_readRsp_data = 32'h00000000;
-    case(factory_readAddressMasked)
-      16'h0000 : begin
-        factory_readRsp_data[0 : 0] = logic_harts_0_softwareInterrupt;
-      end
-      default : begin
-      end
-    endcase
-    if(when_AxiLite4SlaveFactory_l86) begin
-      factory_readRsp_data[31 : 0] = _zz_factory_readRsp_data[31 : 0];
-    end
-    if(when_AxiLite4SlaveFactory_l86_1) begin
-      factory_readRsp_data[31 : 0] = _zz_factory_readRsp_data[63 : 32];
-    end
-  end
-
-  assign factory_readAddressMasked = (factory_readDataStage_payload_addr & (~ 16'h0003));
-  assign factory_writeAddressMasked = (io_bus_aw_payload_addr & (~ 16'h0003));
-  assign factory_readOccur = (io_bus_r_valid && io_bus_r_ready);
-  assign logic_stop = 1'b0;
-  assign when_Clint_l39 = (! logic_stop);
-  assign _zz_factory_readRsp_data = logic_time;
-  assign io_timerInterrupt[0] = logic_harts_0_timerInterrupt;
-  assign io_softwareInterrupt[0] = logic_harts_0_softwareInterrupt;
-  assign io_time = logic_time;
-  assign when_AxiLite4SlaveFactory_l68 = ((factory_writeAddressMasked & (~ 16'h0003)) == 16'h4000);
-  assign when_AxiLite4SlaveFactory_l68_1 = ((factory_writeAddressMasked & (~ 16'h0003)) == 16'h4004);
-  assign when_AxiLite4SlaveFactory_l86 = ((factory_readAddressMasked & (~ 16'h0003)) == 16'hbff8);
-  assign when_AxiLite4SlaveFactory_l86_1 = ((factory_readAddressMasked & (~ 16'h0003)) == 16'hbffc);
-  always @(posedge clk or posedge reset) begin
-    if(reset) begin
-      _zz_io_bus_b_valid_1 <= 1'b0;
-      io_bus_ar_rValid <= 1'b0;
-      logic_time <= 64'h0000000000000000;
-      logic_harts_0_softwareInterrupt <= 1'b0;
-    end else begin
-      if((factory_writeJoinEvent_translated_valid && _zz_factory_writeJoinEvent_translated_ready)) begin
-        _zz_io_bus_b_valid_1 <= 1'b1;
-      end
-      if((_zz_io_bus_b_valid && io_bus_b_ready)) begin
-        _zz_io_bus_b_valid_1 <= 1'b0;
-      end
-      if(io_bus_ar_valid) begin
-        io_bus_ar_rValid <= 1'b1;
-      end
-      if(factory_readDataStage_fire) begin
-        io_bus_ar_rValid <= 1'b0;
-      end
-      if(when_Clint_l39) begin
-        logic_time <= (logic_time + 64'h0000000000000001);
-      end
-      case(factory_writeAddressMasked)
-        16'h0000 : begin
-          if(factory_writeOccur) begin
-            logic_harts_0_softwareInterrupt <= io_bus_w_payload_data[0];
-          end
-        end
-        default : begin
-        end
-      endcase
-    end
-  end
-
-  always @(posedge clk) begin
-    if(_zz_factory_writeJoinEvent_translated_ready_1) begin
-      _zz_io_bus_b_payload_resp <= factory_writeJoinEvent_translated_payload_resp;
-    end
-    if(io_bus_ar_ready) begin
-      io_bus_ar_rData_addr <= io_bus_ar_payload_addr;
-      io_bus_ar_rData_prot <= io_bus_ar_payload_prot;
-    end
-    logic_harts_0_timerInterrupt <= (logic_harts_0_cmp <= logic_time);
-    if(when_AxiLite4SlaveFactory_l68) begin
-      if(factory_writeOccur) begin
-        logic_harts_0_cmp[31 : 0] <= io_bus_w_payload_data[31 : 0];
-      end
-    end
-    if(when_AxiLite4SlaveFactory_l68_1) begin
-      if(factory_writeOccur) begin
-        logic_harts_0_cmp[63 : 32] <= io_bus_w_payload_data[31 : 0];
-      end
     end
   end
 
